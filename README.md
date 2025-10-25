@@ -457,7 +457,7 @@ Copyright © 2025 Lennart Wuchold. All rights reserved.
 ## 📞 Contact
 
 **Creator:** Lennart Wuchold
-**Email:** (Add your email if you want)
+**Email:** wucholdlennart@gmail.com
 **Location:** Dippoldiswalde, Germany
 
 ---
