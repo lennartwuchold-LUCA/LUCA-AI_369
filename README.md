@@ -458,7 +458,7 @@ Copyright © 2025 Lennart Wuchold. All rights reserved.
 
 **Creator:** Lennart Wuchold
 **Email:** wucholdlennart@gmail.com
-**Location:** Dippoldiswalde, Germany
+**Location:** Hamburg/Dippoldiswalde/Bärenfels, Germany
 
 ---
 
