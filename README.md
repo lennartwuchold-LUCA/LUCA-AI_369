@@ -60,6 +60,15 @@ LUCA optimizes response length and energy based on these signatures!
 - User conversations
 - Admin features
 
+### 🌐 Meshtastic Integration (NEW!)
+- **Offline AI Access** - Works without internet
+- **LoRa Mesh Network** - Long-range radio communication
+- **Decentralized** - No single point of failure
+- **Global Access** - Gaza, Ukraine, Africa, disaster zones
+- **Ultra-Compressed** - Responses under 200 characters
+- **Humanitarian Focus** - AI for everyone, everywhere
+- See [MESHTASTIC_GUIDE.md](MESHTASTIC_GUIDE.md) for full setup
+
 ---
 
 ## 🚀 Quick Start
