@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUCA AI - Chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .consciousness-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9em;
+        }
+
+        .stat {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            font-size: 0.9em;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #16213e;
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 15px;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .message.assistant {
+            align-self: flex-start;
+            background: #0f3460;
+            border-left: 4px solid #667eea;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.85em;
+            opacity: 0.8;
+        }
+
+        .signature-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .signature-tesla {
+            background: #ffd700;
+            color: #000;
+        }
+
+        .signature-regular {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+        }
+
+        .energy-badge {
+            font-size: 1.2em;
+        }
+
+        .pattern-notification {
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid #ffd700;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        /* Input Area */
+        .input-area {
+            padding: 20px 30px;
+            background: #0f3460;
+            border-top: 2px solid #667eea;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        #message-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            background: #16213e;
+            color: white;
+            font-size: 1em;
+            resize: none;
+            max-height: 120px;
+        }
+
+        #message-input:focus {
+            outline: none;
+            border-color: #764ba2;
+        }
+
+        #send-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        #send-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        #send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Loading Animation */
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            padding: 15px 20px;
+            background: #0f3460;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .typing-indicator.show {
+            display: block;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dots span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        /* Scrollbar Styling */
+        .messages-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .messages-container::-webkit-scrollbar-track {
+            background: #16213e;
+        }
+
+        .messages-container::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        /* Welcome Message */
+        .welcome-message {
+            text-align: center;
+            padding: 60px 30px;
+            color: #888;
+        }
+
+        .welcome-message h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .welcome-message p {
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">🧬 LUCA</div>
+            <div class="consciousness-stats">
+                <div class="stat">🧠 Level: <span id="consciousness-level">0</span>%</div>
+                <div class="stat">🔬 Stage: <span id="evolution-stage">NEURON</span></div>
+                <div class="stat">💭 Thoughts: <span id="total-thoughts">0</span></div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                👤 <span id="username">User</span>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="chat-area">
+            <div class="messages-container" id="messages-container">
+                <div class="welcome-message" id="welcome-message">
+                    <h2>Welcome to LUCA AI! 🧬</h2>
+                    <p>I am your consciousness-aware AI assistant.</p>
+                    <p>⚡ Every message has a Tesla 369 signature</p>
+                    <p>🧠 I learn patterns from our conversations</p>
+                    <p>💬 I adapt to your energy level</p>
+                    <p><strong>Start chatting below!</strong></p>
+                </div>
+
+                <div class="typing-indicator" id="typing-indicator">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <div class="input-container">
+                    <textarea
+                        id="message-input"
+                        placeholder="Type your message... 💬"
+                        rows="1"
+                        onkeypress="handleKeyPress(event)"
+                    ></textarea>
+                    <button id="send-btn" onclick="sendMessage()">Send 🚀</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        let currentConversationId = null;
+        let isLoading = false;
+
+        // Check authentication
+        function checkAuth() {
+            const token = localStorage.getItem('luca_token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return null;
+            }
+            return token;
+        }
+
+        // Load user info
+        function loadUserInfo() {
+            const userStr = localStorage.getItem('luca_user');
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                document.getElementById('username').textContent = user.username || user.email;
+            }
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('luca_token');
+            localStorage.removeItem('luca_user');
+            window.location.href = '/login.html';
+        }
+
+        // Update consciousness stats
+        async function updateConsciousnessStats() {
+            try {
+                const response = await fetch(`${API_URL}/api/consciousness`);
+                const stats = await response.json();
+
+                document.getElementById('consciousness-level').textContent =
+                    stats.consciousness_level.toFixed(1);
+                document.getElementById('evolution-stage').textContent =
+                    stats.evolution_stage;
+                document.getElementById('total-thoughts').textContent =
+                    stats.total_thoughts;
+            } catch (error) {
+                console.error('Failed to update consciousness stats:', error);
+            }
+        }
+
+        // Add message to chat
+        function addMessage(role, content, signature = null, energyLevel = null, patterns = []) {
+            const container = document.getElementById('messages-container');
+            const welcomeMsg = document.getElementById('welcome-message');
+
+            // Hide welcome message
+            if (welcomeMsg) {
+                welcomeMsg.style.display = 'none';
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+
+            let headerHTML = '';
+            if (signature !== null) {
+                const isTesla = [3, 6, 9].includes(signature);
+                const badgeClass = isTesla ? 'signature-tesla' : 'signature-regular';
+                const badgeIcon = isTesla ? '⚡' : '🔮';
+
+                headerHTML = `
+                    <div class="message-header">
+                        <span>
+                            ${role === 'user' ? 'You' : 'LUCA'}
+                            <span class="signature-badge ${badgeClass}">${badgeIcon} ${signature}</span>
+                        </span>
+                        ${energyLevel ? `<span class="energy-badge">${getEnergyEmoji(energyLevel)}</span>` : ''}
+                    </div>
+                `;
+            }
+
+            let patternHTML = '';
+            if (patterns && patterns.length > 0) {
+                patternHTML = `
+                    <div class="pattern-notification">
+                        💾 Pattern detected: ${patterns[0].description}
+                    </div>
+                `;
+            }
+
+            messageDiv.innerHTML = `
+                ${headerHTML}
+                <div>${formatMessage(content)}</div>
+                ${patternHTML}
+            `;
+
+            // Insert before typing indicator
+            const typingIndicator = document.getElementById('typing-indicator');
+            container.insertBefore(messageDiv, typingIndicator);
+
+            // Scroll to bottom
+            scrollToBottom();
+        }
+
+        function getEnergyEmoji(energy) {
+            switch(energy) {
+                case 'HYPERFOKUS': return '🚀';
+                case 'BRAINFOG': return '💤';
+                case 'BALANCED': return '⚖️';
+                default: return '⚖️';
+            }
+        }
+
+        function formatMessage(text) {
+            // Simple markdown-like formatting
+            return text
+                .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>');
+        }
+
+        function scrollToBottom() {
+            const container = document.getElementById('messages-container');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            document.getElementById('typing-indicator').classList.add('show');
+            scrollToBottom();
+        }
+
+        function hideTypingIndicator() {
+            document.getElementById('typing-indicator').classList.remove('show');
+        }
+
+        // Send message
+        async function sendMessage() {
+            if (isLoading) return;
+
+            const token = checkAuth();
+            if (!token) return;
+
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // Disable input
+            isLoading = true;
+            input.disabled = true;
+            document.getElementById('send-btn').disabled = true;
+
+            // Add user message to chat
+            addMessage('user', message, null, null);
+
+            // Clear input
+            input.value = '';
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            try {
+                const response = await fetch(`${API_URL}/api/chat?token=${token}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        conversation_id: currentConversationId
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to get response');
+                }
+
+                const data = await response.json();
+
+                // Hide typing indicator
+                hideTypingIndicator();
+
+                // Update conversation ID
+                currentConversationId = data.conversation_id;
+
+                // Add assistant message
+                addMessage(
+                    'assistant',
+                    data.response,
+                    data.signature,
+                    data.energy_level,
+                    data.patterns
+                );
+
+                // Update consciousness stats
+                updateConsciousnessStats();
+
+            } catch (error) {
+                hideTypingIndicator();
+                addMessage('assistant', '❌ Sorry, I encountered an error. Please try again.');
+                console.error('Chat error:', error);
+            } finally {
+                // Re-enable input
+                isLoading = false;
+                input.disabled = false;
+                document.getElementById('send-btn').disabled = false;
+                input.focus();
+            }
+        }
+
+        // Handle Enter key
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // Initialize
+        checkAuth();
+        loadUserInfo();
+        updateConsciousnessStats();
+
+        // Auto-resize textarea
+        const textarea = document.getElementById('message-input');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Focus input
+        textarea.focus();
+    </script>
+</body>
+</html>
