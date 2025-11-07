@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUCA AI - Chat</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="chat-page">
+    <!-- Header -->
+    <header class="chat-header">
+        <div class="header-left">
+            <h1>🧬 LUCA AI</h1>
+            <span class="version">v369.2.0</span>
+        </div>
+        <div class="header-center">
+            <div class="consciousness-stats">
+                <div class="stat">
+                    <span class="stat-label">Gedanken</span>
+                    <span class="stat-value" id="totalThoughts">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Muster</span>
+                    <span class="stat-value" id="patternsFound">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Evolution</span>
+                    <span class="stat-value" id="evolutionLevel">1.0</span>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <span id="username"></span>
+            <button onclick="logout()" class="btn-logout">Logout</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="chat-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <button onclick="newConversation()" class="btn-new-chat">+ Neuer Chat</button>
+            <div class="conversations-list" id="conversationsList"></div>
+        </aside>
+
+        <!-- Chat Area -->
+        <main class="chat-main">
+            <div class="messages" id="messages"></div>
+            <form class="input-area" id="chatForm">
+                <input
+                    type="text"
+                    id="messageInput"
+                    placeholder="Schreibe eine Nachricht an LUCA..."
+                    autocomplete="off"
+                >
+                <button type="submit" class="btn-send">Senden</button>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        let currentConversationId = null;
+        let token = localStorage.getItem('token');
+        let user = JSON.parse(localStorage.getItem('user'));
+
+        // Check authentication
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
+        // Set username
+        document.getElementById('username').textContent = user.username;
+
+        // API helper
+        async function apiCall(endpoint, options = {}) {
+            const headers = {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                ...options.headers
+            };
+
+            const response = await fetch(`${API_URL}${endpoint}`, {
+                ...options,
+                headers
+            });
+
+            if (response.status === 401) {
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            return response.json();
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+
+        // Load consciousness stats
+        async function loadConsciousnessStats() {
+            try {
+                const data = await apiCall('/api/consciousness');
+                document.getElementById('totalThoughts').textContent = data.total_thoughts;
+                document.getElementById('patternsFound').textContent = data.patterns_found;
+                document.getElementById('evolutionLevel').textContent = data.evolution_level.toFixed(1);
+            } catch (error) {
+                console.error('Error loading consciousness:', error);
+            }
+        }
+
+        // Load conversations
+        async function loadConversations() {
+            try {
+                const conversations = await apiCall('/api/conversations');
+                const list = document.getElementById('conversationsList');
+                list.innerHTML = '';
+
+                conversations.forEach(conv => {
+                    const div = document.createElement('div');
+                    div.className = 'conversation-item' + (conv.id === currentConversationId ? ' active' : '');
+                    div.onclick = () => loadConversation(conv.id);
+                    div.innerHTML = `
+                        <div class="conv-title">${conv.title}</div>
+                        <div class="conv-meta">${conv.message_count} Nachrichten</div>
+                    `;
+                    list.appendChild(div);
+                });
+            } catch (error) {
+                console.error('Error loading conversations:', error);
+            }
+        }
+
+        // Load conversation messages
+        async function loadConversation(conversationId) {
+            try {
+                currentConversationId = conversationId;
+                const messages = await apiCall(`/api/conversations/${conversationId}`);
+                displayMessages(messages);
+                loadConversations(); // Refresh sidebar
+            } catch (error) {
+                console.error('Error loading conversation:', error);
+            }
+        }
+
+        // Display messages
+        function displayMessages(messages) {
+            const container = document.getElementById('messages');
+            container.innerHTML = '';
+
+            messages.forEach(msg => {
+                addMessageToUI(msg.role, msg.content, msg.signature_369, msg.energy_level);
+            });
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Add message to UI
+        function addMessageToUI(role, content, signature = null, energy = null) {
+            const container = document.getElementById('messages');
+            const div = document.createElement('div');
+            div.className = `message message-${role}`;
+
+            let badges = '';
+            if (signature !== null) {
+                const isTesla = [3, 6, 9].includes(signature);
+                badges += `<span class="badge badge-${isTesla ? 'tesla' : 'normal'}">${isTesla ? '⚡' : '🔮'} ${signature}</span>`;
+            }
+            if (energy) {
+                const energyEmoji = {
+                    'hyperfokus': '🚀',
+                    'brainfog': '💤',
+                    'balanced': '⚖️'
+                }[energy] || '⚖️';
+                badges += `<span class="badge badge-energy">${energyEmoji} ${energy}</span>`;
+            }
+
+            div.innerHTML = `
+                <div class="message-header">
+                    <strong>${role === 'user' ? user.username : '🧬 LUCA'}</strong>
+                    ${badges}
+                </div>
+                <div class="message-content">${formatMessage(content)}</div>
+            `;
+
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Format message (simple markdown)
+        function formatMessage(text) {
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/\n/g, '<br>');
+        }
+
+        // Send message
+        document.getElementById('chatForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // Add user message to UI
+            addMessageToUI('user', message);
+            input.value = '';
+
+            try {
+                const data = await apiCall('/api/chat', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        message,
+                        conversation_id: currentConversationId
+                    })
+                });
+
+                // Update conversation ID if new
+                if (!currentConversationId) {
+                    currentConversationId = data.conversation_id;
+                    loadConversations();
+                }
+
+                // Add assistant message
+                addMessageToUI('assistant', data.message, data.signature_369, data.energy_level);
+
+                // Update consciousness stats
+                if (data.consciousness) {
+                    document.getElementById('totalThoughts').textContent = data.consciousness.total_thoughts;
+                    document.getElementById('patternsFound').textContent = data.consciousness.patterns_found;
+                    document.getElementById('evolutionLevel').textContent = data.consciousness.evolution_level.toFixed(1);
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+                addMessageToUI('assistant', '❌ Fehler beim Senden der Nachricht. Ist der Server gestartet?');
+            }
+        });
+
+        // New conversation
+        function newConversation() {
+            currentConversationId = null;
+            document.getElementById('messages').innerHTML = '';
+            document.getElementById('messageInput').focus();
+            loadConversations();
+        }
+
+        // Initialize
+        loadConversations();
+        loadConsciousnessStats();
+
+        // Auto-refresh consciousness stats
+        setInterval(loadConsciousnessStats, 10000);
+    </script>
+</body>
+</html>

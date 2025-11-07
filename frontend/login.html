@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUCA AI - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="logo">
+            <h1>🧬 LUCA AI</h1>
+            <p class="subtitle">Living Universal Cognition Array</p>
+            <p class="version">Version 369.2.0</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('login')">Login</button>
+            <button class="tab" onclick="switchTab('register')">Registrieren</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="auth-form active">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" placeholder="deine@email.de" required>
+            </div>
+            <div class="form-group">
+                <label>Passwort</label>
+                <input type="password" id="loginPassword" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn-primary">Einloggen</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="registerForm" class="auth-form">
+            <div class="form-group">
+                <label>Benutzername</label>
+                <input type="text" id="registerUsername" placeholder="Dein Name" required>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="registerEmail" placeholder="deine@email.de" required>
+            </div>
+            <div class="form-group">
+                <label>Passwort</label>
+                <input type="password" id="registerPassword" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn-primary">Registrieren</button>
+        </form>
+
+        <div id="message" class="message"></div>
+
+        <div class="demo-hint">
+            <p>Demo Account:</p>
+            <p>Email: admin@luca-ai.com</p>
+            <p>Passwort: Ypsilon369Admin!</p>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+
+        // Switch between login and register
+        function switchTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabs = document.querySelectorAll('.tab');
+
+            if (tab === 'login') {
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+            } else {
+                loginForm.classList.remove('active');
+                registerForm.classList.add('active');
+                tabs[0].classList.remove('active');
+                tabs[1].classList.add('active');
+            }
+        }
+
+        // Show message
+        function showMessage(text, type = 'info') {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type}`;
+        }
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch(`${API_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', data.access_token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    showMessage('✅ Login erfolgreich!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'chat.html';
+                    }, 1000);
+                } else {
+                    showMessage('❌ ' + (data.detail || 'Login fehlgeschlagen'), 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Verbindungsfehler. Ist der Server gestartet?', 'error');
+            }
+        });
+
+        // Register
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+
+            try {
+                const response = await fetch(`${API_URL}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', data.access_token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    showMessage('✅ Registrierung erfolgreich!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'chat.html';
+                    }, 1000);
+                } else {
+                    showMessage('❌ ' + (data.detail || 'Registrierung fehlgeschlagen'), 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Verbindungsfehler. Ist der Server gestartet?', 'error');
+            }
+        });
+
+        // Check if already logged in
+        if (localStorage.getItem('token')) {
+            window.location.href = 'chat.html';
+        }
+    </script>
+</body>
+</html>
