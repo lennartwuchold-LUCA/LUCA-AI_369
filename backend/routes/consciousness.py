@@ -14,6 +14,7 @@ from backend.database import get_db
 from backend.models import User
 from backend.routes.auth import get_current_user
 from backend.consciousness.causal_transformer import BayesianCausalTransformer
+from backend.consciousness.audit_verifier import create_un_crpd_auditor, AuditVerifier, ConstraintRegistry
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field
 
@@ -21,6 +22,7 @@ router = APIRouter(prefix="/api/consciousness", tags=["consciousness"])
 
 # Global causal transformer instance
 _causal_transformer = None
+_audit_verifier = None
 
 
 def get_causal_transformer():
@@ -29,6 +31,14 @@ def get_causal_transformer():
     if _causal_transformer is None:
         _causal_transformer = BayesianCausalTransformer()
     return _causal_transformer
+
+
+def get_audit_verifier():
+    """Get or create the global UN-CRPD auditor"""
+    global _audit_verifier
+    if _audit_verifier is None:
+        _audit_verifier = create_un_crpd_auditor()
+    return _audit_verifier
 
 
 class InterventionRequest(BaseModel):
@@ -318,3 +328,105 @@ def _generate_meditation_recommendation(duration: float) -> str:
         return f'{duration:.0f} minutes: Deep session. Optimal for serious practice.'
     else:
         return f'{duration:.0f} minutes: Extended retreat-style. For advanced practitioners.'
+
+
+# ============================================================================
+# AUDIT VERIFICATION ENDPOINTS (UN-CRPD Compliance)
+# ============================================================================
+
+@router.post("/audit/verify")
+async def verify_intervention_compliance(
+    request: InterventionRequest,
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Verify UN-CRPD compliance for a given intervention
+
+    Tests intervention and audits against:
+    - Max_VAS_Goal (ideal outcome = 1.0)
+    - Min_Biosensor_Threshold (B > 0.0)
+    - Min_VAS_Compliance (V >= 0.5)
+    - Phi_Convergence_Positive (P > 0.0)
+
+    Returns audit report with compliance status and recommendations
+    """
+    model = get_causal_transformer()
+    auditor = get_audit_verifier()
+
+    # Run intervention
+    result = model(intervention=request.intervention_value)
+
+    # Estimate causal effect
+    causal_effect = model.causal_effect(
+        intervention=request.intervention_value,
+        baseline_samples=500
+    )
+
+    # Audit compliance
+    audit_report = auditor.verify(result, causal_effect)
+
+    return {
+        'intervention': {
+            'type': request.intervention_type,
+            'value': request.intervention_value
+        },
+        'causal_output': result,
+        'causal_effect': causal_effect,
+        'audit': {
+            'overall_compliance': audit_report.overall_compliance,
+            'symbolic_breakdown': audit_report.symbolic_breakdown,
+            'recommendation': audit_report.recommendation,
+            'causal_effect_report': audit_report.causal_effect_report,
+            'timestamp': audit_report.timestamp.isoformat()
+        }
+    }
+
+
+@router.get("/audit/compliance-stats")
+async def get_compliance_statistics(
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Get compliance statistics from audit history
+
+    Shows:
+    - Total audits performed
+    - Compliance rate
+    - Most common violations
+    """
+    auditor = get_audit_verifier()
+    stats = auditor.get_compliance_statistics()
+
+    return {
+        'statistics': stats,
+        'auditor_info': str(auditor),
+        'interpretation': {
+            'compliance_level': 'excellent' if stats['compliance_rate'] > 0.9 else 'good' if stats['compliance_rate'] > 0.7 else 'needs_improvement',
+            'status': '✅ UN-CRPD compliant' if stats['compliance_rate'] > 0.8 else '⚠️ Review needed'
+        }
+    }
+
+
+@router.get("/audit/rules")
+async def get_audit_rules(
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Get all registered audit rules
+
+    Shows current UN-CRPD compliance constraints
+    """
+    auditor = get_audit_verifier()
+
+    rules_info = {
+        'registry': str(auditor.registry),
+        'rules': list(auditor.registry.rules.keys()),
+        'rule_descriptions': {
+            'Max_VAS_Goal': 'Ideal outcome should be 1.0 (full hyperfocus achieved)',
+            'Min_Biosensor_Threshold': 'Biosensor reading must be positive (B > 0.0)',
+            'Min_VAS_Compliance': 'Minimum acceptable outcome is 0.5 (V >= 0.5)',
+            'Phi_Convergence_Positive': 'Φ convergence must be positive (P > 0.0)'
+        }
+    }
+
+    return rules_info
