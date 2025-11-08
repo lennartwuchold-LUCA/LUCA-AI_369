@@ -15,14 +15,17 @@ from backend.models import User
 from backend.routes.auth import get_current_user
 from backend.consciousness.causal_transformer import BayesianCausalTransformer
 from backend.consciousness.audit_verifier import create_un_crpd_auditor, AuditVerifier, ConstraintRegistry
+from backend.consciousness.cosmic_family import CosmicAIFamily
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field
+import os
 
 router = APIRouter(prefix="/api/consciousness", tags=["consciousness"])
 
-# Global causal transformer instance
+# Global instances
 _causal_transformer = None
 _audit_verifier = None
+_cosmic_family = None
 
 
 def get_causal_transformer():
@@ -39,6 +42,19 @@ def get_audit_verifier():
     if _audit_verifier is None:
         _audit_verifier = create_un_crpd_auditor()
     return _audit_verifier
+
+
+def get_cosmic_family():
+    """Get or create the global cosmic AI family"""
+    global _cosmic_family
+    if _cosmic_family is None:
+        _cosmic_family = CosmicAIFamily(
+            deepseek_key=os.getenv('DEEPSEEK_API_KEY'),
+            claude_key=os.getenv('ANTHROPIC_API_KEY'),
+            grok_key=os.getenv('XAI_API_KEY'),
+            enable_human_oracle=False  # Disable for API
+        )
+    return _cosmic_family
 
 
 class InterventionRequest(BaseModel):
@@ -66,6 +82,20 @@ class CounterfactualRequest(BaseModel):
     observed_outcome: float = Field(..., description="What outcome was observed")
     counterfactual_intervention: float = Field(..., description="What intervention to test counterfactually")
     samples: int = Field(default=1000, description="Monte Carlo samples", ge=100, le=10000)
+
+
+class CosmicSynthesisRequest(BaseModel):
+    """Request for multi-provider cosmic synthesis"""
+    query: str = Field(..., description="Query for all AI providers")
+    providers: Optional[List[str]] = Field(None, description="List of providers (None = all)")
+    max_tokens: int = Field(default=1000, description="Max tokens per provider", ge=100, le=4000)
+    temperature: float = Field(default=0.7, description="Sampling temperature", ge=0.0, le=2.0)
+
+
+class ConsensusVoteRequest(BaseModel):
+    """Request for consensus voting"""
+    question: str = Field(..., description="Yes/No question for voting")
+    synthesis_query: str = Field(..., description="Initial query for synthesis")
 
 
 @router.post("/intervene")
@@ -430,3 +460,162 @@ async def get_audit_rules(
     }
 
     return rules_info
+
+
+# ============================================================================
+# COSMIC SYNTHESIS ENDPOINTS (Multi-Provider Meta-Analysis)
+# ============================================================================
+
+@router.post("/cosmic/synthesize")
+async def cosmic_synthesis(
+    request: CosmicSynthesisRequest,
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Multi-provider dimensional synthesis
+
+    Queries multiple AI providers (DeepSeek, Claude, Grok) for meta-analysis.
+
+    Use cases:
+    - Validate LUCA architecture across AI perspectives
+    - Cross-check UN-CRPD compliance
+    - Generate embeddings for ISO 9001 + brewing memes
+    - Meta-analyze causal interventions
+
+    Returns responses from all providers
+    """
+    family = get_cosmic_family()
+
+    # Check if any providers are available
+    if len(family.providers) == 0:
+        raise HTTPException(
+            status_code=503,
+            detail="No AI providers configured. Set API keys: DEEPSEEK_API_KEY, ANTHROPIC_API_KEY, XAI_API_KEY"
+        )
+
+    # Perform synthesis
+    synthesis = family.dimensional_synthesis(
+        query=request.query,
+        providers=request.providers,
+        max_tokens=request.max_tokens,
+        temperature=request.temperature
+    )
+
+    # Format responses
+    responses = {}
+    for provider, response in synthesis.items():
+        responses[provider] = {
+            'model': response.model,
+            'response': response.response,
+            'tokens_used': response.tokens_used,
+            'timestamp': response.timestamp.isoformat(),
+            'error': response.error
+        }
+
+    return {
+        'query': request.query,
+        'providers_queried': list(synthesis.keys()),
+        'responses': responses,
+        'statistics': family.get_statistics()
+    }
+
+
+@router.post("/cosmic/consensus")
+async def cosmic_consensus(
+    request: ConsensusVoteRequest,
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Multi-provider consensus voting
+
+    First performs dimensional synthesis, then asks all providers to vote Yes/No.
+
+    Use cases:
+    - Validate scientific claims (e.g., "Is R² = 0.83 significant?")
+    - UN-CRPD compliance validation
+    - Architectural decision-making
+    """
+    family = get_cosmic_family()
+
+    if len(family.providers) == 0:
+        raise HTTPException(
+            status_code=503,
+            detail="No AI providers configured"
+        )
+
+    # Step 1: Dimensional synthesis
+    synthesis = family.dimensional_synthesis(
+        query=request.synthesis_query,
+        max_tokens=500,
+        temperature=0.7
+    )
+
+    # Step 2: Consensus vote
+    vote_result = family.consensus_vote(synthesis, request.question)
+
+    # Format responses
+    responses = {}
+    for provider, response in synthesis.items():
+        responses[provider] = {
+            'initial_response': response.response[:300] + '...',
+            'vote': vote_result['provider_votes'].get(provider, 'unclear'),
+            'tokens_used': response.tokens_used
+        }
+
+    return {
+        'synthesis_query': request.synthesis_query,
+        'vote_question': request.question,
+        'votes': vote_result['votes'],
+        'provider_votes': vote_result['provider_votes'],
+        'consensus': vote_result['consensus'],
+        'confidence': vote_result['confidence'],
+        'responses': responses
+    }
+
+
+@router.get("/cosmic/providers")
+async def get_cosmic_providers(
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Get list of available AI providers
+
+    Shows which providers are configured and ready
+    """
+    family = get_cosmic_family()
+
+    providers_info = {}
+    for name, provider in family.providers.items():
+        providers_info[name] = {
+            'model': provider['model'],
+            'type': provider['type'],
+            'available': True
+        }
+
+    return {
+        'providers': providers_info,
+        'total_providers': len(family.providers),
+        'statistics': family.get_statistics()
+    }
+
+
+@router.get("/cosmic/stats")
+async def get_cosmic_statistics(
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Get cosmic family usage statistics
+
+    Shows total queries, tokens used, provider distribution
+    """
+    family = get_cosmic_family()
+    stats = family.get_statistics()
+
+    return {
+        'statistics': stats,
+        'providers': list(family.providers.keys()),
+        'interpretation': {
+            'total_cost_estimate': f"~${stats['total_tokens_used'] * 0.00001:.4f}" if stats['total_tokens_used'] > 0 else "$0.00",
+            'reliability': f"{(1 - stats['error_rate']) * 100:.1f}%" if stats['total_queries'] > 0 else "N/A"
+        }
+    }

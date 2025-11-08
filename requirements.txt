@@ -17,3 +17,8 @@ email-validator==2.1.0
 # Optional: PyTorch for Bayesian Causal Transformer (uncomment to enable)
 # torch==2.1.1
 # If torch is not installed, causal_transformer.py falls back to numpy-only implementation
+
+# Optional: Cosmic AI Family - Multi-Provider Integration (uncomment to enable)
+# openai==1.12.0  # For DeepSeek, Grok (OpenAI-compatible APIs)
+# anthropic==0.71.0  # For Claude (Anthropic native SDK)
+# If not installed, cosmic_family.py will gracefully skip unavailable providers
