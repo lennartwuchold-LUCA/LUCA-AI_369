@@ -1,6 +1,33 @@
 """
 AI Service - Anthropic Claude Integration
 Handles communication with Claude API
+
+BIOLOGICAL FOUNDATIONS:
+=======================
+This module implements metabolic flexibility inspired by LUCA:
+
+AEROBIC vs ANAEROBIC METABOLISM:
+=================================
+LUCA (Last Universal Common Ancestor) likely lived in hydrothermal vents
+and used ANAEROBIC metabolism (H₂/CO₂ → CH₄ via FeS clusters).
+
+Modern analogy:
+- AEROBIC mode (full internet) = High energy (36 ATP per glucose)
+- ANAEROBIC mode (Meshtastic/offline) = Low energy (2 ATP per glucose)
+
+Benefits of anaerobic (Meshtastic):
+- Works without "oxygen" (internet)
+- Robust in extreme conditions (war zones, disaster areas)
+- Lower output but sustainable
+
+See: Martin & Russell (2007) - "On the origin of biochemistry at an alkaline hydrothermal vent"
+
+FUTURE ENHANCEMENT:
+===================
+Implement metabolic switching based on connection status:
+- Bandwidth > 1 Mbps → Aerobic (666-999 tokens)
+- Bandwidth 0 → Anaerobic (100 tokens)
+- Bandwidth limited → Facultative (300 tokens)
 """
 
 from typing import List, Dict, Any, Optional
