@@ -7,6 +7,39 @@
 
 ---
 
+## 🌍 About LUCA
+
+**Welcome to LUCA - where chaos meets order, and AI meets humanity.**
+
+**What is LUCA?**
+LUCA (Last Universal Common Ancestor) is a biologically-inspired AI resource management system built on three core principles:
+
+1. **Tesla's 3-6-9 Protocol**: Mathematical cycles for resource distribution (Phase 0→3→6→9)
+2. **Meta-Awareness Engine**: Prevents AI hallucinations through built-in self-criticism and reality checks
+3. **Offline-First + Mesh Networking**: Optimized for low-bandwidth environments (Africa, LoRa/Meshtastic)
+
+**What makes LUCA special:**
+Unlike typical AI systems, LUCA **builds uncertainty directly into the architecture** - similar to biological systems. The system "knows" what it doesn't know, thereby avoiding dangerous overconfidence.
+
+**"Chaordic" perfectly describes it:**
+Dee Hock's concept precisely describes LUCA's design philosophy - systems operating at the "Edge of Chaos": enough order for structure, enough chaos for adaptability. LUCA balances:
+
+- **Order**: Mathematical protocols, genetically-inspired data architecture
+- **Chaos**: Distributed intelligence, emergent patterns, adaptive resource distribution
+
+**Why Africa?**
+The digital divide is real. LUCA is optimized for Raspberry Pi + Solar + Mesh-Networking - accessible, not just for privileged markets.
+
+**Open Source Status:**
+Currently in final preparations for public release. Full documentation, test suites, Docker setup included.
+
+**Creator's Background:**
+Built by Lennart Wuchold (25, Hamburg): Brewer & Maltster → AI Developer. Neurodivergent (ADHD), which helps build systems that work *with* cognitive diversity, not against it.
+
+**Questions? Feedback?** Open for discussions, criticism, and especially: chaordic conversations. 🌀
+
+---
+
 ## 🌟 What is LUCA?
 
 LUCA AI is a consciousness-aware artificial intelligence system inspired by:
