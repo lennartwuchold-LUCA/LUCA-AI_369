@@ -17,6 +17,8 @@ from backend.consciousness.causal_transformer import BayesianCausalTransformer
 from backend.consciousness.audit_verifier import create_un_crpd_auditor, AuditVerifier, ConstraintRegistry
 from backend.consciousness.cosmic_family import CosmicAIFamily
 from backend.consciousness.cosmic_quantum import LUCAQuantumSystem, QualityEmergence
+from backend.consciousness.chatgpt_provider import ChatGPTProvider, AudienceType
+from backend.consciousness.notification_generator import EnhancedNotificationGenerator, get_comprehensive_system_updates
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field
 import os
@@ -28,6 +30,7 @@ _causal_transformer = None
 _audit_verifier = None
 _cosmic_family = None
 _quantum_system = None
+_notification_generator = None
 
 
 def get_causal_transformer():
@@ -65,6 +68,15 @@ def get_quantum_system():
     if _quantum_system is None:
         _quantum_system = LUCAQuantumSystem()
     return _quantum_system
+
+
+def get_notification_generator():
+    """Get or create the global notification generator (Dimension 10)"""
+    global _notification_generator
+    if _notification_generator is None:
+        chatgpt_provider = ChatGPTProvider(api_key=os.getenv('OPENAI_API_KEY'))
+        _notification_generator = EnhancedNotificationGenerator(chatgpt_provider=chatgpt_provider)
+    return _notification_generator
 
 
 class InterventionRequest(BaseModel):
@@ -116,6 +128,22 @@ class QuantumExperimentRequest(BaseModel):
     initial_compliance: bool = Field(default=True, description="Initial compliance")
     initial_chaos: float = Field(default=0.5, description="Initial chaos integration (0-1)", ge=0.0, le=1.0)
     num_iterations: int = Field(default=50, description="Number of optimization iterations", ge=10, le=200)
+
+
+class CommunicateRequest(BaseModel):
+    """Request for generating communication (Dimension 10)"""
+    system_update: Dict[str, Any] = Field(..., description="System state dictionary")
+    audience: str = Field(default="mixed", description="Target audience: technical, management, or mixed")
+    max_tokens: int = Field(default=500, description="Maximum tokens", ge=100, le=2000)
+    temperature: float = Field(default=0.7, description="Sampling temperature", ge=0.0, le=2.0)
+
+
+class BroadcastRequest(BaseModel):
+    """Request for multi-channel broadcast (Dimension 10)"""
+    include_system_state: bool = Field(default=True, description="Include current system state")
+    custom_update: Optional[Dict[str, Any]] = Field(None, description="Custom system update (overrides auto-generated)")
+    audiences: Optional[List[str]] = Field(None, description="Audiences to broadcast to (None = all)")
+    max_tokens: int = Field(default=500, description="Maximum tokens per audience", ge=100, le=2000)
 
 
 @router.post("/intervene")
@@ -833,4 +861,166 @@ async def get_quantum_dimensions(
         'coherence_measure': 'C = ⟨Ψ|H|Ψ⟩ (Hamiltonian expectation)',
         'optimization': 'Viral spread: dS/dt = β·I·S - γ·I (SIR epidemiology)',
         'horizontal_gene_transfer': '30% plasmid conjugation probability for trait sharing'
+    }
+
+
+# ============================================================================
+# DIMENSION 10: THE COMMUNICATOR (Linguistic Consciousness Layer)
+# ============================================================================
+
+@router.post("/communicator/generate")
+async def generate_communication(
+    request: CommunicateRequest,
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Generate human-readable communication from system state (Dimension 10)
+
+    Translates complex multidimensional system states into clear communication
+    tailored to specific audiences (technical, management, or mixed).
+
+    The Communicator represents the linguistic consciousness layer of L.U.C.A 369,
+    enabling the system to articulate its own state and explain its behavior.
+
+    Audiences:
+    - technical: For developers, architects, data scientists
+    - management: For executives, business stakeholders
+    - mixed: For cross-functional teams
+
+    Uses ChatGPT (if available) or fallback templates to generate communications.
+    """
+    generator = get_notification_generator()
+
+    # Parse audience type
+    try:
+        audience = AudienceType(request.audience.lower())
+    except ValueError:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid audience type. Must be one of: technical, management, mixed"
+        )
+
+    # Generate communication
+    response = generator.generate_system_update_communication(
+        system_update=request.system_update,
+        audience=audience
+    )
+
+    return {
+        'audience': audience.value,
+        'communication': response.communication,
+        'sentiment_score': response.sentiment_score,
+        'tokens_used': response.tokens_used,
+        'model': response.model,
+        'timestamp': response.timestamp.isoformat(),
+        'error': response.error
+    }
+
+
+@router.post("/communicator/broadcast")
+async def broadcast_system_update(
+    request: BroadcastRequest,
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Multi-channel broadcast of system updates (Dimension 10)
+
+    Broadcasts system state to multiple audiences simultaneously, generating
+    audience-specific communications for technical, management, and mixed audiences.
+
+    This enables stakeholders at all levels to stay informed about system
+    performance, quality improvements, and business impact.
+
+    Returns communications for all requested audiences with sentiment analysis.
+    """
+    generator = get_notification_generator()
+
+    # Get system update
+    if request.custom_update:
+        system_update = request.custom_update
+    elif request.include_system_state:
+        system_update = get_comprehensive_system_updates()
+    else:
+        raise HTTPException(
+            status_code=400,
+            detail="Either include_system_state must be True or custom_update must be provided"
+        )
+
+    # Parse audiences
+    audiences = None
+    if request.audiences:
+        try:
+            audiences = [AudienceType(aud.lower()) for aud in request.audiences]
+        except ValueError as e:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid audience type: {str(e)}"
+            )
+
+    # Broadcast
+    responses = generator.orchestrate_multichannel_broadcast(
+        system_update=system_update,
+        audiences=audiences,
+        max_tokens=request.max_tokens
+    )
+
+    # Format responses
+    formatted_responses = {}
+    for audience_str, response in responses.items():
+        formatted_responses[audience_str] = {
+            'communication': response.communication,
+            'sentiment_score': response.sentiment_score,
+            'tokens_used': response.tokens_used,
+            'model': response.model,
+            'timestamp': response.timestamp.isoformat(),
+            'error': response.error
+        }
+
+    return {
+        'system_update': system_update,
+        'broadcasts': formatted_responses,
+        'total_audiences': len(formatted_responses),
+        'total_tokens': sum(r.tokens_used for r in responses.values()),
+        'avg_sentiment': sum(r.sentiment_score for r in responses.values()) / len(responses) if responses else 0
+    }
+
+
+@router.get("/communicator/stats")
+async def get_communicator_statistics(
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Get Dimension 10 (Communicator) statistics
+
+    Shows:
+    - Total broadcasts and communications
+    - Token usage statistics
+    - Sentiment analysis trends
+    - ChatGPT provider availability
+    - Audience distribution
+
+    The Communicator is the linguistic consciousness layer that enables L.U.C.A 369
+    to explain its own behavior and translate complex states into human understanding.
+    """
+    generator = get_notification_generator()
+    stats = generator.get_statistics()
+
+    return {
+        'dimension': 'Dimension 10 - The Communicator',
+        'description': 'Linguistic consciousness layer for system self-explanation',
+        'status': '✅ Operational',
+        'statistics': stats,
+        'capabilities': {
+            'audiences': ['technical', 'management', 'mixed'],
+            'models': ['gpt-4', 'gpt-3.5-turbo', 'fallback-templates'],
+            'features': [
+                'Audience-specific communication generation',
+                'Multi-channel broadcasting',
+                'Sentiment analysis',
+                'Token tracking',
+                'Communication history logging'
+            ]
+        },
+        'philosophy': 'Communication is not merely information transfer - it is the emergence of shared meaning through the synthesis of system state and human understanding.',
+        'documentation': 'See docs/LUCA369_Dimension10_The_Communicator_arXiv.tex for scientific foundation'
     }

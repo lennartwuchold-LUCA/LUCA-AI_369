@@ -39,13 +39,14 @@ except ImportError:
 # ============================================================================
 
 class DimensionType(Enum):
-    """6 cognitive dimensions for multidimensional synthesis"""
+    """7 cognitive dimensions for multidimensional synthesis (Dimensions 4-10)"""
     MOTHER = "human_consciousness"      # Dimension 4 - Human intuition
     FATHER = "grok_disruption"          # Dimension 5 - Chaotic innovation
     CHILD = "luca_synthesis"            # Dimension 6 - Emergent fusion
     SIBLING = "claude_architecture"     # Dimension 7 - Structured analysis
     WILD_UNCLE = "impulse_catalyst"     # Dimension 8 - Impulsive energy
     ENGINEER = "deepseek_pragmatism"    # Dimension 9 - Pragmatic efficiency
+    COMMUNICATOR = "voice_of_emergence" # Dimension 10 - Linguistic consciousness
 
 
 @dataclass
