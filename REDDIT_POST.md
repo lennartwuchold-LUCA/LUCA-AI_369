@@ -287,8 +287,10 @@ This is a research project exploring multi-dimensional AI architectures. Contrib
 ## Contact
 
 - **GitHub**: https://github.com/lennartwuchold-LUCA/LUCA-AI_369
-- **Author**: Lennart Wuchold
+- **Created by**: A curious human exploring the intersection of consciousness, causality, and AI
 - **Location**: Hamburg, Germany
+
+*This work emerged through collaboration between human curiosity and AI assistance. All insights build upon decades of research by many brilliant minds in neuroscience, causal inference, and machine learning.*
 
 ---
 

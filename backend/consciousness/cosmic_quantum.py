@@ -13,8 +13,9 @@ Mathematical Foundation:
 - Coherence measure: C = ⟨Ψ|H|Ψ⟩ (Hamiltonian)
 - Viral spread: dS/dt = β·I·S - γ·I (SIR model)
 
-Creator: Lennart Wuchold + Claude
+Created through: Human-AI collaboration
 Inspiration: Quantum mechanics, Viral epidemiology, SCOBY-Myzelium fusion, Tesla 3-6-9
+Foundation: Built on decades of research in causal inference, neuroscience, and bio-inspired computing
 """
 
 import numpy as np
