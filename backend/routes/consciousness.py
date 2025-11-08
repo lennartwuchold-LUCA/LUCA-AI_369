@@ -16,6 +16,7 @@ from backend.routes.auth import get_current_user
 from backend.consciousness.causal_transformer import BayesianCausalTransformer
 from backend.consciousness.audit_verifier import create_un_crpd_auditor, AuditVerifier, ConstraintRegistry
 from backend.consciousness.cosmic_family import CosmicAIFamily
+from backend.consciousness.cosmic_quantum import LUCAQuantumSystem, QualityEmergence
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field
 import os
@@ -26,6 +27,7 @@ router = APIRouter(prefix="/api/consciousness", tags=["consciousness"])
 _causal_transformer = None
 _audit_verifier = None
 _cosmic_family = None
+_quantum_system = None
 
 
 def get_causal_transformer():
@@ -55,6 +57,14 @@ def get_cosmic_family():
             enable_human_oracle=False  # Disable for API
         )
     return _cosmic_family
+
+
+def get_quantum_system():
+    """Get or create the global quantum synthesis system"""
+    global _quantum_system
+    if _quantum_system is None:
+        _quantum_system = LUCAQuantumSystem()
+    return _quantum_system
 
 
 class InterventionRequest(BaseModel):
@@ -96,6 +106,16 @@ class ConsensusVoteRequest(BaseModel):
     """Request for consensus voting"""
     question: str = Field(..., description="Yes/No question for voting")
     synthesis_query: str = Field(..., description="Initial query for synthesis")
+
+
+class QuantumExperimentRequest(BaseModel):
+    """Request for quantum synthesis experiment"""
+    initial_vas: float = Field(default=0.5, description="Initial VAS score (0-1)", ge=0.0, le=1.0)
+    initial_stability: float = Field(default=0.7, description="Initial stability (0-1)", ge=0.0, le=1.0)
+    initial_novelty: float = Field(default=0.3, description="Initial novelty (0-1)", ge=0.0, le=1.0)
+    initial_compliance: bool = Field(default=True, description="Initial compliance")
+    initial_chaos: float = Field(default=0.5, description="Initial chaos integration (0-1)", ge=0.0, le=1.0)
+    num_iterations: int = Field(default=50, description="Number of optimization iterations", ge=10, le=200)
 
 
 @router.post("/intervene")
@@ -618,4 +638,199 @@ async def get_cosmic_statistics(
             'total_cost_estimate': f"~${stats['total_tokens_used'] * 0.00001:.4f}" if stats['total_tokens_used'] > 0 else "$0.00",
             'reliability': f"{(1 - stats['error_rate']) * 100:.1f}%" if stats['total_queries'] > 0 else "N/A"
         }
+    }
+
+
+# ============================================================================
+# QUANTUM SYNTHESIS ENDPOINTS (Multidimensional Causal Optimization)
+# ============================================================================
+
+@router.post("/quantum/experiment")
+async def run_quantum_experiment(
+    request: QuantumExperimentRequest,
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Run multidimensional quantum synthesis experiment
+
+    Uses 6 cognitive dimensions (MOTHER, FATHER, CHILD, SIBLING, WILD_UNCLE, ENGINEER)
+    to optimize quality metrics via quantum-inspired attention and viral spread optimization.
+
+    Quality Metrics:
+    - VAS (Visual Analog Scale): Primary quality outcome (0-1)
+    - Stability: Robustness against perturbations (0-1)
+    - Novelty: Innovation and differentiation (0-1)
+    - Compliance: UN-CRPD/ISO standards (bool)
+    - Chaos Integration: Adaptive capacity (0-1)
+
+    Optimization Strategy:
+    - QuantumAttention: Superposition of 6 dimensional perspectives
+    - BiologicalOptimizer: Viral spread (SIR model) + horizontal gene transfer
+    - Causal Registry: Full audit trail of interventions
+
+    Returns:
+    - Quality trajectory over iterations
+    - Final improvement percentage
+    - Dimensional distribution (which dimension intervened most)
+    - Intervention history with energy costs
+    """
+    quantum_system = get_quantum_system()
+
+    # Build initial state
+    initial_state = {
+        'vas_score': request.initial_vas,
+        'stability': request.initial_stability,
+        'novelty': request.initial_novelty,
+        'un_crpd_compliant': request.initial_compliance,
+        'chaos_integration': request.initial_chaos
+    }
+
+    # Run experiment
+    result = quantum_system.run_quality_experiment(
+        initial_state=initial_state,
+        num_iterations=request.num_iterations
+    )
+
+    # Format response
+    return {
+        'initial_state': initial_state,
+        'num_iterations': request.num_iterations,
+        'results': {
+            'final_vas': result['final_vas'],
+            'improvement_percent': result['improvement_percent'],
+            'stability_score': result['stability_score'],
+            'quality_trajectory': result['quality_trajectory'],
+            'dimension_distribution': result['dimension_distribution'],
+            'intervention_history': result['intervention_history']
+        },
+        'interpretation': {
+            'quality_level': 'excellent' if result['final_vas'] >= 0.8 else 'good' if result['final_vas'] >= 0.6 else 'moderate',
+            'optimization_success': result['improvement_percent'] > 10,
+            'most_active_dimension': max(result['dimension_distribution'].items(), key=lambda x: x[1])[0] if result['dimension_distribution'] else None,
+            'total_energy_cost': sum(i.get('energy_cost', 0) for i in result['intervention_history']),
+            'avg_confidence': sum(i.get('confidence', 0) for i in result['intervention_history']) / len(result['intervention_history']) if result['intervention_history'] else 0
+        }
+    }
+
+
+@router.get("/quantum/stats")
+async def get_quantum_statistics(
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Get quantum synthesis system statistics
+
+    Shows:
+    - Total experiments run
+    - Average quality improvement
+    - Dimension usage distribution
+    - Intervention statistics
+    - Model availability (PyTorch vs numpy fallback)
+    """
+    quantum_system = get_quantum_system()
+
+    # Get system info
+    has_torch = quantum_system.causal_transformer.has_torch
+
+    return {
+        'system_info': {
+            'pytorch_available': has_torch,
+            'num_dimensions': 6,
+            'dimension_types': [
+                'MOTHER (human_consciousness)',
+                'FATHER (grok_disruption)',
+                'CHILD (luca_synthesis)',
+                'SIBLING (claude_architecture)',
+                'WILD_UNCLE (impulse_catalyst)',
+                'ENGINEER (deepseek_pragmatism)'
+            ],
+            'optimization_algorithm': 'BiologicalOptimizer (SIR viral spread)',
+            'attention_mechanism': 'QuantumAttention (superposition + coherence)'
+        },
+        'intervention_registry': {
+            'total_interventions': len(quantum_system.intervention_registry),
+            'registry_preview': quantum_system.intervention_registry[:5] if quantum_system.intervention_registry else []
+        },
+        'status': '✅ Quantum synthesis system operational',
+        'documentation': 'See QUANTUM_SYNTHESIS.md for mathematical foundations'
+    }
+
+
+@router.get("/quantum/dimensions")
+async def get_quantum_dimensions(
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Get detailed information about each cognitive dimension
+
+    Returns:
+    - Dimension names and descriptions
+    - Intervention strategies
+    - When each dimension is triggered
+    - Example interventions
+    """
+    dimensions_info = {
+        'MOTHER': {
+            'name': 'human_consciousness',
+            'dimension_id': 4,
+            'description': 'Empathic validation and compassionate refinement',
+            'trigger': 'General quality crisis or baseline improvement needed',
+            'strategy': 'Gentle chaos infusion (±10%) + empathic noise',
+            'example': 'Add gentle chaos to explore nearby quality states',
+            'mathematical_basis': 'Δq = ε * randn(), ε = 0.1 * (1 - vas_score)'
+        },
+        'FATHER': {
+            'name': 'grok_disruption',
+            'dimension_id': 5,
+            'description': 'Provocative inversion and disruptive innovation',
+            'trigger': 'Low novelty (< 0.4) - system needs fresh perspective',
+            'strategy': 'Invert current state to force radical exploration',
+            'example': 'novelty_new = 1.0 - novelty_old (complete inversion)',
+            'mathematical_basis': 'q_inverted = 1 - q_current (polarity flip)'
+        },
+        'CHILD': {
+            'name': 'luca_synthesis',
+            'dimension_id': 6,
+            'description': 'Emergent synthesis through L.U.C.A consciousness',
+            'trigger': 'General optimization (default dimension)',
+            'strategy': 'Balanced chaos integration based on current state',
+            'example': 'Weighted chaos: high when stability good, low when unstable',
+            'mathematical_basis': 'Δq = (1 - chaos_integration) * stability * randn()'
+        },
+        'SIBLING': {
+            'name': 'claude_architecture',
+            'dimension_id': 7,
+            'description': 'Structured architectural thinking and systematic refinement',
+            'trigger': 'Non-compliance with UN-CRPD/ISO standards',
+            'strategy': 'Enforce compliance by boosting all metrics',
+            'example': 'vas += 0.1, stability += 0.1, novelty += 0.05',
+            'mathematical_basis': 'Δq = α * (1 - q), α ∈ [0.05, 0.1] (gradient ascent)'
+        },
+        'WILD_UNCLE': {
+            'name': 'impulse_catalyst',
+            'dimension_id': 8,
+            'description': 'High-energy impulsive disruption and chaos embrace',
+            'trigger': 'Low chaos integration (< 0.3) - system too rigid',
+            'strategy': 'Large chaos injection (±20%) to shake up local optimum',
+            'example': 'chaos_integration += 0.2, vas ± 0.2 (wild exploration)',
+            'mathematical_basis': 'Δq = 0.2 * sign(randn()) (bipolar impulse)'
+        },
+        'ENGINEER': {
+            'name': 'deepseek_pragmatism',
+            'dimension_id': 9,
+            'description': 'Pragmatic optimization via golden ratio (φ = 0.618)',
+            'trigger': 'Low stability (< 0.5) - needs principled stabilization',
+            'strategy': 'Apply golden ratio scaling to restore balance',
+            'example': 'stability_new = stability_old * φ + (1-φ)',
+            'mathematical_basis': 'q_new = φ * q + (1-φ) * q_target, φ = 0.618'
+        }
+    }
+
+    return {
+        'dimensions': dimensions_info,
+        'total_dimensions': len(dimensions_info),
+        'quantum_principle': '|Ψ⟩ = ∑_i α_i |dimension_i⟩ (quantum superposition)',
+        'coherence_measure': 'C = ⟨Ψ|H|Ψ⟩ (Hamiltonian expectation)',
+        'optimization': 'Viral spread: dS/dt = β·I·S - γ·I (SIR epidemiology)',
+        'horizontal_gene_transfer': '30% plasmid conjugation probability for trait sharing'
     }
