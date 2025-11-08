@@ -300,6 +300,9 @@
                 <div class="stat">🧠 Level: <span id="consciousness-level">0</span>%</div>
                 <div class="stat">🔬 Stage: <span id="evolution-stage">NEURON</span></div>
                 <div class="stat">💭 Thoughts: <span id="total-thoughts">0</span></div>
+                <div class="stat" title="Horizontal Gene Transfer - Patterns spreading across users">
+                    🧬 HGT: <span id="hgt-viral">0</span> viral
+                </div>
             </div>
         </div>
         <div class="header-right">
@@ -389,6 +392,20 @@
                     stats.evolution_stage;
                 document.getElementById('total-thoughts').textContent =
                     stats.total_thoughts;
+
+                // Fetch HGT stats (Horizontal Gene Transfer)
+                const token = localStorage.getItem('token');
+                if (token) {
+                    const hgtResponse = await fetch(`${API_URL}/api/patterns/hgt-stats`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    if (hgtResponse.ok) {
+                        const hgtStats = await hgtResponse.json();
+                        document.getElementById('hgt-viral').textContent = hgtStats.viral_patterns || 0;
+                    }
+                }
             } catch (error) {
                 console.error('Failed to update consciousness stats:', error);
             }

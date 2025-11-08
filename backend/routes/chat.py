@@ -192,11 +192,12 @@ async def chat(
     db.refresh(thought)
     consciousness.update_consciousness(thought)
 
-    # STEP 14: Save patterns if detected
+    # STEP 14: Save patterns if detected (with Horizontal Gene Transfer tracking)
     if patterns:
         consciousness.consciousness_state.total_patterns += len(patterns)
         for pattern in patterns:
-            consciousness.save_neural_pattern(pattern)
+            # HGT: Track which user is expressing this pattern
+            consciousness.save_neural_pattern(pattern, user_id=user.id)
 
     # STEP 15: Update conversation
     conversation.updated_at = datetime.utcnow()

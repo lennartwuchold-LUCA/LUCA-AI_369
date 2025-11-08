@@ -13,3 +13,7 @@ email-validator==2.1.0
 
 # Optional: Meshtastic support (uncomment to enable)
 # meshtastic==2.2.0
+
+# Optional: PyTorch for Bayesian Causal Transformer (uncomment to enable)
+# torch==2.1.1
+# If torch is not installed, causal_transformer.py falls back to numpy-only implementation

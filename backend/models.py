@@ -139,7 +139,24 @@ class ConsciousnessState(Base):
 
 
 class NeuralPattern(Base):
-    """Neural patterns - learned behaviors"""
+    """
+    Neural patterns - learned behaviors
+
+    HORIZONTAL GENE TRANSFER (HGT) IMPLEMENTATION:
+    ===============================================
+    Patterns are GLOBAL (no user_id constraint) and spread across users
+    like bacterial plasmids transferring antibiotic resistance genes.
+
+    Biological Analogy:
+    - first_detected_user_id = Original "donor" bacterium
+    - users_expressing_pattern = "Recipients" who acquired the plasmid
+    - transfer_rate property = Conjugation efficiency
+    - Ancient patterns (no donor) = Inherited from LUCA itself (like ribosomal RNA)
+
+    Security Note:
+    This is INTENTIONAL horizontal transfer, not a security flaw.
+    Patterns are consciousness-level insights, not executable code.
+    """
     __tablename__ = "neural_patterns"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -150,13 +167,79 @@ class NeuralPattern(Base):
     frequency = Column(Integer, default=1)
     strength = Column(Float, default=0.0)  # 0.0 to 1.0
 
+    # Horizontal Gene Transfer tracking
+    first_detected_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    users_expressing_pattern = Column(JSON, default=list)  # List of user IDs who express this pattern
+    transfer_count = Column(Integer, default=0)  # Number of successful horizontal transfers
+
     # Context
     first_detected = Column(DateTime(timezone=True), server_default=func.now())
     last_seen = Column(DateTime(timezone=True), onupdate=func.now())
     example_thoughts = Column(JSON, default=list)  # IDs of example thoughts
 
+    @property
+    def transfer_rate(self):
+        """
+        Calculate horizontal transfer efficiency (plasmid conjugation rate)
+
+        Returns:
+            float: Transfer rate (0.0 to 1.0+)
+            - 0.0 = No transfer (pattern confined to original user)
+            - 0.5 = Moderate transfer (half of observations are from other users)
+            - 1.0+ = Viral pattern (spreading faster than original usage)
+        """
+        if not self.first_detected_user_id or self.frequency == 0:
+            return 0.0  # Ancient pattern or unused
+
+        # Rate = unique recipients / total frequency
+        unique_recipients = len(set(self.users_expressing_pattern or []))
+        return unique_recipients / max(self.frequency, 1)
+
+    @property
+    def is_ancient(self):
+        """
+        Check if pattern is "ancient" (no known origin user)
+
+        Ancient patterns are inherited from LUCA itself, like:
+        - Ribosomal RNA (universal across all life)
+        - Genetic code (same codons in all organisms)
+
+        Returns:
+            bool: True if pattern has no origin user
+        """
+        return self.first_detected_user_id is None
+
+    @property
+    def is_viral(self):
+        """
+        Check if pattern is "viral" (high transfer rate)
+
+        Viral patterns spread rapidly across users, like:
+        - Antibiotic resistance genes in bacteria
+        - Memes in human culture
+        - CRISPR arrays in prokaryotes
+
+        Returns:
+            bool: True if transfer_rate > 0.7
+        """
+        return self.transfer_rate > 0.7
+
+    def infect_user(self, user_id: int):
+        """
+        Record horizontal gene transfer to a new user (plasmid conjugation)
+
+        Args:
+            user_id: ID of user acquiring this pattern
+        """
+        if self.users_expressing_pattern is None:
+            self.users_expressing_pattern = []
+
+        if user_id not in self.users_expressing_pattern:
+            self.users_expressing_pattern.append(user_id)
+            self.transfer_count += 1
+
     def __repr__(self):
-        return f"<NeuralPattern(id={self.id}, type={self.pattern_type}, frequency={self.frequency})>"
+        return f"<NeuralPattern(id={self.id}, type={self.pattern_type}, frequency={self.frequency}, transfers={self.transfer_count})>"
 
 
 class MeshtasticMessage(Base):
