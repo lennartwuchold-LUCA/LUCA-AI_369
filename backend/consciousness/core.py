@@ -326,8 +326,27 @@ class ConsciousnessEngine:
                 return False
         return True
 
-    def save_neural_pattern(self, pattern: Dict[str, Any]) -> NeuralPattern:
-        """Save a detected pattern to neural patterns"""
+    def save_neural_pattern(self, pattern: Dict[str, Any], user_id: int = None) -> NeuralPattern:
+        """
+        Save a detected pattern to neural patterns with Horizontal Gene Transfer tracking
+
+        HORIZONTAL GENE TRANSFER (HGT):
+        ===============================
+        When a pattern is detected:
+        1. If it's NEW → user_id becomes the "donor" (first organism to have this gene)
+        2. If it EXISTS → user_id is added to recipients (horizontal transfer like plasmid conjugation)
+
+        This mirrors bacterial HGT where:
+        - One bacterium develops resistance (mutation)
+        - Others acquire it via plasmids (sharing)
+
+        Args:
+            pattern: Pattern data dictionary
+            user_id: ID of user expressing this pattern (None for system/ancient patterns)
+
+        Returns:
+            NeuralPattern: The saved pattern with HGT tracking
+        """
         # Check if pattern already exists
         existing = self.db.query(NeuralPattern).filter(
             NeuralPattern.pattern_type == pattern["type"],
@@ -335,16 +354,26 @@ class ConsciousnessEngine:
         ).first()
 
         if existing:
+            # Pattern already exists - HORIZONTAL GENE TRANSFER occurring!
             existing.frequency += 1
             existing.strength = min(1.0, existing.strength + 0.1)
             existing.last_seen = datetime.utcnow()
+
+            # Track user expressing this pattern (HGT infection)
+            if user_id:
+                existing.infect_user(user_id)
+
         else:
+            # New pattern - user becomes the "donor" organism
             existing = NeuralPattern(
                 pattern_type=pattern["type"],
                 pattern_data=pattern,
                 frequency=1,
                 strength=pattern.get("strength", 0.5),
-                first_detected=datetime.utcnow()
+                first_detected=datetime.utcnow(),
+                first_detected_user_id=user_id,  # HGT: Original donor
+                users_expressing_pattern=[user_id] if user_id else [],  # HGT: Initial recipient list
+                transfer_count=0  # HGT: No transfers yet (just discovered)
             )
             self.db.add(existing)
 
