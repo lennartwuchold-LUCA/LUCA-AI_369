@@ -184,3 +184,60 @@ class MeshtasticMessage(Base):
 
     def __repr__(self):
         return f"<MeshtasticMessage(id={self.id}, mesh_id={self.mesh_id}, status={self.status})>"
+
+
+class AuditLog(Base):
+    """Audit log for admin actions"""
+    __tablename__ = "audit_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    action = Column(String, nullable=False)  # create_user, delete_user, update_config, etc.
+    resource_type = Column(String)  # user, command, config, etc.
+    resource_id = Column(String)
+    details = Column(JSON)  # Additional action details
+    ip_address = Column(String)
+    user_agent = Column(String)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    def __repr__(self):
+        return f"<AuditLog(id={self.id}, action={self.action}, user_id={self.user_id})>"
+
+
+class ClaudeCommand(Base):
+    """Claude commands management"""
+    __tablename__ = "claude_commands"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, nullable=False, index=True)  # Command name (without /)
+    description = Column(Text)
+    content = Column(Text, nullable=False)  # Command prompt/content
+    category = Column(String, default="general")  # general, admin, development, etc.
+    is_active = Column(Boolean, default=True)
+    is_system = Column(Boolean, default=False)  # System commands can't be deleted
+    usage_count = Column(Integer, default=0)
+    created_by = Column(Integer, ForeignKey("users.id"))
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    last_used = Column(DateTime(timezone=True))
+
+    def __repr__(self):
+        return f"<ClaudeCommand(id={self.id}, name={self.name}, active={self.is_active})>"
+
+
+class SystemConfig(Base):
+    """System configuration key-value store"""
+    __tablename__ = "system_config"
+
+    id = Column(Integer, primary_key=True, index=True)
+    key = Column(String, unique=True, nullable=False, index=True)
+    value = Column(Text)
+    value_type = Column(String, default="string")  # string, integer, float, boolean, json
+    description = Column(Text)
+    category = Column(String, default="general")  # general, ai, security, meshtastic, etc.
+    is_secret = Column(Boolean, default=False)  # Hide sensitive values
+    updated_by = Column(Integer, ForeignKey("users.id"))
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    def __repr__(self):
+        return f"<SystemConfig(key={self.key}, category={self.category})>"

@@ -5,10 +5,12 @@ Initializes SQLite database and creates tables
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
-from backend.models import Base, User, ConsciousnessState
+from backend.models import Base, User, ConsciousnessState, ClaudeCommand
 from backend.config import settings
 import bcrypt
 from datetime import datetime
+import os
+import glob
 
 
 # Create engine
@@ -83,6 +85,40 @@ def init_database():
             print("✅ Consciousness state initialized")
         else:
             print("ℹ️  Consciousness state already exists")
+
+        # Import Claude commands from filesystem
+        commands_dir = "/home/user/LUCA-AI_369/.claude/commands"
+        if os.path.exists(commands_dir):
+            command_files = glob.glob(os.path.join(commands_dir, "*.md"))
+            imported_count = 0
+
+            for file_path in command_files:
+                command_name = os.path.splitext(os.path.basename(file_path))[0]
+
+                # Check if command already exists
+                existing = db.query(ClaudeCommand).filter(
+                    ClaudeCommand.name == command_name
+                ).first()
+
+                if not existing:
+                    with open(file_path, 'r') as f:
+                        content = f.read()
+
+                    # Create command
+                    command = ClaudeCommand(
+                        name=command_name,
+                        description=f"Command from filesystem: {command_name}",
+                        content=content,
+                        category="system",
+                        is_active=True,
+                        is_system=True,
+                        created_by=admin.id
+                    )
+                    db.add(command)
+                    imported_count += 1
+
+            if imported_count > 0:
+                print(f"✅ Imported {imported_count} Claude commands from filesystem")
 
         db.commit()
         print("✅ Database initialization complete!\n")

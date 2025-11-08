@@ -1,0 +1,239 @@
+{
+    "folders": [
+        {
+            "path": ".",
+            "name": "LUCA AI"
+        },
+        {
+            "path": "backend",
+            "name": "Backend (Python)"
+        },
+        {
+            "path": "frontend",
+            "name": "Frontend (HTML/JS)"
+        },
+        {
+            "path": ".claude",
+            "name": "Claude Commands"
+        }
+    ],
+    "settings": {
+        // Python Settings
+        "python.defaultInterpreterPath": "${workspaceFolder}/venv/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": false,
+        "python.linting.flake8Enabled": true,
+        "python.formatting.provider": "black",
+        "python.analysis.typeCheckingMode": "basic",
+        "python.analysis.autoImportCompletions": true,
+
+        // Editor Settings
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        },
+        "editor.rulers": [88, 120],
+        "editor.tabSize": 4,
+        "editor.insertSpaces": true,
+
+        // File Associations
+        "files.associations": {
+            "*.md": "markdown",
+            ".env.template": "dotenv"
+        },
+
+        // Files to exclude from explorer
+        "files.exclude": {
+            "**/__pycache__": true,
+            "**/*.pyc": true,
+            "**/.pytest_cache": true,
+            "**/node_modules": true,
+            "**/.git": false,
+            "venv": false
+        },
+
+        // Search exclusions
+        "search.exclude": {
+            "**/__pycache__": true,
+            "**/*.pyc": true,
+            "**/venv": true,
+            "**/.git": true
+        },
+
+        // Terminal
+        "terminal.integrated.env.linux": {
+            "PYTHONPATH": "${workspaceFolder}"
+        },
+
+        // Auto-save
+        "files.autoSave": "afterDelay",
+        "files.autoSaveDelay": 1000,
+
+        // Git
+        "git.autofetch": true,
+        "git.confirmSync": false,
+
+        // HTML/CSS/JS
+        "html.format.indentInnerHtml": true,
+        "html.format.wrapLineLength": 120,
+        "css.lint.unknownAtRules": "ignore",
+        "javascript.suggest.autoImports": true,
+
+        // Live Server
+        "liveServer.settings.root": "/frontend",
+        "liveServer.settings.port": 3000,
+        "liveServer.settings.CustomBrowser": "chrome",
+
+        // REST Client
+        "rest-client.environmentVariables": {
+            "$shared": {
+                "baseUrl": "http://localhost:8000",
+                "token": ""
+            }
+        }
+    },
+    "extensions": {
+        "recommendations": [
+            // Python
+            "ms-python.python",
+            "ms-python.vscode-pylance",
+            "ms-python.black-formatter",
+
+            // Web Development
+            "ritwickdey.liveserver",
+            "dbaeumer.vscode-eslint",
+            "esbenp.prettier-vscode",
+
+            // API Development
+            "humao.rest-client",
+            "42crunch.vscode-openapi",
+
+            // Database
+            "qwtel.sqlite-viewer",
+
+            // Git
+            "eamodio.gitlens",
+            "mhutchie.git-graph",
+
+            // Markdown
+            "yzhang.markdown-all-in-one",
+
+            // Other utilities
+            "editorconfig.editorconfig",
+            "streetsidesoftware.code-spell-checker",
+            "gruntfuggly.todo-tree",
+            "wayou.vscode-todo-highlight",
+
+            // Claude Integration
+            "anthropics.claude-dev"
+        ]
+    },
+    "launch": {
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "name": "Python: FastAPI",
+                "type": "python",
+                "request": "launch",
+                "module": "uvicorn",
+                "args": [
+                    "backend.main:app",
+                    "--reload",
+                    "--host",
+                    "0.0.0.0",
+                    "--port",
+                    "8000"
+                ],
+                "jinja": true,
+                "justMyCode": false,
+                "env": {
+                    "PYTHONPATH": "${workspaceFolder}"
+                },
+                "console": "integratedTerminal"
+            },
+            {
+                "name": "Python: Current File",
+                "type": "python",
+                "request": "launch",
+                "program": "${file}",
+                "console": "integratedTerminal",
+                "justMyCode": false
+            }
+        ]
+    },
+    "tasks": {
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "label": "Start LUCA Backend",
+                "type": "shell",
+                "command": "${workspaceFolder}/venv/bin/python",
+                "args": [
+                    "-m",
+                    "uvicorn",
+                    "backend.main:app",
+                    "--reload",
+                    "--host",
+                    "0.0.0.0",
+                    "--port",
+                    "8000"
+                ],
+                "problemMatcher": [],
+                "presentation": {
+                    "reveal": "always",
+                    "panel": "new"
+                },
+                "group": {
+                    "kind": "build",
+                    "isDefault": true
+                }
+            },
+            {
+                "label": "Start Frontend Server",
+                "type": "shell",
+                "command": "python3",
+                "args": [
+                    "-m",
+                    "http.server",
+                    "3000",
+                    "--directory",
+                    "${workspaceFolder}/frontend"
+                ],
+                "problemMatcher": [],
+                "presentation": {
+                    "reveal": "always",
+                    "panel": "new"
+                }
+            },
+            {
+                "label": "Install Dependencies",
+                "type": "shell",
+                "command": "${workspaceFolder}/venv/bin/pip",
+                "args": [
+                    "install",
+                    "-r",
+                    "requirements.txt"
+                ],
+                "problemMatcher": []
+            },
+            {
+                "label": "Run Database Migration",
+                "type": "shell",
+                "command": "${workspaceFolder}/venv/bin/python",
+                "args": [
+                    "-c",
+                    "from backend.database import init_database; init_database()"
+                ],
+                "problemMatcher": []
+            },
+            {
+                "label": "Start Full Stack",
+                "dependsOn": [
+                    "Start LUCA Backend",
+                    "Start Frontend Server"
+                ],
+                "problemMatcher": []
+            }
+        ]
+    }
+}

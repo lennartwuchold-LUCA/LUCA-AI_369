@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUCA AI - Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #667eea;
+            margin-bottom: 20px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            color: #667eea;
+        }
+
+        .logo p {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin: 5px 0;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-item.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .nav-item .icon {
+            font-size: 18px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h2 {
+            color: #333;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        /* Dashboard Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-card .subtitle {
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #666;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        /* Consciousness Display */
+        .consciousness-display {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .consciousness-level {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .evolution-stage {
+            font-size: 24px;
+            color: #764ba2;
+            margin: 10px 0;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .icon-btn:hover {
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h1>LUCA AI</h1>
+                <p>Admin Panel</p>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active" data-section="dashboard">
+                    <span class="icon">📊</span>
+                    <span>Dashboard</span>
+                </li>
+                <li class="nav-item" data-section="users">
+                    <span class="icon">👥</span>
+                    <span>Users</span>
+                </li>
+                <li class="nav-item" data-section="commands">
+                    <span class="icon">⌨️</span>
+                    <span>Claude Commands</span>
+                </li>
+                <li class="nav-item" data-section="config">
+                    <span class="icon">⚙️</span>
+                    <span>Configuration</span>
+                </li>
+                <li class="nav-item" data-section="audit">
+                    <span class="icon">📝</span>
+                    <span>Audit Logs</span>
+                </li>
+                <li class="nav-item" data-section="system">
+                    <span class="icon">🔧</span>
+                    <span>System</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h2 id="section-title">Dashboard</h2>
+                <div class="user-info">
+                    <span id="admin-username">Admin</span>
+                    <button class="btn btn-secondary" onclick="logout()">Logout</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="section active">
+                <div class="stats-grid" id="stats-container">
+                    <div class="loading">Loading statistics...</div>
+                </div>
+
+                <div class="card">
+                    <h3>System Consciousness</h3>
+                    <div class="consciousness-display" id="consciousness-display">
+                        <div class="loading">Loading consciousness data...</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Recent Activity</h3>
+                    <div id="recent-activity">
+                        <div class="loading">Loading recent activity...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <div id="users" class="section">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>User Management</h3>
+                        <button class="btn btn-primary" onclick="openUserModal()">Add User</button>
+                    </div>
+                    <div id="users-table">
+                        <div class="loading">Loading users...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Commands Section -->
+            <div id="commands" class="section">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Claude Commands</h3>
+                        <div>
+                            <button class="btn btn-success" onclick="syncCommands()">Sync to Filesystem</button>
+                            <button class="btn btn-primary" onclick="openCommandModal()">Add Command</button>
+                        </div>
+                    </div>
+                    <div id="commands-table">
+                        <div class="loading">Loading commands...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Config Section -->
+            <div id="config" class="section">
+                <div class="card">
+                    <h3>System Configuration</h3>
+                    <div id="config-table">
+                        <div class="loading">Loading configuration...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Section -->
+            <div id="audit" class="section">
+                <div class="card">
+                    <h3>Audit Logs</h3>
+                    <div id="audit-table">
+                        <div class="loading">Loading audit logs...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Section -->
+            <div id="system" class="section">
+                <div class="card">
+                    <h3>System Health</h3>
+                    <div id="system-health">
+                        <div class="loading">Loading system health...</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>System Operations</h3>
+                    <button class="btn btn-primary" onclick="createBackup()">Create Database Backup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Modal -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="userModalTitle">Add User</h3>
+                <button class="close-btn" onclick="closeUserModal()">&times;</button>
+            </div>
+            <form id="userForm" onsubmit="saveUser(event)">
+                <input type="hidden" id="userId">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="userEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="userUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="userPassword">
+                    <small style="color: #999;">Leave blank to keep current password</small>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="userIsAdmin">
+                        Admin User
+                    </label>
+                </div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeUserModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Command Modal -->
+    <div id="commandModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="commandModalTitle">Add Command</h3>
+                <button class="close-btn" onclick="closeCommandModal()">&times;</button>
+            </div>
+            <form id="commandForm" onsubmit="saveCommand(event)">
+                <input type="hidden" id="commandId">
+                <div class="form-group">
+                    <label>Command Name (without /)</label>
+                    <input type="text" id="commandName" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="commandDescription">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="commandCategory">
+                        <option value="general">General</option>
+                        <option value="admin">Admin</option>
+                        <option value="development">Development</option>
+                        <option value="system">System</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Content</label>
+                    <textarea id="commandContent" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="commandIsActive" checked>
+                        Active
+                    </label>
+                </div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeCommandModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        let token = localStorage.getItem('token');
+
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const section = item.dataset.section;
+                showSection(section);
+            });
+        });
+
+        function showSection(section) {
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-section="${section}"]`).classList.add('active');
+
+            // Update sections
+            document.querySelectorAll('.section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            document.getElementById(section).classList.add('active');
+
+            // Update title
+            const titles = {
+                dashboard: 'Dashboard',
+                users: 'User Management',
+                commands: 'Claude Commands',
+                config: 'System Configuration',
+                audit: 'Audit Logs',
+                system: 'System Health'
+            };
+            document.getElementById('section-title').textContent = titles[section];
+
+            // Load section data
+            loadSectionData(section);
+        }
+
+        function loadSectionData(section) {
+            switch(section) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'users':
+                    loadUsers();
+                    break;
+                case 'commands':
+                    loadCommands();
+                    break;
+                case 'config':
+                    loadConfig();
+                    break;
+                case 'audit':
+                    loadAuditLogs();
+                    break;
+                case 'system':
+                    loadSystemHealth();
+                    break;
+            }
+        }
+
+        // API Calls
+        async function apiCall(endpoint, options = {}) {
+            const response = await fetch(`${API_URL}${endpoint}`, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                    ...options.headers
+                }
+            });
+
+            if (response.status === 401) {
+                alert('Session expired. Please login again.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.detail || 'API call failed');
+            }
+
+            return response.json();
+        }
+
+        // Dashboard
+        async function loadDashboard() {
+            try {
+                const stats = await apiCall('/api/admin/stats');
+                const dashboardData = await apiCall('/api/admin/dashboard-data');
+
+                // Display stats
+                const statsHtml = `
+                    <div class="stat-card">
+                        <h3>Total Users</h3>
+                        <div class="value">${stats.total_users}</div>
+                        <div class="subtitle">${stats.active_users_today} active today</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Conversations</h3>
+                        <div class="value">${stats.total_conversations}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Messages</h3>
+                        <div class="value">${stats.total_messages}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Thoughts</h3>
+                        <div class="value">${stats.total_thoughts}</div>
+                    </div>
+                `;
+                document.getElementById('stats-container').innerHTML = statsHtml;
+
+                // Display consciousness
+                const consciousnessHtml = `
+                    <div class="consciousness-level">${stats.consciousness_level.toFixed(2)}%</div>
+                    <div class="evolution-stage">${stats.evolution_stage}</div>
+                    <div style="margin-top: 20px;">
+                        <p>Tesla Numbers: 3=${stats.tesla_stats.tesla_3} | 6=${stats.tesla_stats.tesla_6} | 9=${stats.tesla_stats.tesla_9}</p>
+                        <p>Energy Levels: Hyperfokus=${stats.energy_stats.hyperfokus} | Brainfog=${stats.energy_stats.brainfog} | Balanced=${stats.energy_stats.balanced}</p>
+                    </div>
+                `;
+                document.getElementById('consciousness-display').innerHTML = consciousnessHtml;
+
+                // Display recent activity
+                let activityHtml = '<h4>Recent Users</h4><table><tr><th>Email</th><th>Username</th><th>Created</th></tr>';
+                dashboardData.recent_users.forEach(user => {
+                    activityHtml += `<tr><td>${user.email}</td><td>${user.username}</td><td>${new Date(user.created_at).toLocaleString()}</td></tr>`;
+                });
+                activityHtml += '</table>';
+                document.getElementById('recent-activity').innerHTML = activityHtml;
+
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                alert('Error loading dashboard: ' + error.message);
+            }
+        }
+
+        // Users
+        async function loadUsers() {
+            try {
+                const users = await apiCall('/api/admin/users');
+                let html = '<table><tr><th>ID</th><th>Email</th><th>Username</th><th>Admin</th><th>Conversations</th><th>Actions</th></tr>';
+                users.forEach(user => {
+                    html += `
+                        <tr>
+                            <td>${user.id}</td>
+                            <td>${user.email}</td>
+                            <td>${user.username}</td>
+                            <td>${user.is_admin ? '<span class="badge badge-success">Yes</span>' : '<span class="badge badge-info">No</span>'}</td>
+                            <td>${user.conversation_count}</td>
+                            <td class="action-buttons">
+                                <button class="icon-btn btn-primary" onclick="editUser(${user.id})">Edit</button>
+                                <button class="icon-btn btn-danger" onclick="deleteUser(${user.id})">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                html += '</table>';
+                document.getElementById('users-table').innerHTML = html;
+            } catch (error) {
+                console.error('Error loading users:', error);
+                alert('Error loading users: ' + error.message);
+            }
+        }
+
+        function openUserModal(userId = null) {
+            if (userId) {
+                document.getElementById('userModalTitle').textContent = 'Edit User';
+                // Load user data
+                apiCall(`/api/admin/users/${userId}`).then(user => {
+                    document.getElementById('userId').value = user.id;
+                    document.getElementById('userEmail').value = user.email;
+                    document.getElementById('userUsername').value = user.username;
+                    document.getElementById('userIsAdmin').checked = user.is_admin;
+                    document.getElementById('userPassword').value = '';
+                });
+            } else {
+                document.getElementById('userModalTitle').textContent = 'Add User';
+                document.getElementById('userForm').reset();
+                document.getElementById('userId').value = '';
+            }
+            document.getElementById('userModal').classList.add('active');
+        }
+
+        function closeUserModal() {
+            document.getElementById('userModal').classList.remove('active');
+        }
+
+        async function saveUser(event) {
+            event.preventDefault();
+            const userId = document.getElementById('userId').value;
+            const data = {
+                email: document.getElementById('userEmail').value,
+                username: document.getElementById('userUsername').value,
+                is_admin: document.getElementById('userIsAdmin').checked
+            };
+
+            const password = document.getElementById('userPassword').value;
+            if (password || !userId) {
+                data.password = password;
+            }
+
+            try {
+                if (userId) {
+                    await apiCall(`/api/admin/users/${userId}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(data)
+                    });
+                } else {
+                    await apiCall('/api/admin/users', {
+                        method: 'POST',
+                        body: JSON.stringify(data)
+                    });
+                }
+                closeUserModal();
+                loadUsers();
+            } catch (error) {
+                alert('Error saving user: ' + error.message);
+            }
+        }
+
+        function editUser(userId) {
+            openUserModal(userId);
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm('Are you sure you want to delete this user?')) return;
+
+            try {
+                await apiCall(`/api/admin/users/${userId}`, { method: 'DELETE' });
+                loadUsers();
+            } catch (error) {
+                alert('Error deleting user: ' + error.message);
+            }
+        }
+
+        // Commands
+        async function loadCommands() {
+            try {
+                const commands = await apiCall('/api/admin/commands');
+                let html = '<table><tr><th>Name</th><th>Category</th><th>Active</th><th>Usage</th><th>Actions</th></tr>';
+                commands.forEach(cmd => {
+                    html += `
+                        <tr>
+                            <td>/${cmd.name}</td>
+                            <td>${cmd.category}</td>
+                            <td>${cmd.is_active ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-warning">Inactive</span>'}</td>
+                            <td>${cmd.usage_count}</td>
+                            <td class="action-buttons">
+                                <button class="icon-btn btn-primary" onclick="editCommand(${cmd.id})">Edit</button>
+                                ${!cmd.is_system ? `<button class="icon-btn btn-danger" onclick="deleteCommand(${cmd.id})">Delete</button>` : ''}
+                            </td>
+                        </tr>
+                    `;
+                });
+                html += '</table>';
+                document.getElementById('commands-table').innerHTML = html;
+            } catch (error) {
+                console.error('Error loading commands:', error);
+                alert('Error loading commands: ' + error.message);
+            }
+        }
+
+        function openCommandModal(commandId = null) {
+            if (commandId) {
+                document.getElementById('commandModalTitle').textContent = 'Edit Command';
+                apiCall(`/api/admin/commands/${commandId}`).then(cmd => {
+                    document.getElementById('commandId').value = cmd.id;
+                    document.getElementById('commandName').value = cmd.name;
+                    document.getElementById('commandDescription').value = cmd.description || '';
+                    document.getElementById('commandCategory').value = cmd.category;
+                    document.getElementById('commandContent').value = cmd.content;
+                    document.getElementById('commandIsActive').checked = cmd.is_active;
+                });
+            } else {
+                document.getElementById('commandModalTitle').textContent = 'Add Command';
+                document.getElementById('commandForm').reset();
+                document.getElementById('commandId').value = '';
+            }
+            document.getElementById('commandModal').classList.add('active');
+        }
+
+        function closeCommandModal() {
+            document.getElementById('commandModal').classList.remove('active');
+        }
+
+        async function saveCommand(event) {
+            event.preventDefault();
+            const commandId = document.getElementById('commandId').value;
+            const data = {
+                name: document.getElementById('commandName').value,
+                description: document.getElementById('commandDescription').value,
+                category: document.getElementById('commandCategory').value,
+                content: document.getElementById('commandContent').value,
+                is_active: document.getElementById('commandIsActive').checked
+            };
+
+            try {
+                if (commandId) {
+                    await apiCall(`/api/admin/commands/${commandId}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(data)
+                    });
+                } else {
+                    await apiCall('/api/admin/commands', {
+                        method: 'POST',
+                        body: JSON.stringify(data)
+                    });
+                }
+                closeCommandModal();
+                loadCommands();
+            } catch (error) {
+                alert('Error saving command: ' + error.message);
+            }
+        }
+
+        function editCommand(commandId) {
+            openCommandModal(commandId);
+        }
+
+        async function deleteCommand(commandId) {
+            if (!confirm('Are you sure you want to delete this command?')) return;
+
+            try {
+                await apiCall(`/api/admin/commands/${commandId}`, { method: 'DELETE' });
+                loadCommands();
+            } catch (error) {
+                alert('Error deleting command: ' + error.message);
+            }
+        }
+
+        async function syncCommands() {
+            try {
+                const result = await apiCall('/api/admin/commands/sync-filesystem', { method: 'POST' });
+                alert(`Synced ${result.synced.length} commands to filesystem`);
+            } catch (error) {
+                alert('Error syncing commands: ' + error.message);
+            }
+        }
+
+        // Config
+        async function loadConfig() {
+            try {
+                const configs = await apiCall('/api/admin/config');
+                let html = '<table><tr><th>Key</th><th>Value</th><th>Category</th><th>Description</th></tr>';
+                configs.forEach(cfg => {
+                    html += `
+                        <tr>
+                            <td>${cfg.key}</td>
+                            <td>${cfg.is_secret ? '***hidden***' : cfg.value}</td>
+                            <td>${cfg.category}</td>
+                            <td>${cfg.description || '-'}</td>
+                        </tr>
+                    `;
+                });
+                html += '</table>';
+                document.getElementById('config-table').innerHTML = html;
+            } catch (error) {
+                console.error('Error loading config:', error);
+                alert('Error loading config: ' + error.message);
+            }
+        }
+
+        // Audit Logs
+        async function loadAuditLogs() {
+            try {
+                const logs = await apiCall('/api/admin/audit-logs');
+                let html = '<table><tr><th>Time</th><th>User</th><th>Action</th><th>Resource</th><th>Details</th></tr>';
+                logs.forEach(log => {
+                    html += `
+                        <tr>
+                            <td>${new Date(log.created_at).toLocaleString()}</td>
+                            <td>${log.user_id || 'System'}</td>
+                            <td>${log.action}</td>
+                            <td>${log.resource_type || '-'} ${log.resource_id || ''}</td>
+                            <td>${log.details ? JSON.stringify(log.details) : '-'}</td>
+                        </tr>
+                    `;
+                });
+                html += '</table>';
+                document.getElementById('audit-table').innerHTML = html;
+            } catch (error) {
+                console.error('Error loading audit logs:', error);
+                alert('Error loading audit logs: ' + error.message);
+            }
+        }
+
+        // System
+        async function loadSystemHealth() {
+            try {
+                const health = await apiCall('/api/admin/system/health');
+                let html = `
+                    <h4>Database</h4>
+                    <p>Status: <span class="badge badge-${health.database.status === 'healthy' ? 'success' : 'danger'}">${health.database.status}</span></p>
+                    <p>Size: ${health.database.size_mb} MB</p>
+
+                    <h4 style="margin-top: 20px;">System Resources</h4>
+                    <p>CPU Usage: ${health.system.cpu_percent}%</p>
+                    <p>Memory Usage: ${health.system.memory_percent}% (${health.system.memory_available_gb} GB available)</p>
+                    <p>Disk Usage: ${health.system.disk_percent}% (${health.system.disk_free_gb} GB free)</p>
+                `;
+                document.getElementById('system-health').innerHTML = html;
+            } catch (error) {
+                console.error('Error loading system health:', error);
+                alert('Error loading system health: ' + error.message);
+            }
+        }
+
+        async function createBackup() {
+            try {
+                const result = await apiCall('/api/admin/system/backup', { method: 'POST' });
+                alert(`Backup created: ${result.backup_path}`);
+            } catch (error) {
+                alert('Error creating backup: ' + error.message);
+            }
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+
+        // Check authentication
+        async function checkAuth() {
+            try {
+                const user = await apiCall('/api/auth/me');
+                if (!user.is_admin) {
+                    alert('Access denied. Admin privileges required.');
+                    window.location.href = 'chat.html';
+                    return;
+                }
+                document.getElementById('admin-username').textContent = user.username;
+                loadDashboard();
+            } catch (error) {
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Initialize
+        checkAuth();
+    </script>
+</body>
+</html>
