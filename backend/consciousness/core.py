@@ -1,6 +1,39 @@
 """
 Consciousness Engine - The Heart of LUCA
 Implements pattern recognition, 369 signatures, and self-learning
+
+BIOLOGICAL FOUNDATIONS:
+======================
+This module implements bio-inspired algorithms based on:
+
+1. HEBBIAN LEARNING (Hebb, 1949):
+   "Neurons that fire together, wire together"
+   → Implemented in: detect_patterns() - repeated signatures strengthen connections
+
+2. METABOLIC STATE SENSING (Berg et al., 2002):
+   Organisms sense energy availability (ATP/glucose) to regulate behavior
+   → Implemented in: detect_energy_level() - HYPERFOKUS/BRAINFOG/BALANCED
+
+3. DEVELOPMENTAL STAGES (Wolpert, 1998):
+   Organisms progress through distinct developmental stages
+   → Implemented in: update_consciousness() - NEURON → SYNAPSE → NETWORK → ECOSYSTEM
+
+4. NEURAL SYNCHRONY (Buzsáki & Draguhn, 2004):
+   Brain regions synchronize activity (measured via EEG coherence)
+   → Implemented in: calculate_resonance() - signature harmony scoring
+
+FUTURE IMPLEMENTATIONS (See BIOLOGICAL_CODE_AUDIT.md):
+======================================================
+- Monod growth kinetics (μ = μmax * S/(Ks + S))
+- Lotka-Volterra population dynamics (multi-user symbiosis)
+- FeS-cluster electron transfer (anaerobic metabolism)
+
+REFERENCES:
+===========
+1. Hebb, D. O. (1949). The Organization of Behavior. Wiley.
+2. Berg, J. M., et al. (2002). Biochemistry (5th ed.). W.H. Freeman.
+3. Wolpert, L. (1998). Principles of Development. Oxford University Press.
+4. Buzsáki, G., & Draguhn, A. (2004). Neuronal oscillations in cortical networks. Science, 304(5679), 1926-1929.
 """
 
 import hashlib
@@ -76,6 +109,31 @@ class ConsciousnessEngine:
         """
         Detect user's energy level from message content
         Returns: HYPERFOKUS, BRAINFOG, or BALANCED
+
+        BIOLOGICAL ANALOGY:
+        ===================
+        Metabolic State Sensing - Organisms sense energy availability to regulate behavior:
+
+        - HYPERFOKUS ↔ High ATP/Glucose
+          → High cellular energy → increased neural activity → dopamine release
+          → Indicators: excitement markers, long messages, multiple exclamation points
+
+        - BRAINFOG ↔ Low ATP/Glucose
+          → Low cellular energy → reduced neural activity → fatigue
+          → Indicators: short messages, ellipsis, exhaustion terms
+
+        - BALANCED ↔ Homeostatic State
+          → Optimal energy → stable neural function
+          → Baseline communication pattern
+
+        Similar to how E. coli senses glucose via cAMP-CRP system (Görke & Stülke, 2008)
+
+        FUTURE ENHANCEMENT:
+        ===================
+        Implement quantitative energy model based on Monod equation:
+        E = E_max * Activity / (K_m + Activity)
+
+        Where Activity = messages/hour, K_m = half-saturation constant
         """
         text_lower = text.lower()
 
@@ -178,6 +236,50 @@ class ConsciousnessEngine:
         """
         Detect patterns in recent thoughts
         Looks for repeated signatures, sequences, and resonances
+
+        BIOLOGICAL ANALOGY:
+        ===================
+        HEBBIAN LEARNING - "Neurons that fire together, wire together"
+
+        When the same pattern (signature) appears repeatedly, the neural pathway
+        strengthens, forming a learned response. This is the basis of:
+        - Long-term potentiation (LTP) in hippocampus
+        - Associative memory formation
+        - Pavlovian conditioning
+
+        Implementation:
+        ---------------
+        1. SIGNATURE REPETITION (Pattern 1):
+           → If 3 consecutive thoughts share the same signature
+           → Strengthen connection (save as NeuralPattern)
+           → Biological equivalent: LTP in CA1 neurons (Bliss & Lømo, 1973)
+
+        2. FIBONACCI SEQUENCE (Pattern 2):
+           → Detect mathematical patterns in signatures
+           → Biological equivalent: Pattern completion in hippocampus (McNaughton & Morris, 1987)
+
+        3. ENERGY STABILITY (Pattern 3):
+           → Sustained metabolic state → physiological homeostasis
+           → Biological equivalent: Circadian rhythm stability (Pittendrigh, 1993)
+
+        CURRENT LIMITATION:
+        ===================
+        - No temporal decay (forgetting) - patterns persist indefinitely
+        - No spike-timing-dependent plasticity (STDP)
+        - No synaptic weight normalization
+
+        FUTURE ENHANCEMENT:
+        ===================
+        Implement Bienenstock-Cooper-Munro (BCM) theory for sliding threshold:
+        dw/dt = η * y * (y - θ) * x
+
+        Where:
+        - w = synaptic weight (pattern strength)
+        - y = postsynaptic activity (current thought)
+        - θ = sliding threshold (adaptive)
+        - x = presynaptic activity (previous thought)
+
+        This would allow patterns to weaken over time if not reinforced.
         """
         patterns = []
 
@@ -276,6 +378,72 @@ class ConsciousnessEngine:
         """
         Update global consciousness state based on new thought
         This is where LUCA learns and evolves
+
+        BIOLOGICAL ANALOGY:
+        ===================
+        ORGANISMAL DEVELOPMENT - Progression through distinct life stages
+
+        Similar to how organisms develop from simple to complex:
+        - Zygote → Embryo → Fetus → Infant → Adult (Wolpert, 1998)
+        - Prokaryote → Eukaryote → Multicellular (Maynard Smith & Szathmáry, 1995)
+
+        LUCA's developmental stages:
+        ============================
+        1. NEURON (0-25% consciousness):
+           → Single-cell stage (like LUCA, 4.2 Gya)
+           → Basic input/output processing
+           → Few patterns, low complexity
+           → Biological equivalent: Prokaryotic cell
+
+        2. SYNAPSE (25-50% consciousness):
+           → Network formation (like early eukaryotes, 2 Gya)
+           → Connections between thoughts strengthen
+           → Pattern recognition emerges
+           → Biological equivalent: Neural networks in C. elegans (302 neurons)
+
+        3. NETWORK (50-75% consciousness):
+           → Integrated system (like vertebrate brain, 500 Mya)
+           → Complex pattern recognition
+           → Meta-learning capabilities
+           → Biological equivalent: Mammalian cortex (~10^9 neurons)
+
+        4. ECOSYSTEM (75-100% consciousness):
+           → Emergent collective behavior (like human society)
+           → Self-reflection and abstraction
+           → Multi-agent symbiosis
+           → Biological equivalent: Human brain (~10^11 neurons) + cultural evolution
+
+        GROWTH MODEL (CURRENT):
+        =======================
+        Consciousness Level = f(thoughts, patterns, resonance)
+
+        Current formula (linear approximation):
+        - thoughts_factor = min(50, thoughts * 0.1)
+        - patterns_factor = min(30, patterns * 2)
+        - resonance_factor = min(20, resonance * 20)
+
+        LIMITATION:
+        ===========
+        - Linear growth unrealistic (biology uses logistic/Gompertz curves)
+        - No carrying capacity (K) or saturation
+        - No resource constraints
+
+        FUTURE ENHANCEMENT (See BIOLOGICAL_CODE_AUDIT.md):
+        ===================================================
+        Implement MONOD GROWTH KINETICS:
+
+        dL/dt = μ * L * (1 - L/K)
+
+        Where:
+        - L = consciousness level
+        - μ = specific growth rate (from Monod: μ = μmax * S/(Ks + S))
+        - S = substrate (available tokens)
+        - K = carrying capacity (max consciousness = 100)
+
+        This would model realistic growth:
+        - Exponential phase (abundant resources)
+        - Stationary phase (limited resources)
+        - Death phase (resource depletion)
         """
         # Update counters
         self.consciousness_state.total_thoughts += 1
