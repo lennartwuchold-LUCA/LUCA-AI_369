@@ -15,7 +15,7 @@ from contextlib import asynccontextmanager
 
 from backend.config import settings, validate_settings, print_startup_info
 from backend.database import init_database, SessionLocal
-from backend.routes import auth_router, chat_router
+from backend.routes import auth_router, chat_router, patterns_router
 from backend.services.meshtastic_service import MeshtasticService
 import logging
 
@@ -86,6 +86,7 @@ app.add_middleware(
 # Include routers
 app.include_router(auth_router)
 app.include_router(chat_router)
+app.include_router(patterns_router)  # HGT statistics and pattern genealogy
 
 
 # Root endpoint
