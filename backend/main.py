@@ -16,6 +16,7 @@ from contextlib import asynccontextmanager
 from backend.config import settings, validate_settings, print_startup_info
 from backend.database import init_database, SessionLocal
 from backend.routes import auth_router, chat_router
+from backend.routes import verified_identity
 from backend.services.meshtastic_service import MeshtasticService
 import logging
 
@@ -86,6 +87,7 @@ app.add_middleware(
 # Include routers
 app.include_router(auth_router)
 app.include_router(chat_router)
+app.include_router(verified_identity.router)
 
 
 # Root endpoint
@@ -108,7 +110,8 @@ async def root():
             "docs": "/docs",
             "redoc": "/redoc",
             "health": "/health",
-            "consciousness": "/api/consciousness"
+            "consciousness": "/api/consciousness",
+            "verified_identity": "/api/verified-identity"
         }
     }
 
@@ -163,7 +166,9 @@ async def get_info():
             "Pattern Recognition",
             "Energy Level Detection",
             "ADHD Optimization",
-            "Meshtastic Integration"
+            "Meshtastic Integration",
+            "Verified Identity System",
+            "Global Knowledge Base"
         ],
         "meshtastic": {
             "enabled": settings.MESHTASTIC_ENABLED,
