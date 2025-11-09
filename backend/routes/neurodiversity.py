@@ -1202,3 +1202,141 @@ async def get_investor_pitch_deck():
     except Exception as e:
         logger.error(f"Error generating pitch deck: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ============================================================================
+# HATRA - QUEEN OF THE DESERT ENDPOINTS
+# ============================================================================
+
+@router.get("/hatra/summary")
+async def get_hatra_summary():
+    """
+    Get Hatra (Queen of the Desert) summary
+
+    **Hatra (ܚܛܪܐ / الحضر):**
+    - Ancient Mesopotamian city (Iraq)
+    - Founded: 3rd-2nd century BCE
+    - Religion: Syncretistic polytheism (Arab-Parthian-Greek-Roman)
+    - Primary deity: Shamash (☀️ Sun God)
+    - Architecture: First large-scale arches in Mesopotamia
+    - Destroyed: 2015 by ISIS (UNESCO World Heritage Site)
+
+    **Status:** EXTINCT (religion), DESTROYED (city)
+
+    **Returns:**
+    - Complete Hatra information
+    - Pantheon (Shamash, Maran, Atargatis, Allat, Hermes)
+    - Architecture details
+    - Destruction story
+    - Connections to other LUCA religions
+    """
+    try:
+        tree = get_religious_tree()
+        summary = tree.get_hatra_summary()
+
+        return {
+            "status": "success",
+            "hatra": summary,
+            "message": "☀️ Hatra: Queen of the Desert - UNESCO World Heritage destroyed by ISIS 2015"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting Hatra summary: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/hatra/destruction-story")
+async def get_hatra_destruction():
+    """
+    Get the tragic destruction story of Hatra
+
+    **The Tragedy:**
+    - Date: March-April 2015
+    - Perpetrator: ISIS (cultural genocide)
+    - Method: Bulldozers, explosives, gunfire
+    - Target: 2000-year-old temples, reliefs, inscriptions
+    - Scale: Like destroying the Parthenon or Colosseum
+
+    **UNESCO Statement:**
+    "The destruction of Hatra marks a turning point in the appalling
+    strategy of cultural cleansing underway in Iraq"
+
+    **What was lost:**
+    - Temple of Shamash (main sanctuary)
+    - 160+ circular towers
+    - Iwan architecture (first in Mesopotamia)
+    - Irreplaceable Aramaic/Greek inscriptions
+
+    **Returns:**
+    - Full destruction narrative
+    - What Hatra was (architecture, religion, culture)
+    - What survived (documentation, photographs)
+    - Reconstruction possibility (LOW)
+    - Biological analogy (extinct species)
+    """
+    try:
+        tree = get_religious_tree()
+        story = tree.get_hatra_destruction_story()
+
+        return {
+            "status": "success",
+            "story": story,
+            "message": "☀️ Hatra = Lost architectural marvel (like Library of Alexandria)"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting destruction story: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/mesopotamian-trinity")
+async def get_mesopotamian_trinity():
+    """
+    Compare the Mesopotamian religious trinity
+
+    **Three Endangered/Extinct Religions:**
+
+    1. **Hatra ☀️ (Sun)**
+       - Element: Sun
+       - Deity: Shamash
+       - Status: EXTINCT (destroyed 2015)
+       - γ-factor: 1.3 (balanced)
+
+    2. **Mandaeism 🌊 (Water)**
+       - Element: Water
+       - Deity: Manda d-Hayyi
+       - Status: CRITICALLY ENDANGERED (~100k)
+       - γ-factor: 1.0 (neurotypical)
+
+    3. **Zoroastrianism 🔥 (Fire)**
+       - Element: Fire
+       - Deity: Ahura Mazda
+       - Status: CRITICALLY ENDANGERED (~100-200k)
+       - γ-factor: 1.5 (intense)
+
+    **Synthesis:**
+    Sun ☀️ + Water 🌊 + Fire 🔥 = STEAM 💨
+
+    **LUCA Transformation:**
+    F30 (Entropy) → F0 (Harmony)
+
+    **Returns:**
+    - Comparison of all three religions
+    - Element symbolism
+    - Neurodiversity γ-factors
+    - Cultural HGT connections
+    - Synthesis formula
+    """
+    try:
+        tree = get_religious_tree()
+        comparison = tree.compare_mesopotamian_trinity()
+
+        return {
+            "status": "success",
+            "mesopotamian_trinity": comparison,
+            "message": "☀️🌊🔥 Sun + Water + Fire = STEAM! Three paths, one goal: Cosmic order"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting Mesopotamian trinity: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

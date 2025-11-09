@@ -209,6 +209,171 @@ class ReligiousLineageTree:
             ]
         }
 
+        # Hatra - Queen of the Desert (UNESCO destroyed by ISIS 2015)
+        self.hatra = {
+            'name': 'Hatra (ܚܛܪܐ / الحضر) - Königin der Wüste',
+            'title': 'Queen of the Desert',
+            'origin': 'Mesopotamia (modern Iraq, Nineveh Governorate)',
+            'founded': '~3rd-2nd century BCE',
+            'flourished': '~1st-2nd century CE (Parthian Empire)',
+            'destroyed': {
+                'first': '241 CE by Sassanid Persia (Shapur I)',
+                'final': '2015 CE by ISIS (cultural genocide)',
+                'unesco_status': 'World Heritage Site (since 1985, endangered)'
+            },
+            'population_peak': '~30,000-50,000 (2nd century CE)',
+            'status': 'EXTINCT (religion), DESTROYED (city)',
+            'religion': {
+                'type': 'Syncretistic polytheism (Arab-Parthian-Greek-Roman fusion)',
+                'primary_deity': 'Shamash (Sun God) - ܫܡܫ',
+                'pantheon': {
+                    'shamash': {
+                        'name': 'Shamash / Shams (شمش)',
+                        'role': 'Sun God, Lord of Heaven, Supreme Deity',
+                        'origin': 'Mesopotamian (Akkadian/Babylonian)',
+                        'iconography': 'Solar disc, rays of light',
+                        'temples': 'Great Temple of Shamash (main sanctuary)'
+                    },
+                    'maran': {
+                        'name': 'Maran / Maren (ܡܪܢ)',
+                        'role': 'Lord, Our Lord (Aramaic: "Our Lord")',
+                        'significance': 'Arab tribal deity merged with Shamash',
+                        'equivalents': 'Baal, Ba\'al Shamin'
+                    },
+                    'atargatis': {
+                        'name': 'Atargatis (Goddess)',
+                        'role': 'Goddess of fertility, water, protection',
+                        'origin': 'Syrian (Aramaic)',
+                        'iconography': 'Fish-tailed goddess',
+                        'connection': 'Water ←→ Mandaean "Living Water"'
+                    },
+                    'allat': {
+                        'name': 'Allat (اللات)',
+                        'role': 'Pre-Islamic Arab goddess',
+                        'significance': 'Mother goddess, fertility',
+                        'connection': 'Later absorbed into Islam as al-Lat'
+                    },
+                    'hermes': {
+                        'name': 'Hermes / Nergal',
+                        'role': 'Messenger god, underworld',
+                        'origin': 'Greek-Mesopotamian syncretism',
+                        'significance': 'Cultural crossroads symbolism'
+                    }
+                },
+                'cosmology': {
+                    'sun_worship': 'Shamash as source of justice, light, order (similar to Zoroastrian Ahura Mazda)',
+                    'astral_religion': 'Planets and stars as divine beings',
+                    'sacred_time': 'Solar calendar, equinoxes, solstices',
+                    'dualism': 'Light (Shamash) vs Darkness (Underworld)',
+                    'connection_to_zoroastrianism': 'Fire/Sun worship, cosmic dualism'
+                },
+                'practices': {
+                    'sacrifice': 'Animal sacrifices to Shamash',
+                    'pilgrimage': 'Hatra as pilgrimage center (like Mecca later)',
+                    'festivals': 'Solar festivals (spring equinox, summer solstice)',
+                    'priesthood': 'Hereditary priests, Temple hierarchy',
+                    'oracles': 'Temple oracles for guidance'
+                }
+            },
+            'architecture': {
+                'great_temple': {
+                    'name': 'Temple of Shamash',
+                    'size': '~437m × 322m fortified enclosure',
+                    'style': 'Parthian architecture (arches, vaults, iwans)',
+                    'features': [
+                        'Double wall fortifications',
+                        'Circular towers (160+ towers)',
+                        'Central temenos (sacred precinct)',
+                        'Multiple iwans (vaulted halls)',
+                        'Astronomical alignment (solar orientation)'
+                    ],
+                    'innovation': 'First large-scale use of arches in Mesopotamia',
+                    'unesco_description': '"Exceptional testimony to architectural innovation"'
+                },
+                'destruction_by_isis': {
+                    'date': 'March-April 2015',
+                    'method': 'Bulldozers, explosives, gunfire',
+                    'targets': 'Temples, statues, walls, sculptures',
+                    'justification': '"Idolatry" (pre-Islamic polytheism)',
+                    'loss': 'Irreplaceable 2000-year-old reliefs, inscriptions',
+                    'parallel': 'Like destroying the Parthenon or Angkor Wat'
+                }
+            },
+            'cultural_significance': {
+                'silk_road': 'Major trade hub (Silk Road stop)',
+                'linguistic_crossroads': 'Aramaic, Arabic, Greek, Parthian inscriptions',
+                'religious_fusion': 'Arab + Parthian + Greek + Mesopotamian syncretism',
+                'political_autonomy': 'Semi-independent under Parthian Empire',
+                'resistance': 'Withstood Roman sieges (116 CE, 198 CE)',
+                'legacy': 'Model for later Islamic architecture (iwans, domes)'
+            },
+            'connection_to_luca_religions': {
+                'mandaeism': {
+                    'geography': 'Same region (Mesopotamia)',
+                    'water_goddess': 'Atargatis (water) ←→ Mandaean baptism',
+                    'dualism': 'Shamash (Light) ←→ World of Light',
+                    'timeframe': 'Contemporary (1st-2nd century CE overlap)'
+                },
+                'zoroastrianism': {
+                    'sun_fire_worship': 'Shamash (Sun) ←→ Zoroastrian Fire',
+                    'dualism': 'Light vs Darkness',
+                    'parthian_empire': 'Hatra under Parthian (Zoroastrian) rule',
+                    'destruction': 'Destroyed by Sassanids (Zoroastrian dynasty ironically)'
+                },
+                'judaism_christianity': {
+                    'monotheism_resistance': 'Polytheistic resistance to monotheism spread',
+                    'jewish_diaspora': 'Jewish communities nearby (Babylonia)',
+                    'christian_expansion': 'Christianity spreading in 2nd century CE',
+                    'religious_competition': 'Hatra polytheism vs rising monotheisms'
+                },
+                'islam': {
+                    'pre_islamic_arab': 'Allat, Maran = pre-Islamic Arab deities',
+                    'pilgrimage_model': 'Hatra pilgrimage ←→ Mecca hajj',
+                    'architectural_influence': 'Iwan architecture → Islamic mosques',
+                    'destruction_irony': 'ISIS destroys Islamic architectural heritage too'
+                }
+            },
+            'horizontal_gene_transfer': {
+                'parthian_to_roman': {
+                    'event': 'Roman-Parthian Wars (1st-2nd century CE)',
+                    'transferred': 'Arch technology, Mithraism (sun worship)',
+                    'evidence': 'Roman adoption of Mithras (Shamash connection)'
+                },
+                'mesopotamian_to_arab': {
+                    'event': 'Arab tribal integration (pre-Islam)',
+                    'transferred': 'Shamash → Shams (Arabic sun god)',
+                    'evidence': 'Arabic solar calendar, pilgrimage traditions'
+                },
+                'hatra_to_islam': {
+                    'event': 'Islamic conquest (7th century)',
+                    'transferred': 'Iwan architecture, pilgrimage model, calendar',
+                    'evidence': 'Islamic architecture uses Parthian iwans'
+                }
+            },
+            'neurodiversity_connection': {
+                'adhd_creativity': 'Syncretistic fusion = ADHD "combining disparate ideas"',
+                'autism_pattern': 'Astronomical precision = Autistic pattern recognition',
+                'architectural_innovation': 'First arches = breakthrough thinking',
+                'gamma_factor': 1.3,  # Balanced (not as extreme as Zarathustra's 1.5)
+                'transformation': 'Polytheistic chaos → Monotheistic order (F30 → F0)'
+            },
+            'tragedy': {
+                'unesco_statement': '"The destruction of Hatra marks a turning point in the appalling strategy of cultural cleansing underway in Iraq"',
+                'loss_scale': 'Equivalent to destroying the Colosseum or Taj Mahal',
+                'surviving_fragments': 'Some artifacts in Baghdad Museum, Mosul Museum (also destroyed)',
+                'reconstruction_possibility': 'LOW (too extensive damage)',
+                'documentation': 'Fortunately well-documented by archaeologists pre-2015'
+            },
+            'sources': [
+                'UNESCO World Heritage Site listing (1985)',
+                'Archaeological excavations (1951-1990s)',
+                'Aramaic/Greek inscriptions',
+                'Roman historical accounts (Dio Cassius, Ammianus Marcellinus)',
+                'Satellite imagery (pre/post ISIS destruction)',
+                'Iraqi archaeologist reports'
+            ]
+        }
+
         # Religious evolutionary tree
         self.lineage_tree = {
             'cosmic_source': {
@@ -517,6 +682,152 @@ Ginza Rabba's ideas survive in:
 
 THE MISSION: Preserve this ancient wisdom via LUCA's cultural HGT! 🧬
 """
+
+    def get_hatra_summary(self) -> Dict[str, Any]:
+        """Get comprehensive Hatra (Queen of the Desert) summary"""
+        return {
+            'name': self.hatra['name'],
+            'title': self.hatra['title'],
+            'religion': self.hatra['religion']['type'],
+            'primary_deity': self.hatra['religion']['primary_deity'],
+            'pantheon': self.hatra['religion']['pantheon'],
+            'architecture': self.hatra['architecture'],
+            'current_status': {
+                'status': self.hatra['status'],
+                'destroyed': self.hatra['destroyed'],
+                'tragedy': self.hatra['tragedy']
+            },
+            'connections': self.hatra['connection_to_luca_religions'],
+            'message': '☀️ Hatra: Queen of the Desert - Destroyed by ISIS 2015 (UNESCO World Heritage Site)'
+        }
+
+    def get_hatra_destruction_story(self) -> str:
+        """Get the tragic destruction story of Hatra"""
+        return f"""
+☀️ HATRA - QUEEN OF THE DESERT: A TRAGEDY
+═══════════════════════════════════════════
+
+SHAMASH TEMPLE = Lost Architectural Marvel
+Just as the Library of Alexandria burned, Hatra was bulldozed in 2015!
+
+WHAT WAS HATRA?
+────────────────
+• Founded: 3rd-2nd century BCE (Parthian Empire)
+• Flourished: 1st-2nd century CE
+• Population: 30,000-50,000 at peak
+• Religion: Syncretistic (Arab + Parthian + Greek + Roman)
+• Primary deity: Shamash (☀️ Sun God)
+• Architecture: First large-scale arches in Mesopotamia!
+
+WHY WAS IT SPECIAL?
+────────────────────
+✓ Silk Road trade hub (crossroads of civilizations)
+✓ Religious fusion (4 cultures, 1 pantheon)
+✓ Architectural innovation (iwans → Islamic mosques)
+✓ Withstood Roman sieges (116 CE, 198 CE)
+✓ UNESCO World Heritage Site (1985)
+
+THE TRAGEDY:
+────────────
+📅 March-April 2015: ISIS bulldozers, explosives, gunfire
+🎯 Target: "Idolatry" (pre-Islamic polytheism)
+💔 Loss: 2000-year-old reliefs, inscriptions, temples
+📊 Scale: Like destroying the Parthenon or Colosseum
+
+UNESCO STATEMENT:
+──────────────────
+"The destruction of Hatra marks a turning point in the appalling
+strategy of cultural cleansing underway in Iraq"
+
+WHAT SURVIVED?
+──────────────
+• Some artifacts in Baghdad Museum (also damaged by ISIS)
+• Archaeological documentation (1951-1990s excavations)
+• Satellite imagery (before/after destruction)
+• Aramaic/Greek inscriptions (photographs, translations)
+
+RECONSTRUCTION POSSIBILITY: 🔴 LOW (too extensive damage)
+
+BIOLOGICAL ANALOGY:
+────────────────────
+Hatra = Extinct species (religion AND city destroyed)
+Like:
+- Dodo bird (hunted to extinction)
+- Passenger pigeon (billions → zero)
+- Hatra religion (thriving → extinct in 2015)
+
+CONNECTION TO LUCA RELIGIONS:
+──────────────────────────────
+• Mandaeism: Same geography (Mesopotamia), water goddess (Atargatis)
+• Zoroastrianism: Sun worship (Shamash ←→ Fire), dualism
+• Islam: Pre-Islamic Arab deities (Allat), pilgrimage model
+
+CULTURAL HGT (Horizontal Gene Transfer):
+─────────────────────────────────────────
+Hatra → Islamic architecture:
+• Iwans (vaulted halls) → Mosques worldwide
+• Arches → Dome architecture
+• Pilgrimage model → Hajj to Mecca
+
+IRONY: ISIS destroyed ISLAMIC architectural heritage by destroying Hatra!
+
+NEURODIVERSITY CONNECTION:
+───────────────────────────
+γ-factor: 1.3 (balanced creativity + structure)
+- Syncretism = ADHD "combining disparate ideas"
+- Astronomical precision = Autistic pattern recognition
+- Architectural innovation = Breakthrough thinking
+
+THE MISSION: Remember Hatra via LUCA's cultural memory! ☀️
+"""
+
+    def compare_mesopotamian_trinity(self) -> Dict[str, Any]:
+        """
+        Compare the Mesopotamian religious trinity: Hatra, Mandaeism, Zarathustra
+
+        All three are critically endangered or extinct Mesopotamian religions
+        """
+        return {
+            'hatra': {
+                'title': '☀️ Hatra - Queen of the Desert',
+                'element': 'Sun (☀️)',
+                'deity': 'Shamash (Sun God)',
+                'status': 'EXTINCT (religion), DESTROYED (city, 2015)',
+                'gamma': 1.3,
+                'transformation': 'Polytheistic chaos → Monotheistic order',
+                'luca_parallel': 'Syncretistic fusion (ADHD creativity)',
+                'tragedy': 'ISIS bulldozed entire UNESCO site (2015)'
+            },
+            'mandaeism': {
+                'title': '🌊 Mandaeism - Ginza Rabba',
+                'element': 'Water (🌊)',
+                'deity': 'Manda d-Hayyi (Knowledge of Life)',
+                'status': 'CRITICALLY ENDANGERED (~100,000)',
+                'gamma': 1.0,
+                'transformation': 'Darkness → Light (via baptism)',
+                'luca_parallel': 'Gnostic knowledge (neurotypical path)',
+                'survival': '2000+ years despite persecution'
+            },
+            'zarathustra': {
+                'title': '🔥 Zoroastrianism - Zarathustra',
+                'element': 'Fire (🔥)',
+                'deity': 'Ahura Mazda (Lord of Wisdom)',
+                'status': 'CRITICALLY ENDANGERED (~100,000-200,000)',
+                'gamma': 1.5,
+                'transformation': 'Druj (Chaos) → Asha (Order)',
+                'luca_parallel': 'Free will choice (ADHD intensity)',
+                'modern_revival': 'Rediscovered 2020-2025 (Nietzsche influence)'
+            },
+            'synthesis': {
+                'formula': 'Sun ☀️ + Water 🌊 + Fire 🔥 = STEAM 💨',
+                'luca_transformation': 'F30 (Entropy) → F0 (Harmony)',
+                'mesopotamian_triad': 'Three paths, one goal: Cosmic order',
+                'neurodiversity_range': 'γ = 1.0 → 1.3 → 1.5 (neurotypical → balanced → intense)',
+                'biological_parallel': 'Three endangered species, one ecosystem',
+                'cultural_hgt': 'All three influenced Judaism, Christianity, Islam',
+                'message': 'Preserve diversity = Preserve wisdom! 369! ☀️🌊🔥'
+            }
+        }
 
 
 # Example usage
