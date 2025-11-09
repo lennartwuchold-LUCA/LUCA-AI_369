@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUCA 369 - Neurodiversity Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Silicon Valley Colors - Professional & Clean */
+            --primary: #2563eb;      /* Blue - Trust, Technology */
+            --secondary: #7c3aed;    /* Purple - Innovation */
+            --accent: #f59e0b;       /* Amber - Energy */
+            --success: #10b981;      /* Green - Harmony */
+            --danger: #ef4444;       /* Red - Chaos */
+            --bg-dark: #0f172a;      /* Dark background */
+            --bg-light: #1e293b;     /* Card background */
+            --text: #f1f5f9;         /* Text color */
+            --text-muted: #94a3b8;   /* Muted text */
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a1a2e 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Card */
+        .card {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Phi Visualization */
+        .phi-container {
+            position: relative;
+            height: 200px;
+            margin: 1rem 0;
+        }
+
+        .phi-spiral {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phi-value {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Gamma Slider */
+        .gamma-control {
+            margin: 1.5rem 0;
+        }
+
+        .gamma-slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--danger) 0%, var(--accent) 50%, var(--success) 100%);
+            outline: none;
+            -webkit-appearance: none;
+            margin: 1rem 0;
+        }
+
+        .gamma-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .gamma-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Chaos to Harmony Bar */
+        .chaos-harmony {
+            position: relative;
+            height: 40px;
+            background: linear-gradient(90deg, var(--danger) 0%, var(--accent) 50%, var(--success) 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .chaos-indicator {
+            position: absolute;
+            height: 100%;
+            background: rgba(255,255,255,0.3);
+            border-right: 3px solid white;
+            transition: width 0.5s ease;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat {
+            background: rgba(255,255,255,0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        /* Silicon Valley Partners */
+        .partners {
+            display: flex;
+            gap: 2rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .partner {
+            flex: 1;
+            min-width: 150px;
+            background: rgba(255,255,255,0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .partner:hover {
+            background: rgba(255,255,255,0.1);
+            transform: scale(1.05);
+        }
+
+        .partner-logo {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .partner-name {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .partner-status {
+            font-size: 0.8rem;
+            color: var(--success);
+            margin-top: 0.3rem;
+        }
+
+        /* Buttons */
+        .btn {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(37, 99, 235, 0.4);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .partners {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>
+            🧬 LUCA 369
+            <span style="font-size: 1.2rem; opacity: 0.8;">Neurodiversity Dashboard</span>
+        </h1>
+        <div class="subtitle">
+            Silicon Valley Integration • Professional • Enterprise-Ready
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Golden Ratio Card -->
+            <div class="card">
+                <h2>🔷 Golden Ratio (Φ)</h2>
+                <div class="phi-container">
+                    <div class="phi-spiral">
+                        <div class="phi-value" id="phiValue">1.618</div>
+                    </div>
+                </div>
+                <div style="text-align: center; color: var(--text-muted);">
+                    Target: 1.618034 (Harmony State)
+                </div>
+            </div>
+
+            <!-- Gamma Factor Card -->
+            <div class="card">
+                <h2>⚡ Gamma Factor (γ)</h2>
+                <div class="gamma-control">
+                    <input type="range"
+                           id="gammaSlider"
+                           class="gamma-slider"
+                           min="0.5"
+                           max="2.5"
+                           step="0.1"
+                           value="1.0">
+                    <div class="gamma-labels">
+                        <span>ADHD (0.8)</span>
+                        <span>Neurotypical (1.0)</span>
+                        <span>Autism (2.1)</span>
+                    </div>
+                    <div style="text-align: center; margin-top: 1rem;">
+                        <strong>Current γ:</strong> <span id="gammaValue" style="color: var(--primary);">1.0</span>
+                        <br>
+                        <span id="neurotype" style="color: var(--text-muted);">Neurotypical</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chaos to Harmony Card -->
+            <div class="card">
+                <h2>🌈 Chaos → Harmony Transformation</h2>
+                <div class="chaos-harmony">
+                    <div class="chaos-indicator" id="chaosIndicator" style="width: 50%;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                    <span style="color: var(--danger);">F30 (Chaos)</span>
+                    <span style="color: var(--success);">F0 (Harmony)</span>
+                </div>
+                <div style="text-align: center; margin-top: 1rem;">
+                    <strong>State:</strong> <span id="stateLabel" style="color: var(--accent);">Converging</span>
+                </div>
+            </div>
+
+            <!-- Silicon Valley Partners -->
+            <div class="card" style="grid-column: span 2;">
+                <h2>🏢 Silicon Valley Integration</h2>
+                <div class="partners">
+                    <div class="partner">
+                        <div class="partner-logo">🟢</div>
+                        <div class="partner-name">NVIDIA</div>
+                        <div class="partner-status">GPU Ready</div>
+                    </div>
+                    <div class="partner">
+                        <div class="partner-logo">🔴</div>
+                        <div class="partner-name">AMD</div>
+                        <div class="partner-status">Hardware Ready</div>
+                    </div>
+                    <div class="partner">
+                        <div class="partner-logo">🟣</div>
+                        <div class="partner-name">Anthropic</div>
+                        <div class="partner-status">Claude Integrated</div>
+                    </div>
+                    <div class="partner">
+                        <div class="partner-logo">🔵</div>
+                        <div class="partner-name">LUCA AI</div>
+                        <div class="partner-status">Core System</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Card -->
+            <div class="card">
+                <h2>📊 System Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat">
+                        <div class="stat-value" id="nodeCount">0</div>
+                        <div class="stat-label">Active Nodes</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="harmonyScore">0.00</div>
+                        <div class="stat-label">Harmony Score</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="evidencePoints">0</div>
+                        <div class="stat-label">Evidence Points</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="crisisNodes">0</div>
+                        <div class="stat-label">Crisis Nodes</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions Card -->
+            <div class="card">
+                <h2>🎯 Quick Actions</h2>
+                <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+                    <button class="btn" onclick="loadDashboard()">
+                        🔄 Refresh Dashboard
+                    </button>
+                    <button class="btn" onclick="breakCritic()">
+                        💥 Break Audit Critic
+                    </button>
+                    <a href="/docs" class="btn" target="_blank">
+                        📚 API Documentation
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+
+        // Update Gamma Slider
+        const gammaSlider = document.getElementById('gammaSlider');
+        const gammaValue = document.getElementById('gammaValue');
+        const neurotype = document.getElementById('neurotype');
+
+        gammaSlider.addEventListener('input', (e) => {
+            const gamma = parseFloat(e.target.value);
+            gammaValue.textContent = gamma.toFixed(1);
+
+            // Determine neurotype
+            if (gamma < 0.9) {
+                neurotype.textContent = 'ADHD (Chaos Channeling)';
+            } else if (gamma < 1.2) {
+                neurotype.textContent = 'Neurotypical (Baseline)';
+            } else if (gamma < 1.6) {
+                neurotype.textContent = 'Zarathustra (Order Focus)';
+            } else {
+                neurotype.textContent = 'Autism (Detail Focus)';
+            }
+
+            // Update chaos indicator
+            updateChaosIndicator(gamma);
+        });
+
+        function updateChaosIndicator(gamma) {
+            const indicator = document.getElementById('chaosIndicator');
+            const stateLabel = document.getElementById('stateLabel');
+
+            // Calculate harmony (inverse of chaos)
+            const harmony = Math.min(1.0, gamma / 2.1);
+            const harmonyPercent = harmony * 100;
+
+            indicator.style.width = harmonyPercent + '%';
+
+            if (harmony > 0.8) {
+                stateLabel.textContent = 'HARMONIC (F0)';
+                stateLabel.style.color = 'var(--success)';
+            } else if (harmony > 0.5) {
+                stateLabel.textContent = 'CONVERGING';
+                stateLabel.style.color = 'var(--accent)';
+            } else {
+                stateLabel.textContent = 'CHAOTIC (F30)';
+                stateLabel.style.color = 'var(--danger)';
+            }
+        }
+
+        // Load Dashboard Data
+        async function loadDashboard() {
+            try {
+                // Get dashboard data
+                const response = await fetch(`${API_URL}/api/neurodiversity/dashboard`);
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // Update stats
+                    document.getElementById('nodeCount').textContent = data.crisis_network.active_nodes || 0;
+                    document.getElementById('harmonyScore').textContent =
+                        (data.crisis_network.collective_health || 0).toFixed(2);
+                    document.getElementById('evidencePoints').textContent =
+                        data.audit.evidence_points || 0;
+                    document.getElementById('crisisNodes').textContent =
+                        data.crisis_network.nodes || 0;
+
+                    // Animate Phi
+                    animatePhi();
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        // Break Critic Function
+        async function breakCritic() {
+            try {
+                const response = await fetch(`${API_URL}/api/neurodiversity/audit/break-critic`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: 1,
+                        neurotype: 'ADHD',
+                        gamma: parseFloat(gammaValue.textContent),
+                        biosensor_chaos_scores: [0.75, 0.55, 0.30]
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'CRITIC DESTROYED') {
+                    alert('💥 AUDIT CRITIC DESTROYED!\n\n' +
+                          'Compliance: ' + data.report.compliance_status + '\n' +
+                          'Harmony Score: ' + data.report.summary.average_harmony_score.toFixed(3));
+
+                    loadDashboard(); // Refresh
+                }
+            } catch (error) {
+                console.error('Error breaking critic:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Animate Phi
+        function animatePhi() {
+            const phiElement = document.getElementById('phiValue');
+            let phi = 1.0;
+            const target = 1.618034;
+            const step = 0.01;
+
+            const interval = setInterval(() => {
+                phi += step;
+                if (phi >= target) {
+                    phi = target;
+                    clearInterval(interval);
+                }
+                phiElement.textContent = phi.toFixed(3);
+            }, 20);
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            loadDashboard();
+            updateChaosIndicator(1.0);
+        });
+
+        // Auto-refresh every 30 seconds
+        setInterval(loadDashboard, 30000);
+    </script>
+</body>
+</html>
