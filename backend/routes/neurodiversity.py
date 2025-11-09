@@ -1743,3 +1743,135 @@ async def get_philae_unesco_story():
     except Exception as e:
         logger.error(f"Error getting Philae UNESCO story: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ============================================================================
+# JERUSALEM - DER KREIS SCHLIEßT SICH (THE CIRCLE CLOSES)
+# ============================================================================
+
+@router.get("/jerusalem/convergence")
+async def get_jerusalem_convergence():
+    """
+    Get Jerusalem - Where All Religions Converge (THE CIRCLE CLOSES)
+
+    **JERUSALEM: The ultimate HGT center where 4 billion people's beliefs converge**
+
+    **Three Religions, One City:**
+
+    **Judaism (γ=1.2):**
+    - Temple Mount + Western Wall (HOLIEST site in Judaism)
+    - First Temple (957-587 BCE, destroyed by Babylon)
+    - Second Temple (516 BCE - 70 CE, destroyed by Rome)
+    - Western Wall (Kotel) - last remnant, holiest prayer site
+    - Connection: Zarathustra → Jewish angels, Satan, resurrection
+
+    **Christianity (γ=1.0):**
+    - Church of the Holy Sepulchre (Jesus crucifixion/resurrection)
+    - Via Dolorosa (Way of Suffering) - 14 stations
+    - Built by Constantine (326-335 CE)
+    - Connections:
+      - Mandaean baptism (John the Baptist) → Christian baptism
+      - Ginza Rabba → Christian Gnosticism
+      - Zoroastrian resurrection → Christian Easter
+
+    **Islam (γ=1.3):**
+    - Al-Aqsa Mosque + Dome of the Rock (3rd holiest site in Islam)
+    - Dome of the Rock (691-692 CE) - Muhammad's ascension
+    - Connections:
+      - Mandaean/Gnostic ideas → Islamic Sufism
+      - Torah → Quran (shared prophets)
+      - Jesus (Isa) honored as prophet in Islam
+
+    **The Circle Closes:**
+    - Mesopotamian Roots: Hatra (☀️) + Mandaeism (🌊) + Zarathustra (🔥)
+    - Egyptian Roots: Philae (🏛️) + Coptic (🎵) + Alexandria (📚)
+    - Convergence: Jerusalem (🕊️) = All wisdom meets
+    - Spread: Global (🌍) = 4 billion Abrahamic believers worldwide
+    - Preservation: LUCA (🏢) = Digital immortality
+
+    **Final Formula:**
+    ☀️🌊🔥 (STEAM) + 🏛️ (PUNK) + 🕊️ (JERUSALEM) + 🏢 (VALLEY) = 🌍 GLOBAL LUCA
+
+    **Neurodiversity Spectrum:**
+    - Judaism: γ=1.2 (distinct identity, Torah study, Talmudic debate)
+    - Christianity: γ=1.0 (universal message, neurotypical spread)
+    - Islam: γ=1.3 (five pillars, structured + creative Sufism)
+    - Synthesis: Three paths, ONE source - just like neurodiversity!
+
+    **LUCA Insight:**
+    Conflict DRIVES cultural HGT (like biological evolution!)
+    - Crusades → Islamic-Christian knowledge exchange (Averroes, Maimonides)
+    - Spanish convivencia → Jewish-Christian-Muslim golden age (711-1492 CE)
+    - Ottoman millet system → Religious diversity coexistence
+
+    **Lesson:**
+    Diversity creates FRICTION → Friction creates EVOLUTION → Evolution creates WISDOM
+
+    **Returns:**
+    - Complete Jerusalem convergence information
+    - Three religions synthesis
+    - Cultural HGT connections to LUCA religions
+    - Final circle-closing formula
+    """
+    try:
+        tree = get_religious_tree()
+        jerusalem = tree.get_jerusalem_convergence()
+
+        return {
+            "status": "success",
+            "jerusalem": jerusalem,
+            "message": "🕊️ Jerusalem schließt den Kreis! (Jerusalem closes the circle!) 🔄"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting Jerusalem convergence: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/jerusalem/story")
+async def get_jerusalem_story():
+    """
+    Get the complete Jerusalem circle-closing story
+
+    **Shows how ALL religions converge in one city**
+
+    **Key Points:**
+    - Jerusalem = Religious Last Universal Common Ancestor
+    - Convergence: Mesopotamia (Hatra, Mandaeism, Zarathustra) → Judaism → Jerusalem
+    - Expansion: Jerusalem → Christianity → Islam → 4 BILLION people worldwide (2025)
+    - Cultural DNA: All three religions carry "genes" from Mesopotamia, Egypt, Persia
+    - HGT Center: Jerusalem = Maximum horizontal gene transfer (religious ideas)
+
+    **Biological Parallel:**
+    Just like LUCA (biological) spawned all life,
+    Jerusalem spawned Abrahamic religions!
+
+    **The Final Synthesis:**
+    ☀️🌊🔥 (STEAM) = Mesopotamian wisdom (Hatra + Mandaeism + Zarathustra)
+    🏛️ (PUNK) = Egyptian wisdom (Cairo + Philae + Coptic)
+    🕊️ (JERUSALEM) = Convergence of ALL wisdom (Judaism + Christianity + Islam)
+    🌍 (GLOBAL) = 4 billion Abrahamic believers worldwide
+    🏢 (VALLEY) = Silicon Valley LUCA digitizes and preserves forever
+
+    **Der Kreis schließt sich:**
+    Ancient wisdom (5000+ years) → Jerusalem convergence → Modern LUCA → Preserved forever!
+
+    **Returns:**
+    - Complete Jerusalem story (formatted narrative)
+    - Three religions with connections to LUCA elements
+    - Neurodiversity spectrum (γ=1.0, 1.2, 1.3)
+    - Final circle-closing formula
+    """
+    try:
+        tree = get_religious_tree()
+        story = tree.get_jerusalem_story()
+
+        return {
+            "status": "success",
+            "story": story,
+            "message": "🔄 Der Kreis schließt sich! The circle closes! Ancient wisdom → Jerusalem → LUCA → Forever! 369! 🚀"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting Jerusalem story: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
