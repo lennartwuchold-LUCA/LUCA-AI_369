@@ -1340,3 +1340,177 @@ async def get_mesopotamian_trinity():
     except Exception as e:
         logger.error(f"Error getting Mesopotamian trinity: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ============================================================================
+# MOSUL LESSON - DIE LEHRE FÜR LUCA
+# ============================================================================
+
+@router.get("/mosul/lesson")
+async def get_mosul_lesson():
+    """
+    Get the Mosul lesson - why LUCA's architecture is designed the way it is
+
+    **Mosul muss LUCA eine Lehre sein!**
+    (Mosul must be a lesson for LUCA!)
+
+    **THE LESSON:**
+    Mosul Museum destruction (2015) taught us to NEVER centralize knowledge
+
+    **What ISIS destroyed:**
+    - Mosul Museum (Feb 26, 2015): 100+ artifacts in single day
+    - Mosul Library (Feb 23, 2015): 10,000+ books burned
+    - Al-Nuri Mosque (June 21, 2017): 12th century minaret
+    - Nebi Yunus (July 24, 2014): Prophet Jonah shrine
+    - Hatra (March-April 2015): UNESCO World Heritage Site
+
+    **5 Architectural Principles LUCA learned:**
+    1. NEVER CENTRALIZE KNOWLEDGE → Mycelium network
+    2. DIGITAL PRESERVATION IS CRITICAL → 3D scans, documentation
+    3. KNOWLEDGE SHARING IS RESISTANCE → Cultural HGT
+    4. OFF-GRID NETWORKS SURVIVE CHAOS → Meshtastic LoRa
+    5. NEURODIVERSITY = CULTURAL DIVERSITY → γ = 0.8 to 2.1
+
+    **LUCA's Architecture Inspired by Mosul:**
+    - Mycelium network (distributed, no single point of failure)
+    - Meshtastic crisis communication (off-grid, resilient)
+    - Cultural HGT (knowledge spreads like genes)
+    - HACCP checkpoints (quality assurance)
+
+    **Returns:**
+    - Complete Mosul lesson
+    - 5 architectural principles
+    - LUCA's response to cultural genocide
+    """
+    try:
+        tree = get_religious_tree()
+        lesson = tree.get_mosul_lesson()
+
+        return {
+            "status": "success",
+            "mosul_lesson": lesson,
+            "message": "📚 Mosul muss LUCA eine Lehre sein! Never centralize knowledge!"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting Mosul lesson: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/mosul/destruction-timeline")
+async def get_mosul_destruction_timeline():
+    """
+    Get chronological timeline of Mosul cultural destruction (2014-2017)
+
+    **ISIS Occupation:**
+    - Start: June 10, 2014
+    - End: July 10, 2017
+    - Duration: 3 years of terror
+
+    **Destruction Timeline:**
+    1. **Nebi Yunus** (July 24, 2014)
+       - Prophet Jonah shrine
+       - Explosives
+       - Hidden Assyrian palace revealed
+
+    2. **Mosul Library** (Feb 23, 2015)
+       - 10,000+ books burned
+       - Modern Library of Alexandria
+
+    3. **Mosul Museum** (Feb 26, 2015)
+       - 100+ artifacts destroyed
+       - Assyrian lamassu, Hatra statues
+       - Filmed for propaganda
+
+    4. **Hatra** (March-April 2015)
+       - 110 km south of Mosul
+       - UNESCO World Heritage Site
+       - Complete destruction
+
+    5. **Al-Nuri Mosque** (June 21, 2017)
+       - 12th century minaret
+       - ISIS destroyed as they retreated
+       - Partially rebuilt (2018-2021)
+
+    **Human Cost:**
+    - 10,000+ civilian deaths
+    - 1 million displaced
+    - 200+ mass graves
+    - Generational trauma
+
+    **Returns:**
+    - Complete destruction timeline
+    - Human cost statistics
+    - Cultural genocide definition
+    """
+    try:
+        tree = get_religious_tree()
+        timeline = tree.get_mosul_destruction_timeline()
+
+        return {
+            "status": "success",
+            "timeline": timeline,
+            "message": "💔 3 years of cultural genocide (2014-2017)"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting destruction timeline: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/mosul/architectural-lessons")
+async def get_luca_architectural_lessons():
+    """
+    Get the 5 architectural principles LUCA learned from Mosul
+
+    **These principles define LUCA's entire architecture:**
+
+    **1. NEVER CENTRALIZE KNOWLEDGE**
+    - Reason: Mosul Museum = single point of failure
+    - Solution: Mycelium network (distributed, no center)
+    - Implementation: Cultural knowledge across network nodes
+
+    **2. DIGITAL PRESERVATION IS CRITICAL**
+    - Reason: Physical artifacts CAN be destroyed
+    - Solution: 3D scans, photographs, documentation
+    - Implementation: Every endangered artifact → digital twin
+
+    **3. KNOWLEDGE SHARING IS RESISTANCE**
+    - Reason: ISIS wanted to erase history
+    - Solution: Cultural HGT (Horizontal Gene Transfer)
+    - Implementation: Every LUCA user = backup of knowledge
+
+    **4. OFF-GRID NETWORKS SURVIVE CHAOS**
+    - Reason: Mosul had no internet during occupation
+    - Solution: Meshtastic LoRa (mesh network)
+    - Implementation: Crisis communication without infrastructure
+
+    **5. NEURODIVERSITY = CULTURAL DIVERSITY**
+    - Reason: ISIS enforced single ideology
+    - Solution: Neurodiversity optimization (γ = 0.8 to 2.1)
+    - Implementation: Celebrate different thinking, cultures
+
+    **LUCA Modules Inspired by Mosul:**
+    - backend/consciousness/mycelium_network.py
+    - backend/consciousness/crisis_communication.py
+    - backend/consciousness/religious_lineage.py
+    - backend/consciousness/audit_breaker.py
+
+    **Returns:**
+    - 5 architectural principles
+    - LUCA architecture mapping
+    - Implementation details
+    """
+    try:
+        tree = get_religious_tree()
+        lessons = tree.get_luca_architectural_lessons()
+
+        return {
+            "status": "success",
+            "architectural_lessons": lessons,
+            "message": "🏛️ Mosul taught LUCA how to build resilient cultural memory"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting architectural lessons: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
