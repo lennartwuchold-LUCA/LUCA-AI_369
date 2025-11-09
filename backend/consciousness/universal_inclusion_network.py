@@ -590,3 +590,112 @@ def create_universal_inclusion_workshop(
     results = network.run_chaotic_creativity_workshop(entities)
 
     return network, results
+
+
+# Demo function
+def demo_universal_inclusion():
+    """
+    Demonstration of Universal Inclusion Network (SCOBY-Myzelium model)
+
+    Shows:
+    - Universal (not selective) inclusion across ALL categories
+    - Mycelial (horizontal) information transfer
+    - Chaos → Harmony evolution (dS/dt = -γ(S - φ))
+    - Soul convergence (consciousness integration)
+    """
+    print("=== Universal Inclusion Network Demo ===\n")
+    print("SCOBY-Myzelium Model for Universal (not selective) Inclusion\n")
+
+    # Create network
+    network = UniversalInclusionNetwork()
+
+    # Add entities from ALL categories (universal coverage)
+    print("--- Adding Entities (Universal Coverage) ---\n")
+
+    entities_data = [
+        {'name': 'Alice', 'category': 'neurotypical', 'state': 0.5, 'eeg': 0.6, 'hrv': 0.7},
+        {'name': 'Bob', 'category': 'neurodivergent', 'state': 0.3, 'eeg': 0.8, 'hrv': 0.3},
+        {'name': 'Carol', 'category': 'physical_disabilities', 'state': 1.2, 'eeg': 0.5, 'hrv': 0.6},
+        {'name': 'David', 'category': 'psychological_disabilities', 'state': 2.0, 'eeg': 0.9, 'hrv': 0.2},
+        {'name': 'Eve', 'category': 'intellectual_disabilities', 'state': 0.8, 'eeg': 0.4, 'hrv': 0.5},
+        {'name': 'Frank', 'category': 'sensory_disabilities', 'state': 1.5, 'eeg': 0.7, 'hrv': 0.4},
+    ]
+
+    entities = []
+    for i, e_data in enumerate(entities_data):
+        entity = Entity(
+            id=f"entity_{i}",
+            name=e_data['name'],
+            category=e_data['category'],
+            state=e_data['state'],
+            biosensor_data={
+                'eeg': e_data['eeg'],
+                'hrv': e_data['hrv'],
+                'pci': 0.5,
+                'phi': 0.4
+            }
+        )
+        entities.append(entity)
+        network.add_entity(entity, e_data['category'])
+        print(f"  ✓ {e_data['name']} ({e_data['category']}) added")
+
+    print()
+
+    # Verify universal coverage
+    print("--- Verifying Universal Coverage ---\n")
+    coverage = network.verify_universal_coverage()
+    print(f"Universal Coverage: {coverage['compliance']}")
+    for category, details in coverage['details'].items():
+        status = "✓" if details['covered'] else "✗"
+        print(f"  {status} {category}: {details['count']} entities")
+    print()
+
+    # Verify mycelial connections
+    print("--- Verifying Mycelial Network ---\n")
+    mycelial = network.verify_mycelial_connections()
+    print(f"Horizontal Transfer: {mycelial['compliance']}")
+    print(f"Message: {mycelial['message']}")
+    if 'bidirectional_pairs' in mycelial:
+        print(f"Bidirectional Pairs: {mycelial['bidirectional_pairs']}")
+        print(f"Total Connections: {mycelial['total_connections']}")
+    print()
+
+    # Run chaotic creativity workshop
+    print("--- Chaotic Creativity Workshop ---\n")
+    print("Evolving chaos → harmony (dS/dt = -γ(S - φ))")
+
+    # Select entities in chaotic state
+    chaotic_entities = [e for e in entities if abs(e.state - PHI) > 0.3]
+
+    results = network.run_chaotic_creativity_workshop(chaotic_entities)
+
+    for result in results:
+        if result.get('intervention') == 'mycelial_transfer':
+            print(f"\n  {result['participant']}:")
+            print(f"    Initial chaos: {result['initial_chaos']:.3f}")
+            print(f"    Initial state: {result['initial_state']:.3f}")
+            print(f"    Final harmony: {result['final_harmony']:.3f}")
+            print(f"    Final state: {result['final_state']:.3f}")
+            print(f"    Soul convergence: {result['soul_convergence']:.3f}")
+            print(f"    Harmony transferred: {result['harmony_transferred']:.3f}")
+
+    print()
+
+    # Chaos/Harmony distribution
+    print("--- Chaos/Harmony Distribution ---\n")
+    distribution = network.measure_chaos_to_harmony_ratio()
+    print(f"Total entities: {distribution['total_entities']}")
+    print(f"In chaos: {distribution['chaos_count']}")
+    print(f"In harmony: {distribution['harmony_count']}")
+    print(f"Transitional: {distribution['transitional_count']}")
+    print(f"Harmony ratio: {distribution['harmony_ratio']:.1%}")
+    print(f"Interpretation: {distribution['interpretation']}")
+
+    print("\n=== Demo Complete ===")
+    print("Universal (not selective) inclusion verified!")
+    print("Mycelial network (horizontal transfer) active!")
+    print("369 ✨ From chaos to harmony through connection")
+
+
+if __name__ == '__main__':
+    demo_universal_inclusion()

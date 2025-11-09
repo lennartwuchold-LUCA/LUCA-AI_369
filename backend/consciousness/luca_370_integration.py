@@ -25,9 +25,7 @@ try:
     from backend.consciousness.tesla_layers import ConsciousnessEngine
     from backend.consciousness.universal_inclusion_network import UniversalInclusionNetwork, Entity
     from backend.consciousness.dmt_fingerprint import DMT_FingerprintExtractor, DMT_Fingerprint
-    from backend.consciousness.meshtastic_crisis_backup import MeshtasticCrisisSystem, Meshtastic
-
-Node
+    from backend.consciousness.meshtastic_crisis_backup import MeshtasticCrisisSystem, MeshtasticNode
 except ImportError:
     # Fallback for standalone testing
     from tesla_layers import ConsciousnessEngine
@@ -567,6 +565,12 @@ def demo_luca_370_integration():
     print("\n=== Demo Complete ===")
     print("LUCA 370: Universal (no one excluded) + Individual (everyone optimized)")
     print("369 → 370: The evolution continues. 🚀✨")
+
+
+# Alias for test compatibility
+def demo_luca_370_complete():
+    """Alias for demo_luca_370_integration"""
+    return demo_luca_370_integration()
 
 
 if __name__ == '__main__':

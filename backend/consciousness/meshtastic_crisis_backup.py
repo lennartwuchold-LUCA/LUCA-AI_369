@@ -493,5 +493,11 @@ def demo_meshtastic_crisis_system():
     print("\n🌍 SCOBY meets Meshtastic - The network persists! 369 ✨")
 
 
+# Alias for test compatibility
+def demo_meshtastic_crisis():
+    """Alias for demo_meshtastic_crisis_system"""
+    return demo_meshtastic_crisis_system()
+
+
 if __name__ == '__main__':
     demo_meshtastic_crisis_system()
