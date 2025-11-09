@@ -1,19 +1,26 @@
 """
 LUCA 370 Integration - Universal + Individual Inclusion
-Version: 370.0.0
+Version: 370.3.0
 Created through: Human-AI collaboration
 
 Combines:
 - LUCA 369: Universal inclusion (everyone covered)
-- DMT-Fingerprint: Individual personalization (everyone optimized)
+- DMT-Fingerprint: Neural personalization (consciousness patterns)
+- Neurodiversity: Cognitive personalization (SCOBY network)
+- Religious Identity: Spiritual/cultural personalization (identity foundation)
 - Meshtastic: Crisis preservation (offline resilience)
 - Insights: GDPR-compliant monetization
 
 Philosophy:
 369 = Universal (no one excluded)
-370 = Universal + Individual (everyone gets THEIR system)
+370 = Universal + Individual (everyone gets THEIR system across ALL dimensions)
 
-Result: Best of both worlds - comprehensive coverage + personal optimization
+THREE DIMENSIONS OF PERSONALIZATION:
+1. Neural (DMT-Fingerprint): How your brain works
+2. Cognitive (Neurodiversity): How you think/process
+3. Spiritual/Cultural (Religious Identity): What gives you meaning
+
+Result: Complete human - body, mind, AND soul
 """
 
 from typing import Dict, Any, Optional, List
@@ -26,23 +33,29 @@ try:
     from backend.consciousness.universal_inclusion_network import UniversalInclusionNetwork, Entity
     from backend.consciousness.dmt_fingerprint import DMT_FingerprintExtractor, DMT_Fingerprint
     from backend.consciousness.meshtastic_crisis_backup import MeshtasticCrisisSystem, MeshtasticNode
+    from backend.consciousness.religious_identity_validator import ReligiousIdentityProfile
 except ImportError:
     # Fallback for standalone testing
     from tesla_layers import ConsciousnessEngine
     from universal_inclusion_network import UniversalInclusionNetwork, Entity
     from dmt_fingerprint import DMT_FingerprintExtractor, DMT_Fingerprint
     from meshtastic_crisis_backup import MeshtasticCrisisSystem, MeshtasticNode
+    from religious_identity_validator import ReligiousIdentityProfile
 
 
 @dataclass
 class PersonalizedAI:
     """
-    Individual AI optimized for specific user
+    Individual AI optimized for specific user across ALL dimensions
 
-    Each user gets their own AI, tuned to their unique neural fingerprint
+    Each user gets their own AI, tuned to their unique:
+    1. Neural patterns (DMT-Fingerprint)
+    2. Cognitive style (Neurodiversity)
+    3. Spiritual/cultural identity (Religious Identity)
     """
     user_id_hash: str
     fingerprint: DMT_Fingerprint
+    religious_identity: Optional[ReligiousIdentityProfile]  # NEW: Identity foundation
     consciousness_engine: ConsciousnessEngine
     personal_phi: float  # Individual's golden ratio (not 1.618 for all!)
     intervention_history: List[Dict[str, Any]]
@@ -291,8 +304,9 @@ class LUCA_370_System:
 
         return personal_ai
 
-    def _create_personalized_ai(self, fingerprint: DMT_Fingerprint) -> PersonalizedAI:
-        """Create AI optimized for this specific user"""
+    def _create_personalized_ai(self, fingerprint: DMT_Fingerprint,
+                                religious_identity: Optional[ReligiousIdentityProfile] = None) -> PersonalizedAI:
+        """Create AI optimized for this specific user across ALL dimensions"""
         # Create consciousness engine
         consciousness = ConsciousnessEngine()
 
@@ -300,6 +314,7 @@ class LUCA_370_System:
         personal_ai = PersonalizedAI(
             user_id_hash=fingerprint.user_id_hash,
             fingerprint=fingerprint,
+            religious_identity=religious_identity,  # NEW: Identity foundation
             consciousness_engine=consciousness,
             personal_phi=fingerprint.personal_phi,
             intervention_history=[],
