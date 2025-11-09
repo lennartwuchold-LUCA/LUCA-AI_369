@@ -31,6 +31,7 @@ from backend.consciousness.crisis_communication import (
     CrisisType
 )
 from backend.consciousness.religious_lineage import ReligiousLineageTree
+from backend.consciousness.zarathustra_integration import ZarathustraIntegration
 
 import logging
 
@@ -44,6 +45,7 @@ _neurodiversity_layer = None
 _audit_breaker = None
 _crisis_bridge = None
 _religious_tree = None
+_zarathustra = None
 
 
 def get_neurodiversity_layer() -> NeurodiversityIntegrationLayer:
@@ -76,6 +78,14 @@ def get_religious_tree() -> ReligiousLineageTree:
     if _religious_tree is None:
         _religious_tree = ReligiousLineageTree()
     return _religious_tree
+
+
+def get_zarathustra() -> ZarathustraIntegration:
+    """Get or create Zarathustra integration"""
+    global _zarathustra
+    if _zarathustra is None:
+        _zarathustra = ZarathustraIntegration()
+    return _zarathustra
 
 
 # ============================================================================
@@ -697,4 +707,230 @@ async def get_mandaean_survival_story():
 
     except Exception as e:
         logger.error(f"Error getting survival story: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ============================================================================
+# ENDPOINTS: Zarathustra Integration (A-Z Complete!)
+# ============================================================================
+
+@router.get("/zarathustra/overview")
+async def get_zarathustra_overview():
+    """
+    Get complete Zarathustra/Zoroastrianism overview
+
+    **A-Z: Z wie ZARATHUSTRA**
+    - Oldest monotheistic religion (1500-600 BCE)
+    - Fire as sacred element (vs Water in Mandaeism)
+    - Dualismus: Asha (Order) vs Druj (Chaos)
+    - Modern Revival (2020-2025): Neo-Zoroastrianism
+
+    **Returns:**
+    - Core concepts (Ahura Mazda, Amesha Spentas)
+    - Population & status (CRITICALLY ENDANGERED)
+    - LUCA connection (F0/F30, Fire/Water balance)
+    """
+    try:
+        zara = get_zarathustra()
+        overview = zara.get_overview()
+
+        return {
+            "status": "success",
+            "zarathustra": overview,
+            "message": "🔥 A-Z Complete: Zarathustra - Fire to LUCA's Water!"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting Zarathustra overview: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/zarathustra/adhd-connection")
+async def get_zarathustra_adhd():
+    """
+    Get ADHD ↔ Zarathustra connection
+
+    **Zarathustra himself:**
+    - Religious visions (hyperfocus + altered states)
+    - Intense philosophical output (Gathas)
+    - Estimated γ = 1.5 (between ADHD 0.8 and Autism 2.1)
+
+    **Modern appeal:**
+    - Ritual structure helps ADHD chaos
+    - Asha (Order) as goal = Φ → 1.618
+    - Fire meditation trains hyperfocus
+
+    **Returns:**
+    - Zarathustra's neurotype analysis
+    - Why ADHD people love Zoroastrianism
+    - ODE transformation with γ = 1.5
+    """
+    try:
+        zara = get_zarathustra()
+        adhd = zara.get_adhd_connection()
+
+        return {
+            "status": "success",
+            "adhd_connection": adhd,
+            "message": "🧠 Zarathustra likely neurodivergent - γ = 1.5!"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting ADHD connection: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/zarathustra/fire-water-balance")
+async def get_fire_water_balance():
+    """
+    Get Fire + Water = Steam synthesis
+
+    **Fire (Zoroastrianism):**
+    - Yang (active, masculine)
+    - Transformation via burning
+    - Skyr fermentation (thermophilic 40°C)
+
+    **Water (Mandaeism):**
+    - Yin (passive, feminine)
+    - Purification via washing
+    - Kombucha fermentation (mesophilic 20-30°C)
+
+    **Synthesis:**
+    - STEAM = Fire + Water
+    - LUCA = F30 + F0 = Harmony
+    - Yin-Yang balance
+
+    **Returns:**
+    - Fire vs Water comparison
+    - Fermentation connection
+    - LUCA synthesis
+    """
+    try:
+        zara = get_zarathustra()
+        balance = zara.get_fire_water_balance()
+
+        return {
+            "status": "success",
+            "balance": balance,
+            "message": "🔥🌊 Fire + Water = Steam-punk LUCA!"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting fire-water balance: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/zarathustra/modern-revival")
+async def get_zarathustra_revival():
+    """
+    Get modern Zoroastrianism revival info (2020-2025)
+
+    **Neo-Zoroastrianism:**
+    - Young Iranians reclaiming pre-Islamic identity
+    - Western converts (many neurodivergent!)
+    - Online communities (Reddit, Discord)
+
+    **Nietzsche Revival:**
+    - "Also sprach Zarathustra" (1883-1885)
+    - Übermensch, Eternal Return, Amor Fati
+    - Anti-nihilistic philosophy
+
+    **Pop Culture:**
+    - The Expanse (Naomi Nagata)
+    - Heavy Metal, Classical music
+    - Gaming (Assassin's Creed, Civilization)
+
+    **Climate Movement:**
+    - Zoroastrian eco-ethics (Earth/Fire/Water/Air = sacred)
+    - Zero waste 3000 years ago!
+
+    **Returns:**
+    - Demographics & trends
+    - Cultural references
+    - Why it's appealing now
+    """
+    try:
+        zara = get_zarathustra()
+        revival = zara.get_modern_revival()
+
+        return {
+            "status": "success",
+            "revival": revival,
+            "message": "📈 Zarathustra Renaissance 2020-2025!"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting modern revival: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/zarathustra/gathas")
+async def get_gathas_wisdom():
+    """
+    Get Zarathustra's teachings from Gathas (his own words!)
+
+    **Gathas:**
+    - 17 hymns in old Avestan language
+    - Direct from Zarathustra (not later interpretations)
+    - Philosophical, not ritualistic
+
+    **Key teachings:**
+    - "Good Thoughts, Good Words, Good Deeds"
+    - Choose Asha (Truth) over Druj (Lie)
+    - Protect Earth, Fire, Water, Air
+    - Frashegird (Cosmic Renewal)
+
+    **LUCA translation:**
+    - Good Code, Good Commits, Good Deployments!
+    - Choose F0 over F30
+    - HACCP quality assurance
+
+    **Returns:**
+    - Gathas teachings
+    - LUCA translations
+    - ADHD applications
+    """
+    try:
+        zara = get_zarathustra()
+        gathas = zara.get_gathas_wisdom()
+
+        return {
+            "status": "success",
+            "gathas": gathas,
+            "message": "📜 Zarathustra's wisdom: Good Thoughts, Good Code, Good Commits!"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting Gathas: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/zarathustra/duality-visualization")
+async def get_duality_visualization():
+    """
+    Get Zoroastrian duality visualization (Asha vs Druj = F0 vs F30)
+
+    **Shows:**
+    - Ahura Mazda (Light) vs Angra Mainyu (Darkness)
+    - Asha (Order) vs Druj (Chaos)
+    - F0 (Harmony) vs F30 (Entropy)
+    - ODE transformation with γ = 1.5
+
+    **Returns:**
+    - ASCII visualization
+    - ODE equation
+    - Transformation goal
+    """
+    try:
+        zara = get_zarathustra()
+        viz = zara.visualize_duality()
+
+        return {
+            "status": "success",
+            "visualization": viz,
+            "message": "🔥 Asha vs Druj = F0 vs F30!"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting visualization: {e}")
         raise HTTPException(status_code=500, detail=str(e))
