@@ -1,7 +1,7 @@
 # 🧬 Scientific Vision: LUCA as Bio-Inspired Framework
 
 **Version:** 369.2.0
-**Author:** Lennart Wuchold
+**Created through:** Human-AI collaboration
 **Date:** November 8, 2025
 **Status:** Roadmap for Scientific Validation
 

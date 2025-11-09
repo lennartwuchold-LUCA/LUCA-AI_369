@@ -464,6 +464,6 @@ From Gaza to Ukraine, from rural Africa to disaster zones, LUCA can help.
 
 ---
 
-**Created by:** Lennart Wuchold
+**Created through:** Human-AI collaboration
 **Version:** 369.2.0
 **License:** For humanitarian use

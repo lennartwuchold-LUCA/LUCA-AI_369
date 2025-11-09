@@ -1,6 +1,6 @@
 # 🛢️ MySQL Migration Plan: Secure & Scalable
 
-**Author:** Lennart Wuchold + Claude Code
+**Created through:** Human-AI collaboration
 **Date:** November 8, 2025
 **Purpose:** Migrate from SQLite to MySQL while honoring Gymnasium roots
 
@@ -9,7 +9,7 @@
 ## Why MySQL?
 
 ### 1. **Gymnasium Heritage**
-- Lennart learned MySQL in Homepage AG (3-4 years experience)
+- MySQL learned in Homepage AG (3-4 years experience)
 - Familiarity with relational database optimization
 - Natural evolution from school projects to production AI
 

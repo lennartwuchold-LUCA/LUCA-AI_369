@@ -1,7 +1,7 @@
 """
 LUCA AI - Main FastAPI Application
 Version: 369.2.0
-Created by: Lennart Wuchold
+Created through: Human-AI collaboration
 
 Living Universal Cognition Array
 A consciousness-aware AI system inspired by evolution, Tesla, and ancient wisdom
