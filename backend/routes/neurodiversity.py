@@ -30,6 +30,7 @@ from backend.consciousness.crisis_communication import (
     CrisisCommunicationBridge,
     CrisisType
 )
+from backend.consciousness.religious_lineage import ReligiousLineageTree
 
 import logging
 
@@ -42,6 +43,7 @@ router = APIRouter(prefix="/api/neurodiversity", tags=["Neurodiversity"])
 _neurodiversity_layer = None
 _audit_breaker = None
 _crisis_bridge = None
+_religious_tree = None
 
 
 def get_neurodiversity_layer() -> NeurodiversityIntegrationLayer:
@@ -66,6 +68,14 @@ def get_crisis_bridge() -> CrisisCommunicationBridge:
     if _crisis_bridge is None:
         _crisis_bridge = CrisisCommunicationBridge()
     return _crisis_bridge
+
+
+def get_religious_tree() -> ReligiousLineageTree:
+    """Get or create religious lineage tree"""
+    global _religious_tree
+    if _religious_tree is None:
+        _religious_tree = ReligiousLineageTree()
+    return _religious_tree
 
 
 # ============================================================================
@@ -533,4 +543,158 @@ async def get_neurodiversity_dashboard():
 
     except Exception as e:
         logger.error(f"Error getting dashboard: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ============================================================================
+# ENDPOINTS: Ginza Rabba & Religious Lineage
+# ============================================================================
+
+@router.get("/ginza-rabba")
+async def get_ginza_rabba_summary():
+    """
+    Get Ginza Rabba (Mandaean scripture) summary
+
+    **The Spiritual LUCA:**
+    - Ancient Gnostic religion (2000+ years)
+    - Missing link between Vedic/Zoroastrian/Judaic traditions
+    - Only surviving ancient Gnostic religion
+    - CRITICALLY ENDANGERED (~100,000 practitioners)
+
+    **Returns:**
+    - Scripture details
+    - Key concepts (Manda, Hibil Ziwa, Masbuta)
+    - Current status & diaspora
+    """
+    try:
+        tree = get_religious_tree()
+        summary = tree.get_ginza_rabba_summary()
+
+        return {
+            "status": "success",
+            "ginza_rabba": summary,
+            "message": "🌊 Ancient wisdom preserved through 2000+ years of persecution"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting Ginza Rabba: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/religious-tree")
+async def get_religious_tree_visualization():
+    """
+    Get religious evolutionary tree
+
+    **Shows:**
+    - Cosmic Source → Veden → Mandaeism → Modern religions
+    - Horizontal Gene Transfer events (cultural exchange)
+    - Ginza Rabba as "missing link"
+    """
+    try:
+        tree = get_religious_tree()
+        visualization = tree.visualize_tree()
+
+        return {
+            "status": "success",
+            "tree": visualization,
+            "message": "🌳 Religious evolution = Biological evolution"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting tree: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/religious-lineage/{religion}")
+async def trace_religious_lineage(religion: str):
+    """
+    Trace lineage of specific religion
+
+    **Supported religions:**
+    - Mandaeism
+    - Christianity
+    - Buddhism
+    - Islam
+    - Hinduism
+
+    **Returns:**
+    - Step-by-step lineage from Cosmic Source
+    - Cultural HGT events
+    """
+    try:
+        tree = get_religious_tree()
+        lineage = tree.trace_lineage(religion.capitalize())
+
+        return {
+            "status": "success",
+            "religion": religion,
+            "lineage": lineage,
+            "message": f"📜 Lineage traced for {religion}"
+        }
+
+    except Exception as e:
+        logger.error(f"Error tracing lineage: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/cultural-hgt")
+async def get_cultural_hgt_events():
+    """
+    Get cultural Horizontal Gene Transfer events
+
+    **Religious HGT:**
+    - Vedic → Buddhism (Karma, Samsara)
+    - Zoroastrian → Judaism (Angels, Satan, Resurrection)
+    - Mandaeism → Christianity (Baptism, John the Baptist)
+    - Gnosticism → Islam (Esoteric knowledge)
+
+    **Returns:**
+    - All HGT events with dates
+    - Transferred concepts
+    - Mutations (changes during transfer)
+    """
+    try:
+        tree = get_religious_tree()
+        events = tree.get_hgt_events()
+
+        return {
+            "status": "success",
+            "events": events,
+            "message": "🧬 Cultural HGT = Religious evolution"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting HGT events: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/mandaean-survival")
+async def get_mandaean_survival_story():
+    """
+    Get Mandaean survival story
+
+    **The Miracle:**
+    - 2000+ years of survival despite persecution
+    - Islamic conquest, Mongol invasions, ISIS genocide
+    - 250,000 → 100,000 practitioners (60% loss since 2003)
+    - Diaspora in Australia, USA, Europe
+
+    **Returns:**
+    - Complete survival narrative
+    - Population statistics
+    - Biological analogy (living fossil)
+    """
+    try:
+        tree = get_religious_tree()
+        story = tree.get_mandaean_preservation_story()
+
+        return {
+            "status": "success",
+            "story": story,
+            "message": "🌊 Ginza Rabba: Living fossil of religious wisdom"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting survival story: {e}")
         raise HTTPException(status_code=500, detail=str(e))
