@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Kreativarbeit",
+        "current_load": 1.5,
+        "max_load": 5.0,
+        "k_m": 1.0
+    },
+    {
+        "name": "Analyse",
+        "current_load": 2.2,
+        "max_load": 4.0,
+        "k_m": 0.5
+    },
+    {
+        "name": "Routine-Tasks",
+        "current_load": 0.8,
+        "max_load": 6.0,
+        "k_m": 2.0
+    }
+]

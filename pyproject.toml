@@ -1,0 +1,56 @@
+[tool.poetry]
+name = "luca-bio"
+version = "2.1.0"
+description = "Bio-inspired Resource Allocation using Enzymatic Kinetics (Monod & Hill)"
+authors = ["Lennart Wuchold <lenny@luca.bio>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/lennartwuchold-LUCA/LUCA-AI_369"
+repository = "https://github.com/lennartwuchold-LUCA/LUCA-AI_369"
+keywords = ["bioinformatics", "resource-allocation", "optimization", "enzymatic-kinetics", "hill-equation"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+packages = [{include = "luca"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+numpy = "^1.26.0"
+scipy = "^1.11.0"
+jsonschema = "^4.20.0"
+matplotlib = "^3.8.0"
+click = "^8.1.7"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+black = "^23.11.0"
+isort = "^5.12.0"
+mypy = "^1.7.0"
+
+[tool.poetry.scripts]
+luca = "luca.allocator:cli"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
