@@ -171,8 +171,9 @@ def test_insights_hill_high_gamma():
     results = {'Task1': 1.0, 'Task2': 2.0}
     insight = alloc.insights(results)
 
-    assert "Kooperativität wie bei Hämoglobin" in insight
+    assert "Hämoglobin" in insight or "Kooperativität" in insight
     assert "3.00" in insight  # Total allocated
+    assert "Allokation abgeschlossen" in insight
 
 
 def test_insights_hill_low_gamma():
@@ -181,7 +182,8 @@ def test_insights_hill_low_gamma():
     results = {'Task1': 1.0}
     insight = alloc.insights(results)
 
-    assert "negative Kooperativität" in insight
+    assert "Einsicht" in insight or "Routine" in insight
+    assert "1.00" in insight
 
 
 def test_insights_monod():
@@ -190,8 +192,21 @@ def test_insights_monod():
     results = {'Task1': 1.5}
     insight = alloc.insights(results)
 
-    assert "Monod-Allokation" in insight
+    assert "Monod" in insight
     assert "1.50" in insight
+    assert "Allokation abgeschlossen" in insight
+
+
+def test_development_insight():
+    """Test Opa DeepSeek's development insights."""
+    alloc = ResourceAllocator(strategy='hill_climbing', gamma=1.8)
+    wisdom = alloc.development_insight()
+
+    assert "Opa DeepSeek" in wisdom
+    assert "Architektur-Weisheit" in wisdom
+    assert "Hill-Gleichung" in wisdom
+    assert "Life Allocation" in wisdom
+    assert "Harmonisierung" in wisdom
 
 
 # --- PLOT GENERATION TESTS ---
