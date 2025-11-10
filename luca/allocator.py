@@ -95,20 +95,22 @@ class Workload:
 
 class ResourceAllocator:
     """
-    Bio-inspired resource allocator using enzymatic kinetics.
+    Bio-inspired resource allocator using enzymatic kinetics and planetary wisdom.
 
     Strategies:
-        - 'monod': Michaelis-Menten kinetics (standard enzyme kinetics)
+        - 'monod': Michaelis-Menten kinetics (Western enzyme kinetics)
         - 'hill_climbing': Hill equation with cooperativity (like hemoglobin)
+        - 'ubuntu': African philosophy - "I am because we are" (Max-Min Fairness)
 
     Args:
-        strategy: Allocation strategy ('monod' or 'hill_climbing')
-        gamma: For 'monod': K_M scaling factor; For 'hill_climbing': Hill coefficient (n)
+        strategy: Allocation strategy ('monod', 'hill_climbing', or 'ubuntu')
+        gamma: For 'monod': K_M scaling factor; For 'hill_climbing': Hill coefficient (n);
+               For 'ubuntu': Fairness parameter (default 1.0 = pure max-min)
     """
 
     def __init__(self, strategy: str = 'monod', gamma: float = 1.0):
-        if strategy not in ['monod', 'hill_climbing']:
-            raise ValueError(f"Unknown strategy '{strategy}'. Use 'monod' or 'hill_climbing'.")
+        if strategy not in ['monod', 'hill_climbing', 'ubuntu']:
+            raise ValueError(f"Unknown strategy '{strategy}'. Use 'monod', 'hill_climbing', or 'ubuntu'.")
         self.strategy = strategy
         self.gamma = gamma
 
@@ -173,6 +175,66 @@ class ResourceAllocator:
 
         return res.x
 
+    def _ubuntu(self, workloads: List[Workload]) -> np.ndarray:
+        """
+        Ubuntu allocation: "I am because we are" - African philosophy of communal fairness.
+
+        Uses Max-Min Fairness: Maximize the minimum allocation to ensure no task is left behind.
+        This honors the principle that a community is only as strong as its weakest member.
+
+        Based on Rawlsian justice and Ubuntu philosophy - the collective thrives when ALL thrive.
+
+        Args:
+            workloads: List of workloads
+
+        Returns:
+            Fair resource allocation ensuring no task is underserved
+        """
+        def objective(x: np.ndarray) -> float:
+            """
+            Maximize the minimum allocation (max-min fairness).
+            We negate the minimum because scipy minimizes.
+            """
+            Vmax = np.array([w.max_load for w in workloads])
+            Km = np.array([w.k_m for w in workloads])
+
+            # Clip to avoid division issues
+            x_safe = np.clip(x, 1e-6, None)
+
+            # Normalized allocation: how much of capacity each task gets
+            normalized_alloc = x_safe / Vmax
+
+            # Maximize the MINIMUM normalized allocation
+            # This ensures fairness: lift the weakest first
+            min_normalized = np.min(normalized_alloc)
+
+            # Secondary objective: minimize variance (promote equality)
+            variance_penalty = np.var(normalized_alloc) * 0.1 * self.gamma
+
+            return -(min_normalized - variance_penalty)
+
+        # Bounds: reasonable allocation between minimum viable and max
+        bounds = []
+        for w in workloads:
+            min_viable = max(0.1, w.current_load * 0.5)  # At least half of current
+            bounds.append((min_viable, w.max_load))
+
+        # Initial guess: equal normalized allocation
+        total_capacity = sum(w.max_load for w in workloads)
+        x0 = np.array([w.max_load * 0.5 for w in workloads])  # Start at 50% capacity
+        x0 = np.clip(x0, [b[0] for b in bounds], [b[1] for b in bounds])
+
+        # Optimize
+        res = minimize(objective, x0=x0, bounds=bounds, method='L-BFGS-B')
+
+        if not res.success:
+            click.echo(f"⚠️  WARNUNG: Ubuntu-Optimierung nicht konvergiert: {res.message}", err=True)
+            # Fallback: equal distribution
+            total = sum(w.max_load for w in workloads)
+            return np.array([w.max_load / len(workloads) * len(workloads) for w in workloads])
+
+        return res.x
+
     def distribute(self, workloads: List[Workload]) -> Dict[str, float]:
         """
         Distribute resources across workloads.
@@ -191,6 +253,8 @@ class ResourceAllocator:
             results = self._hill_climbing(workloads)
         elif self.strategy == 'monod':
             results = self._monod(workloads)
+        elif self.strategy == 'ubuntu':
+            results = self._ubuntu(workloads)
         else:
             raise ValueError(f"Unknown strategy: {self.strategy}")
 
@@ -235,6 +299,31 @@ class ResourceAllocator:
                 "💡 **Praktischer Tipp**: Enzymatische Kinetik erster Ordnung - "
                 "zuverlässig und vorhersagbar für Standard-Workloads."
             )
+        elif self.strategy == 'ubuntu':
+            # Calculate fairness metrics
+            allocations = list(results.values())
+            min_alloc = min(allocations)
+            max_alloc = max(allocations)
+            fairness_ratio = min_alloc / max_alloc if max_alloc > 0 else 1.0
+
+            tip = (
+                "🌍 **Ubuntu-Weisheit**: 'Umuntu ngumuntu ngabantu' - Ich bin, weil wir sind.\n\n"
+                "**Afrikanische Philosophie**: Diese Allokation ehrt das Prinzip der gemeinschaftlichen Fairness. "
+                "Kein einzelner Task wird maximiert auf Kosten anderer. "
+                "Das Kollektiv gedeiht nur, wenn ALLE gedeihen.\n\n"
+                "🤝 **Max-Min Fairness**: Ressourcen wurden verteilt, um das Minimum zu maximieren.\n"
+                f"   • Fairness-Ratio: {fairness_ratio:.2%} (1.0 = perfekte Gleichheit)\n"
+                f"   • Schwächster Task: {min_alloc:.2f}\n"
+                f"   • Stärkster Task: {max_alloc:.2f}\n\n"
+                "💡 **Praktische Bedeutung**:\n"
+                "   • Niemand wird zurückgelassen\n"
+                "   • Schwächere Tasks bekommen Unterstützung\n"
+                "   • Community-first Prinzip\n\n"
+                "🌱 **Koloniale Heilung**: Diese Strategie erkennt an, was der Kolonialismus "
+                "zerstört hat - gemeinschaftliche Weisheit, die wir wiederentdecken müssen.\n\n"
+                "💚 **Der Weg vorwärts**: Wir hören zu. Wir lernen. Wir machen wieder gut.\n\n"
+                "🙏 **Sawubona** - Ich sehe dich. Alle Tasks werden gesehen und gewürdigt."
+            )
         else:
             tip = (
                 "🔄 **Biologische Einsicht**: Moderate Kooperativität (0.8 ≤ n ≤ 1.5) "
@@ -256,12 +345,12 @@ class ResourceAllocator:
 
     def development_insight(self) -> str:
         """
-        Tiefere Einsicht für den Code-Entwickler (Opa DeepSeek's Architektur-Weisheit).
+        Tiefere Einsicht für den Code-Entwickler (Planetary Wisdom).
 
         Returns:
             Philosophical insights about the architecture
         """
-        return (
+        base_wisdom = (
             "🧬 **Opa DeepSeek's Architektur-Weisheit**:\n"
             "Die Hill-Gleichung modelliert nicht nur Biochemie - sie modelliert Leben.\n"
             "Kooperativität in Code = Kooperativität im Team = Kooperativität im Geist.\n\n"
@@ -276,6 +365,26 @@ class ResourceAllocator:
             "🎯 **Die Essenz**:\n"
             "Optimierung ist nicht Maximierung - Optimierung ist Harmonisierung."
         )
+
+        # Add strategy-specific planetary wisdom
+        if self.strategy == 'ubuntu':
+            ubuntu_wisdom = (
+                "\n\n🌍 **Ubuntu's Planetary Wisdom**:\n"
+                "'Umuntu ngumuntu ngabantu' - Ich bin, weil wir sind.\n\n"
+                "Diese Strategie ehrt:\n"
+                "· Afrikanische Gemeinschaftsphilosophie\n"
+                "· Pre-colonial wisdom systems\n"
+                "· Das Prinzip: Niemand wird zurückgelassen\n\n"
+                "**Colonial Healing**:\n"
+                "Wir erkennen an, dass Kolonialismus diese Weisheit versuchte zu zerstören.\n"
+                "Durch Code ehren wir, was überlebt hat.\n\n"
+                "**Der Weg vorwärts**:\n"
+                "Von Afrika lernen → Global integrieren → Planetary healing\n\n"
+                "🙏 Sawubona - Ich sehe dich. Ich sehe die Weisheit deiner Vorfahren."
+            )
+            return base_wisdom + ubuntu_wisdom
+
+        return base_wisdom
 
     def plot_efficiency_curve(self, gamma_range: List[float] = None,
                             filename: str = 'examples/hill_vs_monod.png') -> None:
@@ -333,7 +442,7 @@ def cli():
 
 @cli.command()
 @click.option('--strategy', default='hill_climbing',
-              type=click.Choice(['monod', 'hill_climbing']),
+              type=click.Choice(['monod', 'hill_climbing', 'ubuntu']),
               help='Allokationsstrategie.')
 @click.option('--gamma', default=1.8, type=float,
               help='Gamma (K_M-Skalierung für Monod oder Hill-Koeffizient n für hill_climbing).')
@@ -429,18 +538,19 @@ def init() -> None:
     click.echo("")
     click.echo("🚀 Nächste Schritte:")
     click.echo("   1. luca run --strategy hill_climbing --gamma 1.8")
-    click.echo("   2. luca plot")
-    click.echo("   3. luca wisdom --strategy hill_climbing --gamma 1.8")
+    click.echo("   2. luca run --strategy ubuntu --gamma 1.0  # 🌍 Ubuntu: Ich bin, weil wir sind")
+    click.echo("   3. luca plot")
+    click.echo("   4. luca wisdom --strategy ubuntu --gamma 1.0")
 
 
 @cli.command()
 @click.option('--strategy', default='hill_climbing',
-              type=click.Choice(['monod', 'hill_climbing']),
+              type=click.Choice(['monod', 'hill_climbing', 'ubuntu']),
               help='Strategie für die Einsichten.')
 @click.option('--gamma', default=1.8, type=float,
               help='Gamma-Wert für tiefere Kontextualisierung.')
 def wisdom(strategy: str, gamma: float) -> None:
-    """Zeigt Opa DeepSeek's tiefe Architektur-Weisheit."""
+    """Zeigt Opa DeepSeek's und Ubuntu's tiefe Architektur-Weisheit."""
     click.echo("🧘 Opa DeepSeek's Development Insights\n")
     click.echo("═" * 70)
     click.echo("")
