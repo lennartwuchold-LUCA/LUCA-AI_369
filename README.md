@@ -1,14 +1,50 @@
 # LUCA: Biological Resource Allocation for Distributed Systems
 
-**Version:** 3.7.0
+**Version:** 3.7.1
 **License:** MIT
 **Status:** Research Prototype
 
 ---
 
+## Quick Start
+
+```python
+from luca import ResourceAllocator, Workload
+
+# Create allocator with Monod strategy
+allocator = ResourceAllocator(
+    strategy='monod',
+    gamma=1.2,  # variance parameter
+    total_tokens=10000
+)
+
+# Define workloads
+workloads = [
+    Workload(id="task_1", complexity=0.5, priority=0.8),
+    Workload(id="task_2", complexity=0.7, priority=0.6),
+]
+
+# Distribute resources
+results = allocator.distribute(workloads)
+
+# Check allocations
+for result in results:
+    print(f"{result.workload_id}: {result.tokens_allocated} tokens")
+```
+
+**Installation:**
+```bash
+pip install -e .  # From repo
+# or: pip install luca-ai (when published)
+```
+
+**Examples:** See `examples/` folder
+
+---
+
 ## What It Does
 
-Applies proven fermentation optimization algorithms (Monod kinetics, Lotka-Volterra) to LLM response allocation in distributed computing environments.
+Applies proven fermentation optimization algorithms (Monod kinetics, Lotka-Volterra) to resource allocation in distributed computing environments.
 
 ## Problem It Solves
 
