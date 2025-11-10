@@ -415,5 +415,167 @@ def test_high_km_value():
     assert results['HighKm'] < 1.0
 
 
+# --- NORDIC-VIKING ALLOCATION TESTS ---
+
+def test_nordic_viking_allocation(sample_workloads):
+    """Test Nordic-Viking Lagom allocation."""
+    alloc = ResourceAllocator(strategy='nordic_viking', gamma=0.65)
+    results = alloc.distribute(sample_workloads)
+
+    assert 'A' in results
+    assert 'B' in results
+    assert 'C' in results
+
+    # All results should be non-negative
+    assert all(v >= 0 for v in results.values())
+
+
+def test_nordic_viking_lagom_range():
+    """Test that Nordic-Viking respects Lagom range (0.5-0.8)."""
+    workloads = [
+        Workload(name="Task1", current_load=1.0, max_load=5.0, k_m=1.0),
+        Workload(name="Task2", current_load=2.0, max_load=4.0, k_m=0.5),
+    ]
+
+    # Test with optimal Lagom (0.65)
+    alloc_optimal = ResourceAllocator(strategy='nordic_viking', gamma=0.65)
+    results_optimal = alloc_optimal.distribute(workloads)
+
+    # Test with low Lagom (0.5)
+    alloc_low = ResourceAllocator(strategy='nordic_viking', gamma=0.5)
+    results_low = alloc_low.distribute(workloads)
+
+    # Test with high Lagom (0.8)
+    alloc_high = ResourceAllocator(strategy='nordic_viking', gamma=0.8)
+    results_high = alloc_high.distribute(workloads)
+
+    # All should produce valid allocations
+    assert all(v >= 0 for v in results_optimal.values())
+    assert all(v >= 0 for v in results_low.values())
+    assert all(v >= 0 for v in results_high.values())
+
+    # Higher gamma should generally lead to higher allocations
+    assert sum(results_high.values()) >= sum(results_low.values())
+
+
+def test_nordic_viking_bounds(sample_workloads):
+    """Test that Nordic-Viking respects max_load bounds."""
+    alloc = ResourceAllocator(strategy='nordic_viking', gamma=0.65)
+    results = alloc.distribute(sample_workloads)
+
+    # Check bounds: 0 <= allocation <= max_load
+    for workload in sample_workloads:
+        allocation = results[workload.name]
+        assert 0 <= allocation <= workload.max_load, \
+            f"{workload.name}: allocation {allocation} exceeds max_load {workload.max_load}"
+
+
+def test_nordic_viking_stability():
+    """Test that Nordic-Viking provides stable, predictable allocation (Hygge principle)."""
+    workloads = [
+        Workload(name="Stable1", current_load=2.0, max_load=5.0, k_m=1.0),
+        Workload(name="Stable2", current_load=2.0, max_load=5.0, k_m=1.0),
+    ]
+
+    alloc = ResourceAllocator(strategy='nordic_viking', gamma=0.65)
+    results = alloc.distribute(workloads)
+
+    # Similar workloads should get similar allocations (Hygge = stability)
+    ratio = results['Stable1'] / results['Stable2']
+    assert 0.8 <= ratio <= 1.25, f"Allocations too different: {results}"
+
+
+def test_nordic_viking_metrics(sample_workloads):
+    """Test Nordic metrics calculation."""
+    alloc = ResourceAllocator(strategy='nordic_viking', gamma=0.65)
+    results = alloc.distribute(sample_workloads)
+
+    # Convert results to numpy array for metrics
+    allocation = np.array([results[w.name] for w in sample_workloads])
+
+    metrics = alloc.calculate_nordic_metrics(sample_workloads, allocation)
+
+    # Check that all metrics are present and in valid range [0, 1]
+    assert 'lagom_efficiency' in metrics
+    assert 'sisu_stability' in metrics
+    assert 'viking_balance' in metrics
+
+    assert 0.0 <= metrics['lagom_efficiency'] <= 1.0
+    assert 0.0 <= metrics['sisu_stability'] <= 1.0
+    assert 0.0 <= metrics['viking_balance'] <= 1.0
+
+
+def test_nordic_viking_insights():
+    """Test Nordic-Viking insights generation."""
+    alloc = ResourceAllocator(strategy='nordic_viking', gamma=0.65)
+    results = {'Task1': 2.5, 'Task2': 3.0}
+    insight = alloc.insights(results)
+
+    # Check for Nordic-specific content
+    assert "Nordic-Viking" in insight or "Lagom" in insight
+    assert "Nordlichter" in insight or "Greetings" in insight.upper()
+    assert "5.50" in insight  # Total allocated
+    assert "Tack" in insight or "Kiitos" in insight  # Nordic greetings
+
+
+def test_nordic_viking_development_insight():
+    """Test Nordic-Viking development insights."""
+    alloc = ResourceAllocator(strategy='nordic_viking', gamma=0.65)
+    wisdom = alloc.development_insight()
+
+    assert "Nordic-Viking" in wisdom
+    assert "Lagom" in wisdom
+    assert "Sisu" in wisdom
+    assert "Odin" in wisdom or "Viking" in wisdom
+    assert "Tack" in wisdom or "Kiitos" in wisdom
+
+
+def test_nordic_vs_ubuntu_comparison():
+    """Compare Nordic-Viking (balanced) vs Ubuntu (fairness-first)."""
+    workloads = [
+        Workload(name="Strong", current_load=5.0, max_load=10.0, k_m=0.5),
+        Workload(name="Weak", current_load=0.5, max_load=2.0, k_m=2.0),
+    ]
+
+    # Nordic with Lagom
+    alloc_nordic = ResourceAllocator(strategy='nordic_viking', gamma=0.65)
+    results_nordic = alloc_nordic.distribute(workloads)
+
+    # Ubuntu with fairness
+    alloc_ubuntu = ResourceAllocator(strategy='ubuntu', gamma=1.0)
+    results_ubuntu = alloc_ubuntu.distribute(workloads)
+
+    # Both should produce valid allocations
+    assert len(results_nordic) == 2
+    assert len(results_ubuntu) == 2
+
+    # Both should respect bounds
+    for w in workloads:
+        assert 0 <= results_nordic[w.name] <= w.max_load
+        assert 0 <= results_ubuntu[w.name] <= w.max_load
+
+
+def test_nordic_viking_edge_case_extreme_gamma():
+    """Test Nordic-Viking with gamma outside normal range (should clip to 0.5-0.8)."""
+    workloads = [
+        Workload(name="Task", current_load=1.0, max_load=5.0, k_m=1.0),
+    ]
+
+    # Test with very low gamma (should clip to 0.5)
+    alloc_low = ResourceAllocator(strategy='nordic_viking', gamma=0.1)
+    results_low = alloc_low.distribute(workloads)
+
+    # Test with very high gamma (should clip to 0.8)
+    alloc_high = ResourceAllocator(strategy='nordic_viking', gamma=2.0)
+    results_high = alloc_high.distribute(workloads)
+
+    # Both should work and respect bounds
+    assert 0 <= results_low['Task'] <= 5.0
+    assert 0 <= results_high['Task'] <= 5.0
+
+    # Higher clipped gamma should give higher allocation
+    assert results_high['Task'] >= results_low['Task']
+
+
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

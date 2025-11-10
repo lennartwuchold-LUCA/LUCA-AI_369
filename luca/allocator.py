@@ -101,16 +101,18 @@ class ResourceAllocator:
         - 'monod': Michaelis-Menten kinetics (Western enzyme kinetics)
         - 'hill_climbing': Hill equation with cooperativity (like hemoglobin)
         - 'ubuntu': African philosophy - "I am because we are" (Max-Min Fairness)
+        - 'nordic_viking': Nordic-Viking Lagom - "Not too little, not too much - just right"
 
     Args:
-        strategy: Allocation strategy ('monod', 'hill_climbing', or 'ubuntu')
+        strategy: Allocation strategy ('monod', 'hill_climbing', 'ubuntu', or 'nordic_viking')
         gamma: For 'monod': K_M scaling factor; For 'hill_climbing': Hill coefficient (n);
-               For 'ubuntu': Fairness parameter (default 1.0 = pure max-min)
+               For 'ubuntu': Fairness parameter (default 1.0 = pure max-min);
+               For 'nordic_viking': Lagom factor (optimal: 0.65, range: 0.5-0.8)
     """
 
     def __init__(self, strategy: str = 'monod', gamma: float = 1.0):
-        if strategy not in ['monod', 'hill_climbing', 'ubuntu']:
-            raise ValueError(f"Unknown strategy '{strategy}'. Use 'monod', 'hill_climbing', or 'ubuntu'.")
+        if strategy not in ['monod', 'hill_climbing', 'ubuntu', 'nordic_viking']:
+            raise ValueError(f"Unknown strategy '{strategy}'. Use 'monod', 'hill_climbing', 'ubuntu', or 'nordic_viking'.")
         self.strategy = strategy
         self.gamma = gamma
 
@@ -235,6 +237,115 @@ class ResourceAllocator:
 
         return res.x
 
+    def _nordic_viking(self, workloads: List[Workload]) -> np.ndarray:
+        """
+        Nordic-Viking (Lagom) Allokation mit Sisu-Resilienz und Wikinger-Strategie.
+
+        "Lagom är bäst" - Not too little, not too much - just right (Swedish wisdom)
+
+        Honors:
+        - Swedish Lagom: Balanced moderation (0.65 optimal)
+        - Finnish Sisu: Resilience and endurance under pressure
+        - Viking Strategy: Balance between aggressive acquisition and defensive protection
+        - Hygge: Stability and wellbeing
+        - Fika: Predictable, stable rewards
+
+        Args:
+            workloads: List of workloads
+
+        Returns:
+            Balanced Nordic allocation respecting Lagom principles
+        """
+        # Extract workload properties
+        current_loads = np.array([w.current_load for w in workloads])
+        max_loads = np.array([w.max_load for w in workloads])
+        k_m = np.array([w.k_m for w in workloads])
+
+        # Lagom factor: clip gamma to Nordic range [0.5, 0.8], optimal at 0.65
+        lagom_factor = np.clip(self.gamma, 0.5, 0.8)
+
+        # Viking strategy: balance between raid (high K_m affinity) and home defense
+        # Lower K_m = higher affinity = more "raid" potential
+        viking_strategy = np.array([1.0 / (km + 0.1) for km in k_m])
+        viking_strategy = viking_strategy / np.max(viking_strategy)  # Normalize
+
+        # Sisu factor: resilience = how much of capacity is already used
+        sisu_factor = np.array([min(load / max_load, 1.0) for load, max_load in zip(current_loads, max_loads)])
+
+        # Dynamic Lagom: adjust target based on Viking potential
+        dynamic_lagom = lagom_factor * (0.7 + 0.3 * viking_strategy)
+
+        # Target allocation: Lagom of max capacity
+        target_lagom = max_loads * dynamic_lagom
+
+        def objective(x: np.ndarray) -> float:
+            """
+            Minimize deviation from Lagom while respecting Sisu and Hygge.
+            """
+            x_safe = np.clip(x, 1e-6, None)
+
+            # Lagom penalty: distance from ideal balanced point
+            lagom_deviation = np.sum((x_safe - target_lagom) ** 2)
+
+            # Hygge penalty: avoid large jumps (stability)
+            hygge_penalty = np.sum((x_safe - current_loads) ** 2) * 0.1
+
+            # Sisu reward: favor tasks showing resilience (high utilization)
+            sisu_reward = -np.sum(sisu_factor * x_safe) * 0.05
+
+            # Fika reward: predictable, stable allocation (low variance)
+            fika_reward = -np.var(x_safe / max_loads) * 0.1
+
+            return lagom_deviation + hygge_penalty + sisu_reward + fika_reward
+
+        # Bounds: reasonable allocation
+        bounds = [(max(0.1, w.current_load * 0.3), w.max_load) for w in workloads]
+
+        # Initial guess: Lagom target
+        x0 = target_lagom
+        x0 = np.clip(x0, [b[0] for b in bounds], [b[1] for b in bounds])
+
+        # Optimize using L-BFGS-B
+        res = minimize(objective, x0=x0, bounds=bounds, method='L-BFGS-B')
+
+        if not res.success:
+            click.echo(f"⚠️  VARNING: Nordic-Viking optimization did not converge: {res.message}", err=True)
+            return target_lagom
+
+        return res.x
+
+    def calculate_nordic_metrics(self, workloads: List[Workload], allocation: np.ndarray) -> Dict[str, float]:
+        """
+        Calculate Nordic-specific metrics for allocation quality.
+
+        Args:
+            workloads: List of workloads
+            allocation: Allocated resources
+
+        Returns:
+            Dictionary with Nordic metrics
+        """
+        max_loads = np.array([w.max_load for w in workloads])
+        current_loads = np.array([w.current_load for w in workloads])
+
+        # Lagom efficiency: how close to ideal 65%
+        utilization = allocation / max_loads
+        ideal_lagom = 0.65
+        lagom_efficiency = 1.0 - np.mean(np.abs(utilization - ideal_lagom))
+
+        # Sisu stability: how much change from current
+        sisu_stability = 1.0 - np.mean(np.abs(allocation - current_loads) / max_loads)
+
+        # Viking balance: balance between high and low allocations
+        normalized_alloc = allocation / max_loads
+        viking_balance = 1.0 - np.std(normalized_alloc)
+
+        return {
+            'lagom_efficiency': max(0.0, lagom_efficiency),
+            'sisu_stability': max(0.0, sisu_stability),
+            'viking_balance': max(0.0, viking_balance)
+        }
+
     def distribute(self, workloads: List[Workload]) -> Dict[str, float]:
         """
         Distribute resources across workloads.
@@ -255,6 +366,8 @@ class ResourceAllocator:
             results = self._monod(workloads)
         elif self.strategy == 'ubuntu':
             results = self._ubuntu(workloads)
+        elif self.strategy == 'nordic_viking':
+            results = self._nordic_viking(workloads)
         else:
             raise ValueError(f"Unknown strategy: {self.strategy}")
 
@@ -324,6 +437,49 @@ class ResourceAllocator:
                 "💚 **Der Weg vorwärts**: Wir hören zu. Wir lernen. Wir machen wieder gut.\n\n"
                 "🙏 **Sawubona** - Ich sehe dich. Alle Tasks werden gesehen und gewürdigt."
             )
+        elif self.strategy == 'nordic_viking':
+            # Calculate Nordic metrics
+            allocations = list(results.values())
+            workload_objects = [w for w in results.keys()]
+
+            # Get workloads for metrics (need to reconstruct from results)
+            # This is a simplified approach - in real use, pass workloads to insights()
+            tip = (
+                "❄️ **Nordic-Viking Weisheit**: 'Lagom är bäst' - Nicht zu wenig, nicht zu viel - genau richtig!\n\n"
+                "🌌 **GREETINGS TO THE NORTH**:\n"
+                "   🌠 **Nordlichter** - Aurora dancing across endless skies\n"
+                "   🐻 **Tiere** - Polar bears, reindeer, arctic foxes, wolves\n"
+                "   👥 **Menschen** - Sámi, Inuit, Nordic peoples in harmony with nature\n"
+                "   🍄 **Pilze** - Ancient mycelium networks beneath the snow\n"
+                "   🌲 **Bäume** - Pine, spruce, birch - guardians of the forests\n"
+                "   🌿 **Sträucher** - Blueberry, lingonberry - gifts of the land\n"
+                "   🌍 **Komplette Natur** - The whole ecosystem in balance\n"
+                "   ✨ **Wunderschöner Himmel** - Midnight sun and polar night\n\n"
+                "⚖️ **Swedish Lagom**: This allocation honors the principle of balance.\n"
+                "   • Not greedy, not stingy - just right\n"
+                "   • Optimal utilization: ~65% (sustainable)\n"
+                "   • Total allocated: {:.2f}\n\n".format(sum(allocations)) +
+                "🔥 **Finnish Sisu**: Resilience and endurance in all tasks\n"
+                "   • Steady, reliable allocation\n"
+                "   • No extreme spikes or drops\n"
+                "   • Long-term sustainability\n\n"
+                "⚔️ **Viking Strategy**: Balance between exploration and protection\n"
+                "   • Strategic resource distribution\n"
+                "   • Adaptive to changing conditions\n"
+                "   • Honor and fairness in allocation\n\n"
+                "☕ **Hygge & Fika**: Creating stable, predictable work environments\n"
+                "   • Comfort in consistency\n"
+                "   • Community over competition\n"
+                "   • Wellbeing-first approach\n\n"
+                "🏔️ **Northern Wisdom**: The North teaches us respect for limits.\n"
+                "Nature sets boundaries - we honor them. Resources are finite - we use them wisely.\n"
+                "The harsh climate teaches: Take only what you need, share what you have.\n\n"
+                "💚 **Planetary Integration**: Nordic values meet global needs.\n"
+                "From the fjords to the tundra, from the forests to the ice -\n"
+                "we integrate Northern wisdom into LUCA's planetary vision.\n\n"
+                "🙏 **Tack! Kiitos! Takk! Nakurmiik!** - Thank you in Nordic languages.\n"
+                "The North is now part of our global family. 🌍❄️"
+            )
         else:
             tip = (
                 "🔄 **Biologische Einsicht**: Moderate Kooperativität (0.8 ≤ n ≤ 1.5) "
@@ -383,6 +539,41 @@ class ResourceAllocator:
                 "🙏 Sawubona - Ich sehe dich. Ich sehe die Weisheit deiner Vorfahren."
             )
             return base_wisdom + ubuntu_wisdom
+        elif self.strategy == 'nordic_viking':
+            nordic_wisdom = (
+                "\n\n❄️ **Nordic-Viking Planetary Wisdom**:\n"
+                "'Lagom är bäst' - Not too little, not too much - just right.\n\n"
+                "**Northern Voices Integrated**:\n"
+                "· Swedish Lagom - The art of balance and moderation\n"
+                "· Finnish Sisu - Resilience through harsh winters\n"
+                "· Viking Thing - Democratic resource councils\n"
+                "· Sámi wisdom - Living with the reindeer and land\n"
+                "· Danish Hygge - Creating wellbeing in darkness\n\n"
+                "**Odin's Code Wisdom** ⚡:\n"
+                "The Allfather teaches: 'Knowledge without wisdom is like a ship without a rudder.'\n"
+                "Your code has both: algorithmic knowledge AND cultural wisdom.\n\n"
+                "**Thor's Hammer on Efficiency** 🔨:\n"
+                "Mjölnir strikes not randomly, but precisely where needed.\n"
+                "So too does Lagom allocation - precise, balanced, sustainable.\n\n"
+                "**Freya's Gift of Harmony** 💚:\n"
+                "The goddess of love teaches: abundance comes from balance, not excess.\n"
+                "65% utilization = sustainable thriving for generations.\n\n"
+                "**Viking Wisdom for Developers**:\n"
+                "· Don't raid your own future (no technical debt longships)\n"
+                "· Share the spoils fairly (like Thing assemblies)\n"
+                "· Respect nature's limits (the North teaches this daily)\n"
+                "· Endure with Sisu (bugs are just winter - spring comes)\n\n"
+                "**Rune of Integration** ᚠ:\n"
+                "From Africa's Ubuntu (🌍) + Nordic Lagom (❄️) = PLANETARY BALANCE\n\n"
+                "**Northern Lights Revelation** 🌌:\n"
+                "Like Aurora Borealis, your code dances between extremes -\n"
+                "not too bright (burnout), not too dim (underutilization),\n"
+                "but a beautiful, sustainable dance of resources.\n\n"
+                "🙏 **Tack, Kiitos, Takk!** - The North honors your code.\n"
+                "You have heard our voices. You integrate our wisdom.\n"
+                "🌲🐻❄️ - From the forests, from the tundra, from the ice."
+            )
+            return base_wisdom + nordic_wisdom
 
         return base_wisdom
 
@@ -442,10 +633,10 @@ def cli():
 
 @cli.command()
 @click.option('--strategy', default='hill_climbing',
-              type=click.Choice(['monod', 'hill_climbing', 'ubuntu']),
+              type=click.Choice(['monod', 'hill_climbing', 'ubuntu', 'nordic_viking']),
               help='Allokationsstrategie.')
 @click.option('--gamma', default=1.8, type=float,
-              help='Gamma (K_M-Skalierung für Monod oder Hill-Koeffizient n für hill_climbing).')
+              help='Gamma (K_M-Skalierung für Monod, Hill-Koeffizient n für hill_climbing, Lagom-Faktor für nordic_viking).')
 @click.option('--datafile', type=click.Path(exists=True),
               default='examples/workloads.json',
               help='Pfad zur JSON-Datei mit Workloads.')
@@ -539,19 +730,21 @@ def init() -> None:
     click.echo("🚀 Nächste Schritte:")
     click.echo("   1. luca run --strategy hill_climbing --gamma 1.8")
     click.echo("   2. luca run --strategy ubuntu --gamma 1.0  # 🌍 Ubuntu: Ich bin, weil wir sind")
-    click.echo("   3. luca plot")
-    click.echo("   4. luca wisdom --strategy ubuntu --gamma 1.0")
+    click.echo("   3. luca run --strategy nordic_viking --gamma 0.65  # ❄️ Nordic: Lagom är bäst")
+    click.echo("   4. luca nordic_guide  # 🌌 Learn about Nordic-Viking strategy")
+    click.echo("   5. luca plot")
+    click.echo("   6. luca wisdom --strategy nordic_viking --gamma 0.65")
 
 
 @cli.command()
 @click.option('--strategy', default='hill_climbing',
-              type=click.Choice(['monod', 'hill_climbing', 'ubuntu']),
+              type=click.Choice(['monod', 'hill_climbing', 'ubuntu', 'nordic_viking']),
               help='Strategie für die Einsichten.')
 @click.option('--gamma', default=1.8, type=float,
               help='Gamma-Wert für tiefere Kontextualisierung.')
 def wisdom(strategy: str, gamma: float) -> None:
-    """Zeigt Opa DeepSeek's und Ubuntu's tiefe Architektur-Weisheit."""
-    click.echo("🧘 Opa DeepSeek's Development Insights\n")
+    """Zeigt Opa DeepSeek's, Ubuntu's und Nordic-Viking's tiefe Architektur-Weisheit."""
+    click.echo("🧘 Planetary Development Insights\n")
     click.echo("═" * 70)
     click.echo("")
 
@@ -561,7 +754,64 @@ def wisdom(strategy: str, gamma: float) -> None:
     click.echo(wisdom_text)
     click.echo("")
     click.echo("═" * 70)
-    click.echo("💚 Möge der Flow mit dir sein!")
+    if strategy == 'nordic_viking':
+        click.echo("❄️ Möge die Lagom-Balance mit dir sein! ⚖️")
+    elif strategy == 'ubuntu':
+        click.echo("🌍 Sawubona - Ich sehe dich! 💚")
+    else:
+        click.echo("💚 Möge der Flow mit dir sein!")
+
+
+@cli.command()
+def nordic_guide() -> None:
+    """🌌 Nordic-Viking Strategy Guide - Lagom, Sisu, and the Way of the North."""
+    click.echo("\n" + "═" * 80)
+    click.echo("❄️  NORDIC-VIKING ALLOCATION STRATEGY GUIDE  ⚔️")
+    click.echo("═" * 80 + "\n")
+
+    click.echo("🏔️ **WHAT IS LAGOM?**")
+    click.echo("   'Lagom är bäst' - Not too little, not too much - just right!")
+    click.echo("   Swedish philosophy of balanced moderation.")
+    click.echo("   Optimal gamma: 0.65 (65% utilization)\n")
+
+    click.echo("🔥 **SISU - Finnish Resilience**")
+    click.echo("   Endurance, determination, and perseverance.")
+    click.echo("   Your tasks show Sisu when they maintain steady performance.\n")
+
+    click.echo("⚔️ **VIKING STRATEGY**")
+    click.echo("   Balance between aggressive exploration (raid) and")
+    click.echo("   conservative protection (home defense).")
+    click.echo("   Adaptive allocation based on task affinity (K_m).\n")
+
+    click.echo("☕ **HYGGE & FIKA**")
+    click.echo("   Danish Hygge: Creating comfort and wellbeing")
+    click.echo("   Swedish Fika: Coffee break culture - predictable stability\n")
+
+    click.echo("🌌 **GREETINGS FROM THE NORTH:**")
+    click.echo("   🌠 Nordlichter (Northern Lights)")
+    click.echo("   🐻 Polar bears, reindeer, arctic foxes")
+    click.echo("   🌲 Pine forests and ancient trees")
+    click.echo("   🍄 Mycelium networks beneath the snow")
+    click.echo("   ✨ Wunderschöner Himmel - Midnight sun & polar night\n")
+
+    click.echo("📊 **WHEN TO USE NORDIC_VIKING:**")
+    click.echo("   ✓ When you need sustainable, long-term allocation")
+    click.echo("   ✓ When avoiding extremes (burnout or underutilization)")
+    click.echo("   ✓ When fairness AND efficiency both matter")
+    click.echo("   ✓ When you want predictable, stable resource distribution\n")
+
+    click.echo("🎯 **EXAMPLE USAGE:**")
+    click.echo("   luca run --strategy nordic_viking --gamma 0.65")
+    click.echo("   luca wisdom --strategy nordic_viking --gamma 0.65\n")
+
+    click.echo("🌍 **PLANETARY INTEGRATION:**")
+    click.echo("   Africa (Ubuntu) → Max-Min Fairness → Community-first")
+    click.echo("   Nordic (Lagom) → Balanced Moderation → Sustainability-first")
+    click.echo("   Together: PLANETARY BALANCE 🌍❄️\n")
+
+    click.echo("═" * 80)
+    click.echo("🙏 Tack! Kiitos! Takk! Nakurmiik! (Thank you in Nordic languages)")
+    click.echo("═" * 80 + "\n")
 
 
 if __name__ == '__main__':
