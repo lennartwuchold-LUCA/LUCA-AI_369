@@ -49,13 +49,17 @@ jobs:
       run: |
         poetry run pytest tests/ -v --tb=short --color=yes
 
+    - name: 🏛️ Run L.U.C.A 369/370 Framework tests
+      run: |
+        poetry run pytest luca_369_370/tests/ -v --tb=short --color=yes
+
     - name: 🎨 Check code formatting with black
       run: |
-        poetry run black --check luca/ tests/
+        poetry run black --check luca/ tests/ luca_369_370/
 
     - name: 📊 Check import sorting with isort
       run: |
-        poetry run isort --check-only luca/ tests/
+        poetry run isort --check-only luca/ tests/ luca_369_370/
 
   lint:
     name: Lint and Type Check
@@ -82,7 +86,7 @@ jobs:
 
     - name: 🔍 Type check with mypy
       run: |
-        poetry run mypy luca/ || true  # Non-blocking for now
+        poetry run mypy luca/ luca_369_370/ || true  # Non-blocking for now
 
   build:
     name: Build Package

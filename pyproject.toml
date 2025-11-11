@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "luca-bio"
-version = "2.1.0"
-description = "Bio-inspired Resource Allocation using Enzymatic Kinetics (Monod & Hill)"
+version = "3.6.9"
+description = "L.U.C.A - Bio-inspired AI with 369/370 Quality Standard and Neurodiversity Optimization"
 authors = ["Lennart Wuchold <lenny@luca.bio>"]
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/lennartwuchold-LUCA/LUCA-AI_369"
 repository = "https://github.com/lennartwuchold-LUCA/LUCA-AI_369"
-keywords = ["bioinformatics", "resource-allocation", "optimization", "enzymatic-kinetics", "hill-equation"]
+keywords = ["bioinformatics", "resource-allocation", "optimization", "enzymatic-kinetics", "hill-equation", "neurodiversity", "quality-standard", "info-blocks"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -17,8 +17,12 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
-packages = [{include = "luca"}]
+packages = [
+    {include = "luca"},
+    {include = "luca_369_370"}
+]
 
 [tool.poetry.dependencies]
 python = "^3.11"

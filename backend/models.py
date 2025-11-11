@@ -267,3 +267,7 @@ class MeshtasticMessage(Base):
 
     def __repr__(self):
         return f"<MeshtasticMessage(id={self.id}, mesh_id={self.mesh_id}, status={self.status})>"
+
+
+# Backwards compatibility alias
+ChatHistory = Conversation
