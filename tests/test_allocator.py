@@ -10,16 +10,18 @@ Tests for:
 - Plot generation
 """
 
-import pytest
-import numpy as np
-import tempfile
-import os
 import json
-from luca.allocator import ResourceAllocator, Workload, WORKLOAD_SCHEMA
-from jsonschema import validate, ValidationError
+import os
+import tempfile
 
+import numpy as np
+import pytest
+from jsonschema import ValidationError, validate
+
+from luca.allocator import WORKLOAD_SCHEMA, ResourceAllocator, Workload
 
 # --- FIXTURES ---
+
 
 @pytest.fixture
 def sample_workloads():
@@ -42,6 +44,7 @@ def workload_json_data():
 
 # --- VALIDATION TESTS ---
 
+
 def test_workload_validation_success(sample_workloads):
     """Test that valid workloads pass validation."""
     Workload.validate_workloads(sample_workloads)  # Should not raise
@@ -49,7 +52,9 @@ def test_workload_validation_success(sample_workloads):
 
 def test_workload_validation_invalid_schema():
     """Test that invalid schema is rejected."""
-    invalid_data = [{"name": "Bad", "current_load": 1.0, "max_load": 1.0}]  # Missing k_m
+    invalid_data = [
+        {"name": "Bad", "current_load": 1.0, "max_load": 1.0}
+    ]  # Missing k_m
     with pytest.raises(ValidationError):
         validate(instance=invalid_data, schema=WORKLOAD_SCHEMA)
 
@@ -89,26 +94,27 @@ def test_workload_from_dict():
 
 # --- MONOD ALLOCATION TESTS ---
 
+
 def test_monod_allocation(sample_workloads):
     """Test basic Monod allocation."""
-    alloc = ResourceAllocator(strategy='monod', gamma=1.0)
+    alloc = ResourceAllocator(strategy="monod", gamma=1.0)
     results = alloc.distribute(sample_workloads)
 
-    assert 'A' in results
-    assert 'B' in results
-    assert 'C' in results
+    assert "A" in results
+    assert "B" in results
+    assert "C" in results
 
     # Monod formula: V = V_max * S / (K_m + S)
     # For A: V = 5.0 * 1.0 / (1.0 + 1.0) = 2.5 * gamma=1.0 = 2.5
     # But wait, formula is allocation_rate = Vmax * S / (Km + S) * gamma
     # So for A: 5.0 * 1.0 / (1.0 + 1.0) * 1.0 = 2.5
-    assert np.isclose(results['A'], 2.5, rtol=0.01)
+    assert np.isclose(results["A"], 2.5, rtol=0.01)
 
 
 def test_monod_gamma_scaling(sample_workloads):
     """Test that gamma parameter scales Monod results."""
-    alloc1 = ResourceAllocator(strategy='monod', gamma=1.0)
-    alloc2 = ResourceAllocator(strategy='monod', gamma=2.0)
+    alloc1 = ResourceAllocator(strategy="monod", gamma=1.0)
+    alloc2 = ResourceAllocator(strategy="monod", gamma=2.0)
 
     results1 = alloc1.distribute(sample_workloads)
     results2 = alloc2.distribute(sample_workloads)
@@ -120,14 +126,15 @@ def test_monod_gamma_scaling(sample_workloads):
 
 # --- HILL CLIMBING TESTS ---
 
+
 def test_hill_climbing_allocation(sample_workloads):
     """Test Hill climbing optimization."""
-    alloc = ResourceAllocator(strategy='hill_climbing', gamma=1.5)
+    alloc = ResourceAllocator(strategy="hill_climbing", gamma=1.5)
     results = alloc.distribute(sample_workloads)
 
-    assert 'A' in results
-    assert 'B' in results
-    assert 'C' in results
+    assert "A" in results
+    assert "B" in results
+    assert "C" in results
 
     # All results should be non-negative
     assert all(v >= 0 for v in results.values())
@@ -135,14 +142,15 @@ def test_hill_climbing_allocation(sample_workloads):
 
 def test_hill_climbing_bounds(sample_workloads):
     """Test that Hill climbing respects max_load bounds."""
-    alloc = ResourceAllocator(strategy='hill_climbing', gamma=2.0)
+    alloc = ResourceAllocator(strategy="hill_climbing", gamma=2.0)
     results = alloc.distribute(sample_workloads)
 
     # Check bounds: 0 <= allocation <= max_load
     for workload in sample_workloads:
         allocation = results[workload.name]
-        assert 0 <= allocation <= workload.max_load, \
-            f"{workload.name}: allocation {allocation} exceeds max_load {workload.max_load}"
+        assert (
+            0 <= allocation <= workload.max_load
+        ), f"{workload.name}: allocation {allocation} exceeds max_load {workload.max_load}"
 
 
 def test_hill_climbing_cooperativity():
@@ -152,8 +160,8 @@ def test_hill_climbing_cooperativity():
         Workload(name="B", current_load=1.0, max_load=5.0, k_m=1.0),
     ]
 
-    alloc_low = ResourceAllocator(strategy='hill_climbing', gamma=0.8)
-    alloc_high = ResourceAllocator(strategy='hill_climbing', gamma=2.0)
+    alloc_low = ResourceAllocator(strategy="hill_climbing", gamma=0.8)
+    alloc_high = ResourceAllocator(strategy="hill_climbing", gamma=2.0)
 
     results_low = alloc_low.distribute(workloads)
     results_high = alloc_high.distribute(workloads)
@@ -165,10 +173,11 @@ def test_hill_climbing_cooperativity():
 
 # --- INSIGHTS TESTS ---
 
+
 def test_insights_hill_high_gamma():
     """Test insights for high Hill coefficient."""
-    alloc = ResourceAllocator(strategy='hill_climbing', gamma=1.8)
-    results = {'Task1': 1.0, 'Task2': 2.0}
+    alloc = ResourceAllocator(strategy="hill_climbing", gamma=1.8)
+    results = {"Task1": 1.0, "Task2": 2.0}
     insight = alloc.insights(results)
 
     assert "Hämoglobin" in insight or "Kooperativität" in insight
@@ -178,8 +187,8 @@ def test_insights_hill_high_gamma():
 
 def test_insights_hill_low_gamma():
     """Test insights for low Hill coefficient."""
-    alloc = ResourceAllocator(strategy='hill_climbing', gamma=0.5)
-    results = {'Task1': 1.0}
+    alloc = ResourceAllocator(strategy="hill_climbing", gamma=0.5)
+    results = {"Task1": 1.0}
     insight = alloc.insights(results)
 
     assert "Einsicht" in insight or "Routine" in insight
@@ -188,8 +197,8 @@ def test_insights_hill_low_gamma():
 
 def test_insights_monod():
     """Test insights for Monod strategy."""
-    alloc = ResourceAllocator(strategy='monod', gamma=1.0)
-    results = {'Task1': 1.5}
+    alloc = ResourceAllocator(strategy="monod", gamma=1.0)
+    results = {"Task1": 1.5}
     insight = alloc.insights(results)
 
     assert "Monod" in insight
@@ -199,7 +208,7 @@ def test_insights_monod():
 
 def test_development_insight():
     """Test Opa DeepSeek's development insights."""
-    alloc = ResourceAllocator(strategy='hill_climbing', gamma=1.8)
+    alloc = ResourceAllocator(strategy="hill_climbing", gamma=1.8)
     wisdom = alloc.development_insight()
 
     assert "Opa DeepSeek" in wisdom
@@ -210,6 +219,7 @@ def test_development_insight():
 
 
 # --- PLOT GENERATION TESTS ---
+
 
 def test_plot_generation():
     """Test that plot is generated successfully."""
@@ -234,18 +244,17 @@ def test_plot_custom_gamma_range():
 
 # --- ERROR HANDLING TESTS ---
 
+
 def test_invalid_strategy():
     """Test that invalid strategy raises error."""
     with pytest.raises(ValueError, match="Unknown strategy"):
-        ResourceAllocator(strategy='invalid_strategy')
+        ResourceAllocator(strategy="invalid_strategy")
 
 
 def test_distribute_with_invalid_workload():
     """Test that distribution with invalid workload fails."""
-    alloc = ResourceAllocator(strategy='monod')
-    invalid_workloads = [
-        Workload(name="Bad", current_load=10.0, max_load=5.0, k_m=1.0)
-    ]
+    alloc = ResourceAllocator(strategy="monod")
+    invalid_workloads = [Workload(name="Bad", current_load=10.0, max_load=5.0, k_m=1.0)]
 
     with pytest.raises(ValueError):
         alloc.distribute(invalid_workloads)
@@ -253,21 +262,22 @@ def test_distribute_with_invalid_workload():
 
 # --- INTEGRATION TESTS ---
 
+
 def test_full_workflow(workload_json_data):
     """Test complete workflow: load -> allocate -> insights."""
     # Create workloads from JSON
     workloads = [Workload.from_dict(w) for w in workload_json_data]
 
     # Allocate with hill_climbing
-    alloc = ResourceAllocator(strategy='hill_climbing', gamma=1.8)
+    alloc = ResourceAllocator(strategy="hill_climbing", gamma=1.8)
     results = alloc.distribute(workloads)
 
     # Generate insights
     insights = alloc.insights(results)
 
     assert len(results) == 2
-    assert 'Task1' in results
-    assert 'Task2' in results
+    assert "Task1" in results
+    assert "Task2" in results
     assert len(insights) > 0
 
 
@@ -280,15 +290,15 @@ def test_cli_workflow_simulation(tmp_path):
         {"name": "B", "current_load": 2.0, "max_load": 4.0, "k_m": 0.5},
     ]
 
-    with open(workloads_file, 'w') as f:
+    with open(workloads_file, "w") as f:
         json.dump(data, f)
 
     # Load and process
-    with open(workloads_file, 'r') as f:
+    with open(workloads_file, "r") as f:
         loaded_data = json.load(f)
 
     workloads = [Workload.from_dict(w) for w in loaded_data]
-    alloc = ResourceAllocator(strategy='hill_climbing', gamma=1.5)
+    alloc = ResourceAllocator(strategy="hill_climbing", gamma=1.5)
     results = alloc.distribute(workloads)
 
     assert len(results) == 2
@@ -297,15 +307,16 @@ def test_cli_workflow_simulation(tmp_path):
 
 # --- EDGE CASES ---
 
+
 def test_single_workload():
     """Test allocation with single workload."""
     workloads = [Workload(name="Solo", current_load=1.0, max_load=5.0, k_m=1.0)]
 
-    alloc = ResourceAllocator(strategy='hill_climbing', gamma=1.5)
+    alloc = ResourceAllocator(strategy="hill_climbing", gamma=1.5)
     results = alloc.distribute(workloads)
 
     assert len(results) == 1
-    assert 'Solo' in results
+    assert "Solo" in results
 
 
 def test_zero_current_load():
@@ -315,12 +326,12 @@ def test_zero_current_load():
         Workload(name="Normal", current_load=1.0, max_load=5.0, k_m=1.0),
     ]
 
-    alloc = ResourceAllocator(strategy='monod', gamma=1.0)
+    alloc = ResourceAllocator(strategy="monod", gamma=1.0)
     results = alloc.distribute(workloads)
 
     # Zero load should give zero or very small allocation
-    assert results['Zero'] >= 0
-    assert results['Normal'] > 0
+    assert results["Zero"] >= 0
+    assert results["Normal"] > 0
 
 
 def test_high_km_value():
@@ -329,12 +340,12 @@ def test_high_km_value():
         Workload(name="HighKm", current_load=1.0, max_load=5.0, k_m=10.0),
     ]
 
-    alloc = ResourceAllocator(strategy='monod', gamma=1.0)
+    alloc = ResourceAllocator(strategy="monod", gamma=1.0)
     results = alloc.distribute(workloads)
 
     # High K_m should result in lower efficiency
-    assert results['HighKm'] < 1.0
+    assert results["HighKm"] < 1.0
 
 
-if __name__ == '__main__':
-    pytest.main([__file__, '-v'])
+if __name__ == "__main__":
+    pytest.main([__file__, "-v"])

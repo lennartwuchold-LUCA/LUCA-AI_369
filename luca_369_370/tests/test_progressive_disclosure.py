@@ -3,11 +3,12 @@ LUCA 369/370 - Progressive Disclosure Tests
 """
 
 import pytest
-from luca_369_370.core.info_block_engine import InfoBlock, BlockType
+
+from luca_369_370.core.info_block_engine import BlockType, InfoBlock
 from luca_369_370.core.progressive_disclosure import (
-    ProgressiveDisclosureEngine,
     DisclosureMode,
-    UserState
+    ProgressiveDisclosureEngine,
+    UserState,
 )
 
 
@@ -19,7 +20,7 @@ class TestProgressiveDisclosureEngine:
         return [
             InfoBlock("Block 1", BlockType.FOUNDATION, 2),
             InfoBlock("Block 2", BlockType.BUILDING, 2),
-            InfoBlock("Block 3", BlockType.CONNECTION, 2)
+            InfoBlock("Block 3", BlockType.CONNECTION, 2),
         ]
 
     def test_engine_initialization(self):
@@ -106,7 +107,7 @@ class TestProgressiveDisclosureEngine:
 
         assert engine.state.user_state == UserState.PAUSED
         assert engine.pause_count == 1
-        assert pause_result['progress_saved'] == True
+        assert pause_result["progress_saved"] == True
 
     def test_cognitive_overload_detection(self):
         """Test: Cognitive Overload wird erkannt"""
@@ -139,16 +140,16 @@ class TestProgressiveDisclosureEngine:
 
         display = engine.get_current_display()
 
-        assert 'block' in display
-        assert 'progress' in display
-        assert 'timing' in display
-        assert 'actions' in display
-        assert 'cognitive_state' in display
+        assert "block" in display
+        assert "progress" in display
+        assert "timing" in display
+        assert "actions" in display
+        assert "cognitive_state" in display
 
         # Check sub-structures
-        assert 'content' in display['block']
-        assert 'current' in display['progress']
-        assert 'estimated_remaining' in display['timing']
+        assert "content" in display["block"]
+        assert "current" in display["progress"]
+        assert "estimated_remaining" in display["timing"]
 
     def test_completion_state(self):
         """Test: Completion State wird korrekt erreicht"""
@@ -167,9 +168,9 @@ class TestProgressiveDisclosureEngine:
 
         display = engine.get_current_display()
 
-        assert display.get('completed') == True
-        assert 'stats' in display
-        assert display['stats']['total_blocks'] == 3
+        assert display.get("completed") == True
+        assert "stats" in display
+        assert display["stats"]["total_blocks"] == 3
 
     def test_jump_to_block(self):
         """Test: Jump to specific block works"""
@@ -179,11 +180,11 @@ class TestProgressiveDisclosureEngine:
         # Jump to block 2
         result = engine.jump_to_block(2)
         assert engine.state.current_block_index == 2
-        assert 'block' in result
+        assert "block" in result
 
         # Try invalid jump
         result = engine.jump_to_block(10)
-        assert 'error' in result
+        assert "error" in result
 
     def test_request_more_detail(self):
         """Test: Request more detail functionality"""
@@ -192,10 +193,10 @@ class TestProgressiveDisclosureEngine:
 
         detail_result = engine.request_more_detail()
 
-        assert 'detail_request' in detail_result
-        assert detail_result['detail_request'] == True
-        assert 'options' in detail_result
-        assert len(detail_result['options']) > 0
+        assert "detail_request" in detail_result
+        assert detail_result["detail_request"] == True
+        assert "options" in detail_result
+        assert len(detail_result["options"]) > 0
 
     def test_interaction_time_tracking(self):
         """Test: Interaction time is tracked correctly"""
@@ -226,14 +227,14 @@ class TestProgressiveDisclosureEngine:
         engine = ProgressiveDisclosureEngine(blocks)
 
         display = engine.get_current_display()
-        actions = display['actions']
+        actions = display["actions"]
 
         # Should have next, pause, detail but not previous
-        action_keys = [a['key'] for a in actions]
-        assert 'next' in action_keys
-        assert 'pause' in action_keys
-        assert 'detail' in action_keys
-        assert 'previous' not in action_keys
+        action_keys = [a["key"] for a in actions]
+        assert "next" in action_keys
+        assert "pause" in action_keys
+        assert "detail" in action_keys
+        assert "previous" not in action_keys
 
     def test_available_actions_at_middle(self):
         """Test: Available actions in middle include both nav"""
@@ -242,11 +243,11 @@ class TestProgressiveDisclosureEngine:
         engine.next_block()
 
         display = engine.get_current_display()
-        actions = display['actions']
+        actions = display["actions"]
 
-        action_keys = [a['key'] for a in actions]
-        assert 'next' in action_keys
-        assert 'previous' in action_keys
+        action_keys = [a["key"] for a in actions]
+        assert "next" in action_keys
+        assert "previous" in action_keys
 
     def test_hyperfocus_adds_show_all_action(self):
         """Test: Hyperfocus state adds show_all action"""
@@ -259,10 +260,10 @@ class TestProgressiveDisclosureEngine:
         engine.record_interaction_time(5)
 
         display = engine.get_current_display()
-        actions = display['actions']
-        action_keys = [a['key'] for a in actions]
+        actions = display["actions"]
+        action_keys = [a["key"] for a in actions]
 
-        assert 'show_all' in action_keys
+        assert "show_all" in action_keys
 
 
 if __name__ == "__main__":

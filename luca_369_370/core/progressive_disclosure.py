@@ -12,25 +12,28 @@ with attention difficulties. Progressive disclosure reduces cognitive load
 while maintaining information completeness."
 """
 
-from typing import List, Dict, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
-from luca_369_370.core.info_block_engine import InfoBlock, BlockType
+from typing import Dict, List, Optional, Tuple
+
+from luca_369_370.core.info_block_engine import BlockType, InfoBlock
 
 
 class UserState(Enum):
     """Aktueller kognitiver State des Users"""
-    READY = "ready"              # Bereit für nächsten Block
-    PAUSED = "paused"            # User hat Pause gewählt
+
+    READY = "ready"  # Bereit für nächsten Block
+    PAUSED = "paused"  # User hat Pause gewählt
     OVERWHELMED = "overwhelmed"  # Zu viele Infos zu schnell
-    HYPERFOCUS = "hyperfocus"    # Will alles sofort
+    HYPERFOCUS = "hyperfocus"  # Will alles sofort
 
 
 class DisclosureMode(Enum):
     """Wie schnell werden Blöcke angezeigt"""
-    MANUAL = "manual"        # User klickt für jeden Block
+
+    MANUAL = "manual"  # User klickt für jeden Block
     SEMI_AUTO = "semi_auto"  # Auto nach 5 Sekunden, kann pausieren
-    AUTO = "auto"            # Automatisch durchlaufen
+    AUTO = "auto"  # Automatisch durchlaufen
 
 
 @dataclass
@@ -38,6 +41,7 @@ class ProgressiveState:
     """
     Kompletter State der Progressive Disclosure Session
     """
+
     current_block_index: int
     total_blocks: int
     user_state: UserState
@@ -76,7 +80,9 @@ class ProgressiveDisclosureEngine:
     - Erkennt Cognitive Overload
     """
 
-    def __init__(self, blocks: List[InfoBlock], mode: DisclosureMode = DisclosureMode.MANUAL):
+    def __init__(
+        self, blocks: List[InfoBlock], mode: DisclosureMode = DisclosureMode.MANUAL
+    ):
         self.blocks = blocks
         self.state = ProgressiveState(
             current_block_index=0,
@@ -84,7 +90,7 @@ class ProgressiveDisclosureEngine:
             user_state=UserState.READY,
             disclosure_mode=mode,
             time_spent_seconds=0,
-            blocks_revisited=[]
+            blocks_revisited=[],
         )
 
         # Cognitive Load Detection
@@ -105,30 +111,32 @@ class ProgressiveDisclosureEngine:
         current_block = self.blocks[self.state.current_block_index]
 
         return {
-            'block': {
-                'content': current_block.content,
-                'type': current_block.block_type.value,
-                'number': self.state.current_block_index + 1,
-                'has_next_preview': current_block.has_next_preview,
-                'next_hint': current_block.next_block_hint
+            "block": {
+                "content": current_block.content,
+                "type": current_block.block_type.value,
+                "number": self.state.current_block_index + 1,
+                "has_next_preview": current_block.has_next_preview,
+                "next_hint": current_block.next_block_hint,
             },
-            'progress': {
-                'current': self.state.current_block_index + 1,
-                'total': self.state.total_blocks,
-                'percentage': self.state.progress_percentage,
-                'blocks_remaining': self.state.blocks_remaining
+            "progress": {
+                "current": self.state.current_block_index + 1,
+                "total": self.state.total_blocks,
+                "percentage": self.state.progress_percentage,
+                "blocks_remaining": self.state.blocks_remaining,
             },
-            'timing': {
-                'time_spent': self.state.time_spent_seconds,
-                'estimated_remaining': self.state.estimated_time_remaining,
-                'formatted_remaining': self._format_time(self.state.estimated_time_remaining)
+            "timing": {
+                "time_spent": self.state.time_spent_seconds,
+                "estimated_remaining": self.state.estimated_time_remaining,
+                "formatted_remaining": self._format_time(
+                    self.state.estimated_time_remaining
+                ),
             },
-            'actions': self._get_available_actions(),
-            'cognitive_state': {
-                'user_state': self.state.user_state.value,
-                'overload_detected': self._detect_cognitive_overload(),
-                'recommendation': self._get_state_recommendation()
-            }
+            "actions": self._get_available_actions(),
+            "cognitive_state": {
+                "user_state": self.state.user_state.value,
+                "overload_detected": self._detect_cognitive_overload(),
+                "recommendation": self._get_state_recommendation(),
+            },
         }
 
     def next_block(self) -> Dict:
@@ -163,10 +171,10 @@ class ProgressiveDisclosureEngine:
         self.state.user_state = UserState.PAUSED
 
         return {
-            'message': '⏸️ Pause aktiv',
-            'suggestion': 'Nimm dir Zeit. LUCA wartet auf dich. 💚',
-            'resume_action': 'Bereit? [Weiter]',
-            'progress_saved': True
+            "message": "⏸️ Pause aktiv",
+            "suggestion": "Nimm dir Zeit. LUCA wartet auf dich. 💚",
+            "resume_action": "Bereit? [Weiter]",
+            "progress_saved": True,
         }
 
     def jump_to_block(self, block_index: int) -> Dict:
@@ -179,7 +187,7 @@ class ProgressiveDisclosureEngine:
             self.state.current_block_index = block_index
             return self.get_current_display()
         else:
-            return {'error': 'Block index out of range'}
+            return {"error": "Block index out of range"}
 
     def request_more_detail(self) -> Dict:
         """
@@ -190,10 +198,10 @@ class ProgressiveDisclosureEngine:
         current_block = self.blocks[self.state.current_block_index]
 
         return {
-            'block_content': current_block.content,
-            'detail_request': True,
-            'message': 'Möchtest du mehr Details zu einem spezifischen Aspekt?',
-            'options': self._extract_detail_options(current_block)
+            "block_content": current_block.content,
+            "detail_request": True,
+            "message": "Möchtest du mehr Details zu einem spezifischen Aspekt?",
+            "options": self._extract_detail_options(current_block),
         }
 
     def _get_available_actions(self) -> List[Dict]:
@@ -206,46 +214,46 @@ class ProgressiveDisclosureEngine:
 
         # Weiter (wenn nicht am Ende)
         if self.state.current_block_index < len(self.blocks) - 1:
-            actions.append({
-                'label': 'Weiter →',
-                'key': 'next',
-                'hotkey': 'Enter',
-                'primary': True
-            })
+            actions.append(
+                {"label": "Weiter →", "key": "next", "hotkey": "Enter", "primary": True}
+            )
 
         # Zurück (wenn nicht am Anfang)
         if self.state.current_block_index > 0:
-            actions.append({
-                'label': '← Zurück',
-                'key': 'previous',
-                'hotkey': 'Backspace',
-                'primary': False
-            })
+            actions.append(
+                {
+                    "label": "← Zurück",
+                    "key": "previous",
+                    "hotkey": "Backspace",
+                    "primary": False,
+                }
+            )
 
         # Pause
-        actions.append({
-            'label': '⏸️ Pause',
-            'key': 'pause',
-            'hotkey': 'Space',
-            'primary': False
-        })
+        actions.append(
+            {"label": "⏸️ Pause", "key": "pause", "hotkey": "Space", "primary": False}
+        )
 
         # Mehr Details
-        actions.append({
-            'label': '🔍 Mehr Details',
-            'key': 'detail',
-            'hotkey': 'd',
-            'primary': False
-        })
+        actions.append(
+            {
+                "label": "🔍 Mehr Details",
+                "key": "detail",
+                "hotkey": "d",
+                "primary": False,
+            }
+        )
 
         # Alle Blöcke (für Hyperfocus State)
         if self.state.user_state == UserState.HYPERFOCUS:
-            actions.append({
-                'label': '⚡ Alle Blöcke',
-                'key': 'show_all',
-                'hotkey': 'a',
-                'primary': False
-            })
+            actions.append(
+                {
+                    "label": "⚡ Alle Blöcke",
+                    "key": "show_all",
+                    "hotkey": "a",
+                    "primary": False,
+                }
+            )
 
         return actions
 
@@ -269,7 +277,10 @@ class ProgressiveDisclosureEngine:
         # Zu lange bei einem Block
         if self.interaction_times:
             avg_time = sum(self.interaction_times) / len(self.interaction_times)
-            if len(self.interaction_times) > 0 and self.interaction_times[-1] > avg_time * 2:
+            if (
+                len(self.interaction_times) > 0
+                and self.interaction_times[-1] > avg_time * 2
+            ):
                 return True
 
         return False
@@ -305,31 +316,27 @@ class ProgressiveDisclosureEngine:
         TODO: NLP-basierte Extraktion oder LLM-Integration
         """
         # Placeholder - später: semantische Analyse
-        return [
-            "Technische Details",
-            "Praktisches Beispiel",
-            "Verwandte Konzepte"
-        ]
+        return ["Technische Details", "Praktisches Beispiel", "Verwandte Konzepte"]
 
     def _create_completion_display(self) -> Dict:
         """
         Display wenn alle Blöcke durchlaufen wurden
         """
         return {
-            'completed': True,
-            'message': '✅ Alle Blöcke durchlaufen!',
-            'stats': {
-                'total_blocks': self.state.total_blocks,
-                'time_spent': self._format_time(self.state.time_spent_seconds),
-                'revisited_blocks': len(self.state.blocks_revisited),
-                'pauses_taken': self.pause_count
+            "completed": True,
+            "message": "✅ Alle Blöcke durchlaufen!",
+            "stats": {
+                "total_blocks": self.state.total_blocks,
+                "time_spent": self._format_time(self.state.time_spent_seconds),
+                "revisited_blocks": len(self.state.blocks_revisited),
+                "pauses_taken": self.pause_count,
             },
-            'actions': [
-                {'label': '🔄 Nochmal durchgehen', 'key': 'restart'},
-                {'label': '💬 Neue Frage', 'key': 'new_query'},
-                {'label': '📊 Session Summary', 'key': 'summary'}
+            "actions": [
+                {"label": "🔄 Nochmal durchgehen", "key": "restart"},
+                {"label": "💬 Neue Frage", "key": "new_query"},
+                {"label": "📊 Session Summary", "key": "summary"},
             ],
-            'quality_score': 369/370
+            "quality_score": 369 / 370,
         }
 
     def record_interaction_time(self, seconds: int):
@@ -358,55 +365,53 @@ class ProgressiveBlockFormatter:
         """
         Formatiert für Terminal/CLI Output
         """
-        if display_data.get('completed'):
+        if display_data.get("completed"):
             return ProgressiveBlockFormatter._format_completion_cli(display_data)
 
-        block = display_data['block']
-        progress = display_data['progress']
-        timing = display_data['timing']
-        cognitive = display_data['cognitive_state']
+        block = display_data["block"]
+        progress = display_data["progress"]
+        timing = display_data["timing"]
+        cognitive = display_data["cognitive_state"]
 
         output = []
 
         # Header mit Progress
         output.append("=" * 70)
         output.append(f"🏛️ LUCA 369/370 - Progressive Disclosure")
-        output.append(f"📊 Block {progress['current']}/{progress['total']} " +
-                     f"({progress['percentage']:.0f}% | " +
-                     f"⏱️ noch ~{timing['formatted_remaining']})")
+        output.append(
+            f"📊 Block {progress['current']}/{progress['total']} "
+            + f"({progress['percentage']:.0f}% | "
+            + f"⏱️ noch ~{timing['formatted_remaining']})"
+        )
         output.append("=" * 70)
         output.append("")
 
         # Block Type Icon
-        type_icons = {
-            'foundation': '🏛️',
-            'building': '🔨',
-            'connection': '🔗'
-        }
-        icon = type_icons.get(block['type'], '📦')
+        type_icons = {"foundation": "🏛️", "building": "🔨", "connection": "🔗"}
+        icon = type_icons.get(block["type"], "📦")
 
         # Block Content
         output.append(f"{icon} {block['type'].upper()} BLOCK")
         output.append("-" * 70)
-        output.append(block['content'])
+        output.append(block["content"])
         output.append("")
 
         # Next Preview
-        if block['has_next_preview'] and block['next_hint']:
+        if block["has_next_preview"] and block["next_hint"]:
             output.append(f"   → {block['next_hint']}")
             output.append("")
 
         # Cognitive State Feedback
-        if cognitive['overload_detected']:
-            output.append("⚠️  " + cognitive['recommendation'])
+        if cognitive["overload_detected"]:
+            output.append("⚠️  " + cognitive["recommendation"])
             output.append("")
 
         # Actions
         output.append("-" * 70)
         output.append("Verfügbare Aktionen:")
-        for action in display_data['actions']:
-            hotkey_info = f" [{action['hotkey']}]" if 'hotkey' in action else ""
-            primary_mark = " ⭐" if action.get('primary') else ""
+        for action in display_data["actions"]:
+            hotkey_info = f" [{action['hotkey']}]" if "hotkey" in action else ""
+            primary_mark = " ⭐" if action.get("primary") else ""
             output.append(f"  {action['label']}{hotkey_info}{primary_mark}")
 
         output.append("=" * 70)
@@ -420,11 +425,11 @@ class ProgressiveBlockFormatter:
 
         output.append("")
         output.append("=" * 70)
-        output.append("🎉 " + data['message'])
+        output.append("🎉 " + data["message"])
         output.append("=" * 70)
         output.append("")
 
-        stats = data['stats']
+        stats = data["stats"]
         output.append("📊 Session Statistik:")
         output.append(f"   Blöcke gelesen: {stats['total_blocks']}")
         output.append(f"   Zeit investiert: {stats['time_spent']}")
@@ -436,7 +441,7 @@ class ProgressiveBlockFormatter:
         output.append("")
 
         output.append("Nächste Schritte:")
-        for action in data['actions']:
+        for action in data["actions"]:
             output.append(f"  {action['label']}")
 
         output.append("=" * 70)
@@ -449,13 +454,13 @@ class ProgressiveBlockFormatter:
         Formatiert für Web UI (JSON-ready)
         """
         return {
-            'type': 'progressive_disclosure',
-            'version': '369/370',
-            'data': display_data,
-            'ui_hints': {
-                'show_progress_bar': True,
-                'enable_keyboard_nav': True,
-                'highlight_primary_action': True,
-                'show_time_estimate': True
-            }
+            "type": "progressive_disclosure",
+            "version": "369/370",
+            "data": display_data,
+            "ui_hints": {
+                "show_progress_bar": True,
+                "enable_keyboard_nav": True,
+                "highlight_primary_action": True,
+                "show_time_estimate": True,
+            },
         }

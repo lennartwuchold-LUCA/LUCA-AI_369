@@ -11,11 +11,11 @@ __author__ = "Lennart Wuchold"
 __quality_standard__ = 369 / 370
 
 from luca_369_370.core import (
-    InfoBlockEngine,
     BlockFormatter,
-    QualityValidator,
-    InfoBlock,
     BlockType,
+    InfoBlock,
+    InfoBlockEngine,
+    QualityValidator,
 )
 
 __all__ = [

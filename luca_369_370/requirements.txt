@@ -1,5 +1,5 @@
 # LUCA 369/370 - Info-Block-Engine Dependencies
-# Minimal dependencies für maximale Portabilität
+# Updated: 11.11.2025 - LLM Integration AKTIV!
 
 # Core Python Version
 # python>=3.9
@@ -16,11 +16,23 @@ black>=23.9.0        # Code Formatting
 pylint>=3.0.0        # Linting
 isort>=5.12.0        # Import Sorting
 
-# Future: LLM Integration (Phase 2)
-# anthropic>=0.7.0   # Wird in Phase 2 aktiviert
-# openai>=1.0.0      # Optional alternative
+# LLM Integration (PHASE 2 - NOW ACTIVE! ✅)
+anthropic>=0.40.0    # Anthropic Claude API Integration
+# openai>=1.0.0      # Optional alternative (future)
 
-# Future: Advanced Features (Phase 3+)
+# Meshtastic Integration (PHASE 3.5 - NOW ACTIVE! ✅)
+meshtastic>=2.2.0    # LoRa Mesh Network Integration
+cryptography>=41.0.0 # Encryption für Mesh Messages
+pyserial>=3.5        # Serial Communication für Hardware
+
+# Satellite Bridge (PHASE 3.6 - NOW ACTIVE! 🛰️)
+paho-mqtt>=1.6.1     # MQTT für Satellite Communication
+requests>=2.31.0     # HTTP Fallback für Satellite
+
+# AI Optimization (PHASE 3.7 - OPTIONAL ✨)
+# torch>=2.0.0       # PyTorch für AI Provider Selection (optional)
+
+# Future: Advanced Features (Phase 4+)
 # pydantic>=2.4.0    # Data Validation
 # sqlalchemy>=2.0.0  # Database für User Profiles
 # fastapi>=0.104.0   # API Backend

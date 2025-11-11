@@ -7,6 +7,11 @@ on:
     branches: [ main, develop ]
   workflow_dispatch:
 
+# Cancel outdated workflow runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Test Python ${{ matrix.python-version }}
@@ -24,42 +29,35 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+        cache: 'pip'
 
-    - name: 📦 Install Poetry
-      run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+    - name: 📦 Install Poetry (via pipx - faster)
+      run: pipx install poetry
 
     - name: 🔍 Cache Poetry dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.cache/pypoetry
           .venv
-        key: ${{ runner.os }}-poetry-${{ matrix.python-version }}-${{ hashFiles('**/pyproject.toml') }}
+        key: ${{ runner.os }}-poetry-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
         restore-keys: |
           ${{ runner.os }}-poetry-${{ matrix.python-version }}-
 
     - name: 🔧 Install dependencies
       run: |
         poetry config virtualenvs.in-project true
-        poetry install --no-interaction --no-ansi
+        poetry install --no-interaction --no-ansi --extras backend --with dev
 
-    - name: 🧪 Run tests with pytest
+    - name: 🧪 Run tests in parallel (pytest-xdist)
       run: |
-        poetry run pytest tests/ -v --tb=short --color=yes
+        poetry run pytest -n auto -v --tb=short --color=yes
 
-    - name: 🏛️ Run L.U.C.A 369/370 Framework tests
+    - name: 🎨 Check code style (black + isort)
+      if: matrix.python-version == '3.11'
       run: |
-        poetry run pytest luca_369_370/tests/ -v --tb=short --color=yes
-
-    - name: 🎨 Check code formatting with black
-      run: |
-        poetry run black --check luca/ tests/ luca_369_370/
-
-    - name: 📊 Check import sorting with isort
-      run: |
-        poetry run isort --check-only luca/ tests/ luca_369_370/
+        poetry run black --check --quiet luca/ tests/ luca_369_370/
+        poetry run isort --check-only --quiet luca/ tests/ luca_369_370/
 
   lint:
     name: Lint and Type Check
@@ -73,16 +71,25 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: "3.11"
+        cache: 'pip'
 
-    - name: 📦 Install Poetry
-      run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+    - name: 📦 Install Poetry (via pipx - faster)
+      run: pipx install poetry
+
+    - name: 🔍 Cache Poetry dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/pypoetry
+          .venv
+        key: ${{ runner.os }}-poetry-3.11-${{ hashFiles('**/poetry.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-poetry-3.11-
 
     - name: 🔧 Install dependencies
       run: |
         poetry config virtualenvs.in-project true
-        poetry install --no-interaction --no-ansi
+        poetry install --no-interaction --no-ansi --extras backend --with dev
 
     - name: 🔍 Type check with mypy
       run: |
@@ -101,21 +108,21 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: "3.11"
+        cache: 'pip'
 
-    - name: 📦 Install Poetry
-      run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+    - name: 📦 Install Poetry (via pipx - faster)
+      run: pipx install poetry
 
     - name: 🏗️ Build package
       run: |
         poetry build
 
     - name: 📤 Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dist-packages
         path: dist/
+        retention-days: 7
 
   # Future: Auto-publish to PyPI on tags
   # publish:
@@ -134,9 +141,7 @@ jobs:
   #       python-version: "3.11"
   #
   #   - name: 📦 Install Poetry
-  #     run: |
-  #       curl -sSL https://install.python-poetry.org | python3 -
-  #       echo "$HOME/.local/bin" >> $GITHUB_PATH
+  #     run: pipx install poetry
   #
   #   - name: 🔧 Configure Poetry
   #     run: |

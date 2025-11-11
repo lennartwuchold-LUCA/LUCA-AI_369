@@ -8,8 +8,9 @@ ADHD-Optimiert:
 - Progress-Indikatoren
 """
 
-from typing import List, Dict
-from .info_block_engine import InfoBlock, BlockType
+from typing import Dict, List
+
+from .info_block_engine import BlockType, InfoBlock
 
 
 class BlockFormatter:
@@ -22,7 +23,7 @@ class BlockFormatter:
         self.block_icons = {
             BlockType.FOUNDATION: "🏛️",
             BlockType.BUILDING: "🔨",
-            BlockType.CONNECTION: "🔗"
+            BlockType.CONNECTION: "🔗",
         }
 
     def format_response(self, blocks: List[InfoBlock]) -> str:
@@ -62,8 +63,7 @@ class BlockFormatter:
 
         return "\n".join(output)
 
-    def _format_single_block(self, block: InfoBlock,
-                            index: int, total: int) -> str:
+    def _format_single_block(self, block: InfoBlock, index: int, total: int) -> str:
         """Formatiert einen einzelnen Block"""
 
         icon = self.block_icons.get(block.block_type, "📦")
@@ -72,7 +72,7 @@ class BlockFormatter:
         lines = [
             f"{icon} Block {index}/{total} - {type_name}",
             "-" * 60,
-            f"{block.content}"
+            f"{block.content}",
         ]
 
         if block.has_next_preview and block.next_block_hint:
@@ -89,17 +89,17 @@ class BlockFormatter:
             Dict mit strukturierten Block-Daten
         """
         return {
-            'blocks': [
+            "blocks": [
                 {
-                    'index': idx,
-                    'type': block.block_type.value,
-                    'content': block.content,
-                    'icon': self.block_icons.get(block.block_type, "📦"),
-                    'has_next': block.has_next_preview,
-                    'next_hint': block.next_block_hint
+                    "index": idx,
+                    "type": block.block_type.value,
+                    "content": block.content,
+                    "icon": self.block_icons.get(block.block_type, "📦"),
+                    "has_next": block.has_next_preview,
+                    "next_hint": block.next_block_hint,
                 }
                 for idx, block in enumerate(blocks, 1)
             ],
-            'total_blocks': len(blocks),
-            'quality_score': 369/370
+            "total_blocks": len(blocks),
+            "quality_score": 369 / 370,
         }

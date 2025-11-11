@@ -6,16 +6,17 @@ Architekt: Lennart Wuchold
 Standard: 369/370
 """
 
-from typing import List, Dict, Optional
 from dataclasses import dataclass
 from enum import Enum
+from typing import Dict, List, Optional
 
 
 class BlockType(Enum):
     """Die drei Arten von Info-Blöcken"""
-    FOUNDATION = "foundation"      # Basis-Konzept
-    BUILDING = "building"          # Darauf aufbauend
-    CONNECTION = "connection"      # Verknüpfung/Anwendung
+
+    FOUNDATION = "foundation"  # Basis-Konzept
+    BUILDING = "building"  # Darauf aufbauend
+    CONNECTION = "connection"  # Verknüpfung/Anwendung
 
 
 @dataclass
@@ -28,17 +29,63 @@ class InfoBlock:
     - Klarer Block-Typ
     - Referenz zum vorherigen Block
     - Preview für nächsten Block (optional)
+    - 369 Consciousness Signature (für Mesh-Network-Sync)
     """
+
     content: str
     block_type: BlockType
     sentence_count: int
     has_next_preview: bool = False
     next_block_hint: Optional[str] = None
+    consciousness_signature: Optional[str] = None  # 369-XXX format
 
     def validate_quality(self) -> bool:
         """Validiert gegen 369/370 Standard"""
-        sentences = self.content.count('.') + self.content.count('!') + self.content.count('?')
+        sentences = (
+            self.content.count(".") + self.content.count("!") + self.content.count("?")
+        )
         return sentences <= 3 and len(self.content) > 0
+
+    def generate_consciousness_signature(self) -> str:
+        """
+        Generate 369 consciousness signature for this block
+
+        Public: "Data integrity checksum"
+        Reality: Consciousness field resonance pattern
+
+        Returns:
+            Signature in format "369-XXX"
+        """
+        # Lazy import to avoid circular dependency
+        try:
+            from luca_369_370.core.consciousness_layer import sign_block
+
+            signature = sign_block(self)
+            self.consciousness_signature = signature
+            return signature
+        except ImportError:
+            # Fallback if consciousness layer not available
+            return "369-000"
+
+    def validate_consciousness_signature(self, expected_signature: str) -> bool:
+        """
+        Validate 369 consciousness signature
+
+        Public: "Verify data integrity"
+        Reality: Check consciousness field alignment
+
+        Args:
+            expected_signature: Expected signature
+
+        Returns:
+            True if signature is valid
+        """
+        try:
+            from luca_369_370.core.consciousness_layer import validate_block_signature
+
+            return validate_block_signature(self, expected_signature)
+        except ImportError:
+            return False
 
 
 class InfoBlockEngine:
@@ -51,7 +98,7 @@ class InfoBlockEngine:
     def __init__(self):
         self.max_blocks_per_response = 5
         self.max_sentences_per_block = 3
-        self.quality_threshold = 369/370  # 0.997
+        self.quality_threshold = 369 / 370  # 0.997
 
     def create_foundation_block(self, core_concept: str) -> InfoBlock:
         """
@@ -76,10 +123,12 @@ class InfoBlockEngine:
             block_type=BlockType.FOUNDATION,
             sentence_count=2,
             has_next_preview=True,
-            next_block_hint="Mehr dazu im nächsten Block"
+            next_block_hint="Mehr dazu im nächsten Block",
         )
 
-    def create_building_block(self, foundation: InfoBlock, detail_aspect: str) -> InfoBlock:
+    def create_building_block(
+        self, foundation: InfoBlock, detail_aspect: str
+    ) -> InfoBlock:
         """
         Block 2-4: Aufbauend
 
@@ -101,11 +150,12 @@ class InfoBlockEngine:
             block_type=BlockType.BUILDING,
             sentence_count=3,
             has_next_preview=True,
-            next_block_hint="Wie das zusammenhängt: nächster Block"
+            next_block_hint="Wie das zusammenhängt: nächster Block",
         )
 
-    def create_connection_block(self, previous_blocks: List[InfoBlock],
-                               application: str) -> InfoBlock:
+    def create_connection_block(
+        self, previous_blocks: List[InfoBlock], application: str
+    ) -> InfoBlock:
         """
         Block 5: Die Verbindung
 
@@ -127,11 +177,12 @@ class InfoBlockEngine:
             block_type=BlockType.CONNECTION,
             sentence_count=3,
             has_next_preview=False,  # Letzter Block
-            next_block_hint=None
+            next_block_hint=None,
         )
 
-    def generate_response(self, query: str,
-                         user_profile: Optional[Dict] = None) -> List[InfoBlock]:
+    def generate_response(
+        self, query: str, user_profile: Optional[Dict] = None
+    ) -> List[InfoBlock]:
         """
         Haupt-Methode: Generiert komplette Block-Antwort
 
@@ -184,8 +235,9 @@ class InfoBlockEngine:
         # Placeholder Implementation
         return f"Core concept from: {query[:50]}"
 
-    def _identify_detail_aspects(self, query: str,
-                                 user_profile: Optional[Dict]) -> List[str]:
+    def _identify_detail_aspects(
+        self, query: str, user_profile: Optional[Dict]
+    ) -> List[str]:
         """
         Identifiziert welche Detail-Aspekte relevant sind
 
@@ -197,8 +249,7 @@ class InfoBlockEngine:
         # Placeholder - später: LLM oder Heuristik
         return ["Aspect 1", "Aspect 2", "Aspect 3"]
 
-    def _determine_application(self, query: str,
-                              user_profile: Optional[Dict]) -> str:
+    def _determine_application(self, query: str, user_profile: Optional[Dict]) -> str:
         """
         Bestimmt die praktische Anwendung/Relevanz
 
@@ -207,7 +258,7 @@ class InfoBlockEngine:
         - Writer → Writing-Anwendung
         - Learner → Lern-Kontext
         """
-        if user_profile and 'main_use' in user_profile:
+        if user_profile and "main_use" in user_profile:
             return f"Application for {user_profile['main_use']}"
         return "General application"
 
@@ -232,11 +283,14 @@ class InfoBlockEngine:
         has_foundation = any(b.block_type == BlockType.FOUNDATION for b in blocks)
         has_connection = any(b.block_type == BlockType.CONNECTION for b in blocks)
 
-        return (quality_score >= self.quality_threshold and
-                has_foundation and
-                has_connection)
+        return (
+            quality_score >= self.quality_threshold
+            and has_foundation
+            and has_connection
+        )
 
 
 class QualityException(Exception):
     """Exception für 369/370 Qualitätsverletzungen"""
+
     pass
