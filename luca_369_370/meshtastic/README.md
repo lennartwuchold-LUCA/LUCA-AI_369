@@ -408,6 +408,195 @@ Features: Gateway + Knowledge Base
 
 ---
 
+## 🛰️ Satellite Integration (Phase 3.6)
+
+### Global Reach for ALL!
+
+LUCA's satellite bridge extends mesh networks to **worldwide coverage**:
+- 🌍 **Starlink** - Low-latency global coverage
+- 🛰️ **Iridium** - Polar coverage, extreme reliability
+- 🌐 **Globalstar** - Cost-effective global communication
+
+### AI-Optimized Provider Selection
+
+The satellite bridge uses **PyTorch-based AI** to automatically select the best provider:
+
+```python
+from luca_369_370.meshtastic.mesh_network import LucaMeshNetwork
+
+# Create mesh with satellite enabled
+mesh = LucaMeshNetwork(node_name="GlobalNode", enable_satellite=True)
+
+# AI automatically selects best provider
+mesh.enable_satellite_bridge("starlink")
+
+# Send message globally
+mesh.send_via_satellite("Hello World!", region="global")
+```
+
+### Features
+
+#### 1. **Multi-Provider Support**
+```python
+from luca_369_370.meshtastic.satellite_bridge import SatelliteBridge
+
+bridge = SatelliteBridge()
+
+# Connect to any provider
+bridge.connect_satellite("starlink")   # Low-latency
+bridge.connect_satellite("iridium")    # Extreme reliability
+bridge.connect_satellite("globalstar") # Cost-effective
+```
+
+#### 2. **AI-based Provider Selection**
+```python
+# AI tracks performance metrics
+metrics = bridge.performance_metrics
+# {'starlink': {'signal': 0.8, 'latency': 0.5, 'error_rate': 0.1}, ...}
+
+# AI recommends best provider
+status = bridge.get_status()
+print(status['ai_recommendation'])  # 'starlink'
+
+# Train AI on real data
+bridge.train_ai()
+```
+
+#### 3. **Message Buffering & Retry**
+```python
+# Messages are buffered when offline
+message = {
+    "type": "emergency",
+    "content": "Need assistance",
+    "region": "africa"
+}
+
+# Automatically buffers if disconnected
+bridge.send_via_satellite(message)
+
+# Auto-sends when connection restored
+# (buffered messages are sent automatically)
+```
+
+#### 4. **Global Broadcasting**
+```python
+from luca_369_370.meshtastic.satellite_bridge import broadcast_globally
+
+# Broadcast to the world
+broadcast_globally("LUCA is for everyone!", bridge)
+```
+
+### CLI Usage
+
+```bash
+# Start LUCA Mesh with satellite
+python luca_mesh_cli.py
+
+# In CLI:
+LUCA> /satellite on        # Activate satellite
+LUCA> /satellite status    # Check status
+LUCA> /sat_send Hello!     # Send via satellite
+LUCA> /ai_status           # Check AI optimizer
+```
+
+### Architecture
+
+```
+[Local Mesh Node]
+    ↓ LoRa (10-50km)
+[Gateway Node + Satellite Bridge]
+    ↓ MQTT over Satellite
+[Starlink/Iridium/Globalstar]
+    ↓ Global Network
+[Mesh Node Worldwide]
+```
+
+### Performance Metrics
+
+The AI tracks real-time performance:
+- **Signal Strength** (0.0-1.0)
+- **Latency** (seconds)
+- **Error Rate** (0.0-1.0)
+
+Based on these metrics, AI automatically recommends the best provider.
+
+### Installation
+
+```bash
+# Core satellite dependencies
+pip install paho-mqtt>=1.6.1
+
+# AI optimization (optional)
+pip install torch>=2.0.0
+```
+
+### Use Cases
+
+#### 1. **Disaster Response**
+```python
+mesh = LucaMeshNetwork(enable_satellite=True)
+mesh.enable_satellite_bridge("iridium")  # Most reliable
+
+# Emergency broadcast via satellite
+mesh.broadcast_emergency_via_satellite(
+    "Earthquake survivors: Water at coordinates X,Y"
+)
+```
+
+#### 2. **Remote Communities**
+```python
+# African village without internet
+mesh = LucaMeshNetwork("Village_Node", enable_satellite=True)
+mesh.enable_satellite_bridge("globalstar")  # Cost-effective
+
+# Connect to global LUCA network
+mesh.send_via_satellite("Medical supplies needed", region="africa")
+```
+
+#### 3. **Global Coordination**
+```python
+# Europe node
+mesh_eu = LucaMeshNetwork(enable_satellite=True)
+mesh_eu.send_via_satellite("Resources available", region="europe")
+
+# Asia node receives and responds
+mesh_asia = LucaMeshNetwork(enable_satellite=True)
+# Automatically receives via satellite subscription
+```
+
+### Technical Specifications
+
+```
+Protocol: MQTT over Satellite
+Latency:
+  - Starlink: 20-50ms
+  - Iridium: 1-2 seconds
+  - Globalstar: 500ms-1s
+Coverage:
+  - Starlink: Global (excl. polar)
+  - Iridium: Complete global (incl. poles)
+  - Globalstar: 120+ countries
+Bandwidth: Varies by provider
+Cost: Pay-per-message (simulated in current version)
+```
+
+### AI Optimizer Details
+
+The `AIOptimizer` uses a simple neural network:
+
+```
+Input Layer:  [Signal, Latency, Error Rate]
+Hidden Layer: 10 neurons (ReLU activation)
+Output Layer: 3 neurons (Provider scores)
+
+Training: Online learning from real metrics
+Optimizer: Adam (lr=0.01)
+```
+
+Performance improves over time as the AI learns from actual usage patterns.
+
+---
+
 ## 🚀 Roadmap
 
 ### Phase 3.5: Meshtastic Integration ✅ (HEUTE - 11.11.2025)
@@ -417,6 +606,17 @@ Features: Gateway + Knowledge Base
 - [x] Interactive CLI
 - [x] Emergency Features
 - [x] Community Features
+- [x] Tests & Documentation
+
+### Phase 3.6: Satellite Integration ✅ (HEUTE - 11.11.2025)
+- [x] Satellite Bridge (Starlink/Iridium/Globalstar)
+- [x] MQTT-based global communication
+- [x] AI-Optimierung mit PyTorch
+- [x] Performance Metrics Tracking
+- [x] Automatic Provider Selection
+- [x] Message Buffering & Retry
+- [x] Integration mit Mesh Network
+- [x] CLI Commands für Satellite
 - [x] Tests & Documentation
 
 ### Phase 3.6: Hardware Testing (DIESE WOCHE)

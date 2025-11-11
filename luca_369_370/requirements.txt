@@ -25,6 +25,13 @@ meshtastic>=2.2.0    # LoRa Mesh Network Integration
 cryptography>=41.0.0 # Encryption für Mesh Messages
 pyserial>=3.5        # Serial Communication für Hardware
 
+# Satellite Bridge (PHASE 3.6 - NOW ACTIVE! 🛰️)
+paho-mqtt>=1.6.1     # MQTT für Satellite Communication
+requests>=2.31.0     # HTTP Fallback für Satellite
+
+# AI Optimization (PHASE 3.7 - OPTIONAL ✨)
+# torch>=2.0.0       # PyTorch für AI Provider Selection (optional)
+
 # Future: Advanced Features (Phase 4+)
 # pydantic>=2.4.0    # Data Validation
 # sqlalchemy>=2.0.0  # Database für User Profiles

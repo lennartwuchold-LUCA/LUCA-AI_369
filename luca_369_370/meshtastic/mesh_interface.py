@@ -90,6 +90,9 @@ class LucaInterface:
         print("/emergency <Text> - Notfall-Nachricht")
         print("/nodes - Aktive Nodes anzeigen")
         print("/stats - Mesh-Statistiken")
+        print("/satellite <on/off/status> - Satellite-Bridge steuern")
+        print("/sat_send <Nachricht> - Via Satellit senden")
+        print("/ai_status - AI-Optimizer Status anzeigen")
         print("/help - Hilfe anzeigen")
         print("/exit - Beenden")
         print("=" * 50)
@@ -118,6 +121,19 @@ class LucaInterface:
                     emergency_msg = user_input[11:]
                     if self.mesh:
                         self.mesh.send_message(f"/emergency {emergency_msg}")
+                elif user_input.startswith("/satellite "):
+                    sat_cmd = user_input[11:].strip()
+                    self.handle_satellite_command(sat_cmd)
+                elif user_input.startswith("/sat_send "):
+                    sat_message = user_input[10:]
+                    if self.mesh:
+                        success = self.mesh.send_via_satellite(sat_message)
+                        if success:
+                            print("✅ Nachricht via Satellit gesendet!")
+                        else:
+                            print("❌ Satellite-Senden fehlgeschlagen")
+                elif user_input == "/ai_status":
+                    self.show_ai_status()
                 elif user_input:
                     # Standard: Als normale Nachricht senden
                     if self.mesh:
@@ -146,6 +162,80 @@ class LucaInterface:
         print(f"Verschlüsselung: {'✅' if stats['encryption_enabled'] else '❌'}")
         print("=" * 40)
 
+    def handle_satellite_command(self, cmd: str):
+        """
+        Handle satellite commands
+
+        Args:
+            cmd: Command (on/off/status)
+        """
+        if not self.mesh:
+            print("❌ Mesh nicht verfügbar")
+            return
+
+        if cmd == "on":
+            print("🛰️ Aktiviere Satellite-Bridge...")
+            success = self.mesh.enable_satellite_bridge("starlink")
+            if success:
+                print("✅ Satellite-Bridge aktiv!")
+            else:
+                print("❌ Satellite-Aktivierung fehlgeschlagen")
+        elif cmd == "off":
+            if self.mesh.satellite_bridge:
+                self.mesh.satellite_bridge.disconnect()
+                print("📡 Satellite-Bridge deaktiviert")
+            else:
+                print("⚠️  Satellite-Bridge war nicht aktiv")
+        elif cmd == "status":
+            if self.mesh.satellite_bridge:
+                status = self.mesh.satellite_bridge.get_status()
+                print("\n🛰️ Satellite-Bridge Status:")
+                print("=" * 40)
+                print(f"Provider: {status['provider']}")
+                print(f"Status: {status['status']}")
+                print(f"Gebufferte Nachrichten: {status['buffered_messages']}")
+                print(f"AI verfügbar: {'✅' if status['ai_available'] else '❌'}")
+                if "ai_recommendation" in status:
+                    print(f"AI-Empfehlung: {status['ai_recommendation']}")
+                print("=" * 40)
+            else:
+                print("⚠️  Satellite-Bridge nicht aktiviert")
+        else:
+            print("❌ Unbekannter Befehl. Verwende: on/off/status")
+
+    def show_ai_status(self):
+        """Show AI optimizer status"""
+        if not self.mesh or not self.mesh.satellite_bridge:
+            print("⚠️  Satellite-Bridge nicht verfügbar")
+            return
+
+        if self.mesh.satellite_bridge.ai_optimizer.model:
+            print("\n🧠 AI-Optimizer Status:")
+            print("=" * 40)
+            print("Status: ✅ Aktiv (PyTorch)")
+
+            # Show metrics
+            metrics = self.mesh.satellite_bridge.performance_metrics
+            print("\nPerformance Metrics:")
+            for provider, m in metrics.items():
+                print(
+                    f"  {provider}: Latenz={m['latency']:.2f}s, Fehler={m['error_rate']:.2%}"
+                )
+
+            # Best provider recommendation
+            if self.mesh.satellite_bridge.active_provider:
+                provider_metrics = metrics[self.mesh.satellite_bridge.active_provider]
+                best = self.mesh.satellite_bridge.ai_optimizer.predict_best_provider(
+                    provider_metrics["signal"],
+                    provider_metrics["latency"],
+                    provider_metrics["error_rate"],
+                )
+                print(f"\nAI-Empfehlung: {best}")
+            print("=" * 40)
+        else:
+            print("⚠️  AI deaktiviert (PyTorch fehlt)")
+            print("   Installiere mit: pip install torch")
+
     def show_help(self):
         """Hilfe anzeigen"""
         help_text = """
@@ -159,12 +249,18 @@ Grundfunktionen:
 • Automatische Verbindung zu anderen Nodes
 • Verschlüsselte Kommunikation
 • Offline-Funktionalität
+• Satellite-Bridge für globale Reichweite
 
 Befehle:
 /msg <text>        - Nachricht senden
 /emergency <text>  - Notfall-Nachricht (höchste Priorität)
 /nodes             - Zeige verbundene Nodes
 /stats             - Zeige Netzwerk-Statistiken
+/satellite on      - Satellite-Bridge aktivieren
+/satellite off     - Satellite-Bridge deaktivieren
+/satellite status  - Satellite-Status anzeigen
+/sat_send <text>   - Nachricht via Satellit senden
+/ai_status         - AI-Optimizer Status
 /help              - Diese Hilfe
 /exit              - Beenden
 
@@ -173,6 +269,7 @@ Tipps:
 • Mehr Nodes = bessere Abdeckung
 • Notfall-Nachrichten werden priorisiert
 • Funktioniert auch ohne Internet!
+• Satellite-Bridge für weltweite Kommunikation
 
 Hardware:
 • Meshtastic T-Beam (~$30)
@@ -180,8 +277,8 @@ Hardware:
 • LILYGO T-Beam (~$35)
 
 Reichweite:
-• Stadt: bis 10km
-• Land/Berge: bis 50km+
+• LoRa: Stadt bis 10km, Land bis 50km+
+• Satellite: Weltweit!
 • Multi-Hop: unbegrenzt!
 
 Gemeinsam revolutionieren wir die Kommunikation! 🚀

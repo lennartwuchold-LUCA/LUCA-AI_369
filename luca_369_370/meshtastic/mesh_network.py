@@ -31,6 +31,13 @@ except ImportError:
 
 from luca_369_370.core.info_block_engine import InfoBlock, InfoBlockEngine
 
+try:
+    from luca_369_370.meshtastic.satellite_bridge import SatelliteBridge
+
+    SATELLITE_AVAILABLE = True
+except ImportError:
+    SATELLITE_AVAILABLE = False
+
 
 class LucaMeshNetwork:
     """
@@ -44,12 +51,13 @@ class LucaMeshNetwork:
     - Emergency Broadcasting
     """
 
-    def __init__(self, node_name: str = "LUCA_Node"):
+    def __init__(self, node_name: str = "LUCA_Node", enable_satellite: bool = False):
         """
         Initialize LUCA Mesh Network
 
         Args:
             node_name: Name dieses Mesh-Nodes
+            enable_satellite: Enable satellite bridge for global communication
         """
         if not MESHTASTIC_AVAILABLE:
             raise ImportError(
@@ -73,6 +81,13 @@ class LucaMeshNetwork:
 
         # LUCA Integration
         self.info_block_engine = InfoBlockEngine()
+
+        # Satellite Bridge (optional)
+        self.satellite_bridge = None
+        if enable_satellite and SATELLITE_AVAILABLE:
+            self.satellite_bridge = SatelliteBridge()
+        elif enable_satellite and not SATELLITE_AVAILABLE:
+            print("⚠️  Satellite-Bridge nicht verfügbar - installiere: pip install paho-mqtt")
 
     def connect_mesh(self, port: Optional[str] = None, host: Optional[str] = None):
         """
@@ -372,6 +387,70 @@ class LucaMeshNetwork:
         broadcast_thread = threading.Thread(target=broadcast_loop, daemon=True)
         broadcast_thread.start()
 
+    def enable_satellite_bridge(self, provider: str = "starlink") -> bool:
+        """
+        Enable and connect satellite bridge
+
+        Args:
+            provider: Satellite provider ('starlink', 'iridium', 'globalstar')
+
+        Returns:
+            True if successful
+        """
+        if not self.satellite_bridge:
+            if not SATELLITE_AVAILABLE:
+                print("❌ Satellite-Bridge nicht verfügbar")
+                return False
+            self.satellite_bridge = SatelliteBridge()
+
+        return self.satellite_bridge.connect_satellite(provider)
+
+    def send_via_satellite(
+        self, message: str, region: str = "global", message_type: str = "mesh_relay"
+    ) -> bool:
+        """
+        Send message via satellite bridge
+
+        Args:
+            message: Message content
+            region: Target region ('global', 'europe', 'asia', etc.)
+            message_type: Type of message
+
+        Returns:
+            True if successful
+        """
+        if not self.satellite_bridge:
+            print("❌ Satellite-Bridge nicht aktiviert")
+            return False
+
+        msg_dict = {
+            "type": message_type,
+            "message": message,
+            "node": self.node_name,
+            "region": region,
+            "timestamp": datetime.now().isoformat(),
+        }
+
+        return self.satellite_bridge.send_via_satellite(msg_dict)
+
+    def broadcast_emergency_via_satellite(self, emergency_message: str) -> bool:
+        """
+        Broadcast emergency message via satellite
+
+        Args:
+            emergency_message: Emergency message content
+
+        Returns:
+            True if successful
+        """
+        if not self.satellite_bridge:
+            print("⚠️  Satellite nicht verfügbar - aktiviere lokale Emergency")
+            return False
+
+        return self.send_via_satellite(
+            emergency_message, region="global", message_type="emergency"
+        )
+
     def get_mesh_stats(self) -> Dict:
         """
         Holt Mesh-Netzwerk Statistiken
@@ -379,11 +458,19 @@ class LucaMeshNetwork:
         Returns:
             Dictionary mit Statistiken
         """
-        return {
+        stats = {
             "node_name": self.node_name,
             "connected_nodes": len(self.connected_nodes),
             "queued_messages": len(self.message_queue),
             "local_messages": len(self.local_database),
             "interface_active": self.interface is not None,
             "encryption_enabled": self.cipher_suite is not None,
+            "satellite_enabled": self.satellite_bridge is not None,
         }
+
+        # Add satellite stats if available
+        if self.satellite_bridge:
+            satellite_status = self.satellite_bridge.get_status()
+            stats["satellite_status"] = satellite_status
+
+        return stats
