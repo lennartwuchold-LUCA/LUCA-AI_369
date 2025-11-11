@@ -302,6 +302,7 @@ class CulturalLinguisticAnalyzer:
                 # Central Europe: Germany, Austria, Czech, Hungary, Switzerland
                 # Philosophical, precise, historically aware, cultural depth
                 # Special: East German craftsmanship (Erzgebirge, Seiffen)
+                # Special: Rhineland carnival culture (Kölle, Düsseldorf) 🎉
                 "keywords": [
                     "philosophy",
                     "depth",
@@ -327,12 +328,22 @@ class CulturalLinguisticAnalyzer:
                     "bergbau",  # Mining heritage (Erzgebirge)
                     "heimat",  # Homeland/heritage
                     "gemütlichkeit",  # Coziness/warmth
+                    "karneval",  # Carnival culture (Rhineland)
+                    "alaaf",  # Kölle alaaf! (Cologne)
+                    "helau",  # Helau! (Düsseldorf)
+                    "rhein",  # Rhine river
+                    "brauhaus",  # Brewery culture
+                    "jeck",  # Carnival fool (Kölsch)
+                    "jovial",  # Joviality
+                    "frohsinn",  # Cheerfulness
+                    "lebenslust",  # Zest for life
                 ],
                 "emphasis": "depth",
                 "structure": "systematic",
                 "regions": [
                     "Germany",
                     "East Germany (Erzgebirge, Altenberg, Seiffen)",
+                    "Rhineland (Köln, Düsseldorf, am Rhein) 🎉",
                     "Austria",
                     "Czech Republic",
                     "Hungary",
