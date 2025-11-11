@@ -55,13 +55,20 @@ Inspiriert von:
 git clone https://github.com/lennartwuchold-LUCA/LUCA-AI_369.git
 cd LUCA-AI_369/luca_369_370
 
-# Install Dependencies
-pip install -r requirements.txt
+# Run automated setup script
+chmod +x setup_env.sh
+./setup_env.sh
 
-# Run Demo
-python examples/demo_responses.py
+# Activate virtual environment (if not already active)
+source luca_venv/bin/activate
 
-# Run Tests
+# Set your Anthropic API Key for LLM Integration
+export ANTHROPIC_API_KEY='sk-ant-your-key-here'
+
+# Run Interactive LUCA CLI
+python luca_cli.py
+
+# Or run tests
 pytest tests/ -v
 ```
 
@@ -69,47 +76,103 @@ pytest tests/ -v
 
 ## 🚀 Quick Start
 
-### 1. Basis-Verwendung
+### 🆕 1. Interactive CLI (LLM Integration - RECOMMENDED!)
 
-```python
-from core.info_block_engine import InfoBlockEngine, InfoBlock, BlockType
-from core.block_formatter import BlockFormatter
+**PHASE 2 NOW LIVE!** ✅ LLM Integration aktiv seit 11.11.2025
 
-# Initialisiere Engine
-engine = InfoBlockEngine()
+```bash
+# Setup environment
+./setup_env.sh
+source luca_venv/bin/activate
 
-# Erstelle manuell einen Block (später: LLM-generiert)
-foundation = InfoBlock(
-    content="LUCA ist ein Bio-inspiriertes KI-System. Es nutzt Fermentations-Prinzipien. Dein Brauwissen wird zu Code-Architektur.",
-    block_type=BlockType.FOUNDATION,
-    sentence_count=3,
-    has_next_preview=True,
-    next_block_hint="Wie funktioniert das konkret?"
-)
+# Set API Key
+export ANTHROPIC_API_KEY='sk-ant-your-key'
 
-# Formatiere für Display
-formatter = BlockFormatter()
-output = formatter.format_response([foundation])
-print(output)
+# Start Interactive LUCA
+python luca_cli.py
 ```
 
-### 2. Automatische Response-Generierung
+**Example Session:**
+```
+🏛️  L.U.C.A 369/370 - Living Universal Cognition Array
+=====================================================
+Bio-Inspired Intelligence für Neurodivergente Minds
+
+🎯 Deine Frage an LUCA: Was ist LUCA?
+
+🤔 LUCA denkt nach...
+🏛️ Generiere Foundation Block...
+🔨 Generiere Building Block 1...
+🔨 Generiere Building Block 2...
+🔗 Generiere Connection Block...
+✅ 4 Blöcke generiert!
+
+[Block 1/4 - FOUNDATION displayed...]
+
+Aktion ([Enter]=Weiter, [b]=Zurück, [p]=Pause, [q]=Neue Frage):
+```
+
+### 2. Programmatic Usage (LLM Integration)
 
 ```python
-# Generiere komplette Response (verwendet Templates)
+from luca_369_370.core.integrated_response import IntegratedResponseSystem
+
+# Initialize with LLM
+system = IntegratedResponseSystem(use_llm=True)
+
+# Process Query
+engine = system.process_query("Was ist LUCA?", num_building_blocks=2)
+
+# Get formatted display
+display = system.get_formatted_display(engine, format_type='cli')
+print(display)
+
+# Navigate through blocks
+engine.next_block()
+display = system.get_formatted_display(engine)
+print(display)
+```
+
+### 3. Direct LLM Integration
+
+```python
+from luca_369_370.core.llm_integration import generate_luca_response
+
+# Generate complete response with one call
+blocks = generate_luca_response(
+    query="Erkläre mir Fermentation",
+    num_building_blocks=2
+)
+
+# Blocks are ready to use
+for i, block in enumerate(blocks):
+    print(f"\n--- Block {i+1} ({block.block_type.value}) ---")
+    print(block.content)
+```
+
+### 4. Static Mode (Fallback without LLM)
+
+```python
+from luca_369_370.core.info_block_engine import InfoBlockEngine, InfoBlock, BlockType
+from luca_369_370.core.block_formatter import BlockFormatter
+
+# Initialize Engine (uses templates)
+engine = InfoBlockEngine()
+
+# Generate response (template-based)
 blocks = engine.generate_response("Was ist LUCA?")
 
-# Formatiere und zeige
+# Format and display
 formatter = BlockFormatter()
 print(formatter.format_response(blocks))
 ```
 
-### 3. Quality Validation
+### 5. Quality Validation
 
 ```python
-from core.quality_validator import QualityValidator
+from luca_369_370.core.quality_validator import QualityValidator
 
-# Validiere Response
+# Validate Response
 validator = QualityValidator()
 results = validator.validate_response(blocks)
 
@@ -366,21 +429,29 @@ tests/
 - [x] Comprehensive Unit Tests (40+ Tests)
 - [x] Documentation (README, Docstrings)
 
-### Phase 2: LLM Integration (MORGEN - 12.11.2025)
+### Phase 2: LLM Integration ✅ (COMPLETED - 11.11.2025)
 
-- [ ] Anthropic Claude API Integration
-- [ ] Prompt Templates für Block-Generierung
-- [ ] Semantic Analysis für Query-Parsing
-- [ ] User-Profile Integration
-- [ ] Dynamic Block-Count basierend auf Komplexität
+- [x] Anthropic Claude API Integration
+- [x] Prompt Templates für Block-Generierung
+- [x] LUCALLMIntegration Class (llm_integration.py)
+- [x] IntegratedResponseSystem mit LLM Support
+- [x] Interactive CLI (luca_cli.py)
+- [x] Environment Setup Script (setup_env.sh)
+- [x] LLM Integration Tests
+- [x] Documentation Updates
+- [ ] Semantic Analysis für Query-Parsing (Phase 3)
+- [ ] User-Profile Integration (Phase 3)
+- [ ] Dynamic Block-Count basierend auf Komplexität (Phase 3)
 
-### Phase 3: User Experience (DIESE WOCHE)
+### Phase 3: User Experience (IN PROGRESS)
 
-- [ ] CLI Interface (Interactive)
+- [x] CLI Interface (Interactive) ✅
 - [ ] User Onboarding Flow
 - [ ] Profile Management (ADHD/Autismus/Custom)
 - [ ] Session Persistence
 - [ ] History & Favorites
+- [ ] Semantic Query Analysis
+- [ ] Dynamic Block-Count Optimization
 
 ### Phase 4: Advanced Features (NÄCHSTE WOCHE)
 
