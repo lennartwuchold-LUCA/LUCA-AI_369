@@ -8,6 +8,14 @@ Standard: 369/370
 
 from .block_formatter import BlockFormatter
 from .fibonacci_optimizer import EnergyLevel, FibonacciOptimizer, OptimizationResult
+from .growth_kinetics import (
+    GrowthKineticsEngine,
+    GrowthParameters,
+    GrowthPhase,
+    GrowthState,
+    calculate_monod_growth,
+    simulate_fermentation_batch,
+)
 from .info_block_engine import BlockType, InfoBlock, InfoBlockEngine, QualityException
 from .integrated_response import IntegratedResponseSystem
 from .kimi_synergy import KimiSynergyValidator, SynergyMetrics, SynergyResult
@@ -51,4 +59,11 @@ __all__ = [
     "KimiSynergyValidator",
     "SynergyMetrics",
     "SynergyResult",
+    # Layer 6: Growth Kinetics (Bio-inspired)
+    "GrowthKineticsEngine",
+    "GrowthParameters",
+    "GrowthPhase",
+    "GrowthState",
+    "calculate_monod_growth",
+    "simulate_fermentation_batch",
 ]
