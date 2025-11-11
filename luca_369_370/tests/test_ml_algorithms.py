@@ -50,7 +50,9 @@ class TestSymbioticGradientDescent:
         assert flow_state.loss == 25.0
         assert flow_state.gradient_norm > 0
 
-    @pytest.mark.xfail(reason="Fibonacci adaptation overridden by quantization - known issue")
+    @pytest.mark.xfail(
+        reason="Fibonacci adaptation overridden by quantization - known issue"
+    )
     def test_sgd_fibonacci_adaptation(self):
         """Test: Fibonacci-basierte Learning Rate Adaptation"""
         sgd = SymbioticGradientDescent(learning_rate=0.01, use_fibonacci=True)
@@ -286,7 +288,9 @@ class TestConsciousnessTransformer:
         # Werte sollten im Bereich [-1, 1] sein
         assert np.all(pe >= -1.0) and np.all(pe <= 1.0)
 
-    @pytest.mark.xfail(reason="Attention weights sum to 0.9 (resonance factor) - intentional but unexpected")
+    @pytest.mark.xfail(
+        reason="Attention weights sum to 0.9 (resonance factor) - intentional but unexpected"
+    )
     def test_scaled_dot_product_attention(self):
         """Test: Scaled Dot-Product Attention"""
         transformer = ConsciousnessTransformer(d_model=64, num_heads=8)
