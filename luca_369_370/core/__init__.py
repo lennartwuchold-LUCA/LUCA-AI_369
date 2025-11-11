@@ -16,6 +16,14 @@ from .growth_kinetics import (
     calculate_monod_growth,
     simulate_fermentation_batch,
 )
+from .population_dynamics import (
+    InteractionType,
+    PopulationDynamicsEngine,
+    PopulationParameters,
+    PopulationState,
+    UserState,
+    simulate_scoby_dynamics,
+)
 from .info_block_engine import BlockType, InfoBlock, InfoBlockEngine, QualityException
 from .integrated_response import IntegratedResponseSystem
 from .kimi_synergy import KimiSynergyValidator, SynergyMetrics, SynergyResult
@@ -66,4 +74,11 @@ __all__ = [
     "GrowthState",
     "calculate_monod_growth",
     "simulate_fermentation_batch",
+    # Layer 7: Population Dynamics (SCOBY-inspired)
+    "PopulationDynamicsEngine",
+    "PopulationParameters",
+    "PopulationState",
+    "UserState",
+    "InteractionType",
+    "simulate_scoby_dynamics",
 ]
