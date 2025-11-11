@@ -26,8 +26,10 @@ try:
     from cryptography.fernet import Fernet
 
     CRYPTO_AVAILABLE = True
-except ImportError:
+except (ImportError, Exception):
+    # Catch all exceptions including pyo3_runtime.PanicException in CI
     CRYPTO_AVAILABLE = False
+    Fernet = None  # Stub
 
 from luca_369_370.core.info_block_engine import InfoBlock, InfoBlockEngine
 

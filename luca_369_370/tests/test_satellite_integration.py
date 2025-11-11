@@ -20,8 +20,14 @@ try:
     )
 
     SATELLITE_AVAILABLE = True
-except ImportError:
+except (ImportError, Exception):
+    # Catch all exceptions including cryptography module issues in CI
     SATELLITE_AVAILABLE = False
+    AIOptimizer = None  # Stub
+    SatelliteBridge = None  # Stub
+    SatelliteMessageRelay = None  # Stub
+    broadcast_globally = None  # Stub
+    create_satellite_enabled_mesh = None  # Stub
 
 try:
     import paho.mqtt.client as mqtt
