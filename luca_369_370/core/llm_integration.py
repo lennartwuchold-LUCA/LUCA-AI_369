@@ -15,7 +15,7 @@ try:
 except ImportError:
     anthropic = None
 
-from luca_369_370.core.info_block_engine import InfoBlock, BlockType
+from luca_369_370.core.info_block_engine import BlockType, InfoBlock
 
 
 class LUCAPromptTemplates:
@@ -192,9 +192,7 @@ class LUCALLMIntegration:
         content = self._call_claude(prompt)
 
         # Count sentences (rough)
-        sentence_count = (
-            content.count(".") + content.count("!") + content.count("?")
-        )
+        sentence_count = content.count(".") + content.count("!") + content.count("?")
 
         return InfoBlock(
             content=content,
@@ -223,9 +221,7 @@ class LUCALLMIntegration:
         )
 
         content = self._call_claude(prompt)
-        sentence_count = (
-            content.count(".") + content.count("!") + content.count("?")
-        )
+        sentence_count = content.count(".") + content.count("!") + content.count("?")
 
         return InfoBlock(
             content=content,
@@ -250,10 +246,7 @@ class LUCALLMIntegration:
         """
         # Format previous blocks for context
         blocks_context = "\n".join(
-            [
-                f"Block {i+1}: {block.content}"
-                for i, block in enumerate(previous_blocks)
-            ]
+            [f"Block {i+1}: {block.content}" for i, block in enumerate(previous_blocks)]
         )
 
         prompt = self.templates.CONNECTION_BLOCK_PROMPT.format(
@@ -261,9 +254,7 @@ class LUCALLMIntegration:
         )
 
         content = self._call_claude(prompt, max_tokens=250)
-        sentence_count = (
-            content.count(".") + content.count("!") + content.count("?")
-        )
+        sentence_count = content.count(".") + content.count("!") + content.count("?")
 
         return InfoBlock(
             content=content,

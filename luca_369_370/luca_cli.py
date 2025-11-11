@@ -8,8 +8,8 @@ Datum: 11.11.2025
 Standard: 369/370
 """
 
-import sys
 import os
+import sys
 
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -55,7 +55,7 @@ def interactive_luca():
         print()
 
         response = input("Fortfahren ohne LLM? (y/n): ").lower()
-        if response != 'y':
+        if response != "y":
             print("\n👋 Bis bald!")
             sys.exit(0)
         print("\n🔄 Starte im statischen Modus...")
@@ -118,7 +118,7 @@ def interactive_luca():
                 elif action == "p":
                     pause_info = engine.pause()
                     print(f"\n{pause_info['message']}")
-                    print(pause_info['suggestion'])
+                    print(pause_info["suggestion"])
                     try:
                         input(pause_info["resume_action"])
                     except (EOFError, KeyboardInterrupt):
