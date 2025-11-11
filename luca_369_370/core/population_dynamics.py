@@ -38,11 +38,10 @@ Author: Lennart Wuchold (Brauer → SCOBY Expert → Multi-User Dynamics)
 Date: 2025-11-11
 """
 
+import math
 from dataclasses import dataclass
 from enum import Enum
 from typing import Dict, List, Optional, Tuple
-
-import math
 
 
 class InteractionType(Enum):
@@ -242,9 +241,7 @@ class PopulationDynamicsEngine:
 
         return dx_dt, dy_dt
 
-    def detect_interaction_type(
-        self, user1_id: str, user2_id: str
-    ) -> InteractionType:
+    def detect_interaction_type(self, user1_id: str, user2_id: str) -> InteractionType:
         """
         Detect type of interaction between two users.
 
@@ -274,9 +271,7 @@ class PopulationDynamicsEngine:
         scarcity = total_demand / max(self.state.total_resources, 1.0)
 
         # Check consciousness synergy
-        synergy = (
-            user1.consciousness_contribution * user2.consciousness_contribution
-        )
+        synergy = user1.consciousness_contribution * user2.consciousness_contribution
 
         # Detect interaction type
         if scarcity > 0.8 and synergy < 0.1:
@@ -343,7 +338,9 @@ class PopulationDynamicsEngine:
             )
 
             # Total allocation
-            total_allocation = allocation + consciousness_bonus + mutualism_bonus + quality_bonus
+            total_allocation = (
+                allocation + consciousness_bonus + mutualism_bonus + quality_bonus
+            )
 
             # Cap at available resources
             total_allocation = min(total_allocation, self.state.total_resources * 0.5)
@@ -565,6 +562,7 @@ def simulate_scoby_dynamics(
 
     # Copy initial state (not reference)
     from copy import deepcopy
+
     states = [deepcopy(engine.state)]
     current_time = 0.0
 

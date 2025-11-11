@@ -16,6 +16,9 @@ from .growth_kinetics import (
     calculate_monod_growth,
     simulate_fermentation_batch,
 )
+from .info_block_engine import BlockType, InfoBlock, InfoBlockEngine, QualityException
+from .integrated_response import IntegratedResponseSystem
+from .kimi_synergy import KimiSynergyValidator, SynergyMetrics, SynergyResult
 from .population_dynamics import (
     InteractionType,
     PopulationDynamicsEngine,
@@ -24,9 +27,6 @@ from .population_dynamics import (
     UserState,
     simulate_scoby_dynamics,
 )
-from .info_block_engine import BlockType, InfoBlock, InfoBlockEngine, QualityException
-from .integrated_response import IntegratedResponseSystem
-from .kimi_synergy import KimiSynergyValidator, SynergyMetrics, SynergyResult
 from .progressive_disclosure import (
     DisclosureMode,
     ProgressiveBlockFormatter,

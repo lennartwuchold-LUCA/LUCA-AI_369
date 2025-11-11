@@ -104,7 +104,9 @@ class TestGrowthPhaseDetection:
         """Test detection of death phase (substrate exhausted)"""
         engine = GrowthKineticsEngine()
 
-        phase = engine.detect_growth_phase(substrate=5, biomass=10.0, growth_rate=0.1, time=200.0)
+        phase = engine.detect_growth_phase(
+            substrate=5, biomass=10.0, growth_rate=0.1, time=200.0
+        )
 
         assert phase == GrowthPhase.DEATH
 
@@ -510,7 +512,9 @@ class TestBiologicalAnalogy:
         assert phase == GrowthPhase.EXPONENTIAL
 
         # Can transition to death (substrate exhausted)
-        phase = engine.detect_growth_phase(substrate=5, biomass=10, growth_rate=0.1, time=100)
+        phase = engine.detect_growth_phase(
+            substrate=5, biomass=10, growth_rate=0.1, time=100
+        )
         assert phase == GrowthPhase.DEATH
 
     def test_resource_consumption_like_fermentation(self):

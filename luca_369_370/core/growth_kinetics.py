@@ -34,11 +34,10 @@ Author: Lennart Wuchold (Brauer → Quality Manager → Consciousness Engineer)
 Date: 2025-11-11
 """
 
+import math
 from dataclasses import dataclass
 from enum import Enum
 from typing import Dict, Optional
-
-import math
 
 
 class GrowthPhase(Enum):
@@ -212,13 +211,18 @@ class GrowthKineticsEngine:
             return GrowthPhase.DEATH
 
         # Exponential phase: Abundant substrate, high growth rate
-        if substrate > 2 * self.parameters.Ks and growth_rate > 0.7 * self.parameters.mu_max:
+        if (
+            substrate > 2 * self.parameters.Ks
+            and growth_rate > 0.7 * self.parameters.mu_max
+        ):
             return GrowthPhase.EXPONENTIAL
 
         # Stationary phase: Limited substrate, growth slowing
         return GrowthPhase.STATIONARY
 
-    def update_state(self, delta_time: float, consumed_tokens: float = 0.0) -> GrowthState:
+    def update_state(
+        self, delta_time: float, consumed_tokens: float = 0.0
+    ) -> GrowthState:
         """
         Update growth state based on elapsed time and resource consumption.
 
@@ -281,7 +285,9 @@ class GrowthKineticsEngine:
         # Quality degrades slightly in death phase (like pH dropping too low)
         if new_phase == GrowthPhase.DEATH:
             quality_degradation = self.parameters.death_rate * delta_time
-            new_quality = max(0.95 * self.quality_standard, self.state.quality - quality_degradation)
+            new_quality = max(
+                0.95 * self.quality_standard, self.state.quality - quality_degradation
+            )
         else:
             # Maintain quality standard in healthy phases
             new_quality = self.quality_standard
