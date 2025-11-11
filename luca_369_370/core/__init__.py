@@ -19,6 +19,17 @@ from .growth_kinetics import (
 from .info_block_engine import BlockType, InfoBlock, InfoBlockEngine, QualityException
 from .integrated_response import IntegratedResponseSystem
 from .kimi_synergy import KimiSynergyValidator, SynergyMetrics, SynergyResult
+from .metabolic_pathways import (
+    MetabolicMode,
+    MetabolicParameters,
+    MetabolicPathwayEngine,
+    MetabolicState,
+    ReasoningDepth,
+    calculate_atp_yield,
+    optimize_metabolic_strategy,
+    simulate_metabolic_scenario,
+    verify_metabolic_quality,
+)
 from .population_dynamics import (
     InteractionType,
     PopulationDynamicsEngine,
@@ -81,4 +92,14 @@ __all__ = [
     "UserState",
     "InteractionType",
     "simulate_scoby_dynamics",
+    # Layer 8: Metabolic Pathways (HRM-inspired)
+    "MetabolicMode",
+    "MetabolicParameters",
+    "MetabolicPathwayEngine",
+    "MetabolicState",
+    "ReasoningDepth",
+    "calculate_atp_yield",
+    "optimize_metabolic_strategy",
+    "simulate_metabolic_scenario",
+    "verify_metabolic_quality",
 ]
