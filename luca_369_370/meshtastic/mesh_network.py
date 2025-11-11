@@ -175,7 +175,7 @@ class LucaMeshNetwork:
             Komprimierter Block-String
         """
         # Format: [LUCA][IDX/TOTAL][TYPE] Content
-        header = f"[LUCA][{index+1}/{total}][{block.block_type.value[0]}]"
+        header = f"[LUCA][{index+1}/{total}][{block.block_type.value[0].upper()}]"
 
         # Truncate content to fit Meshtastic 256 byte limit
         max_content_length = 256 - len(header) - 10  # Safety margin

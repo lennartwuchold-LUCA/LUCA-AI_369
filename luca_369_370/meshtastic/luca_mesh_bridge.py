@@ -107,7 +107,7 @@ class LucaMeshBridge:
             Komprimierter Block-String
         """
         # Header
-        type_char = block.block_type.value[0]  # F/B/C
+        type_char = block.block_type.value[0].upper()  # F/B/C
         header = f"[LUCA][{index+1}/{total}][{type_char}]"
 
         # Berechne verfügbaren Platz (256 - header - safety margin)
