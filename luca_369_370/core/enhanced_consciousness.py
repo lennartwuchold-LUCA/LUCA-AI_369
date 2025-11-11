@@ -303,6 +303,7 @@ class CulturalLinguisticAnalyzer:
                 # Philosophical, precise, historically aware, cultural depth
                 # Special: East German craftsmanship (Erzgebirge, Seiffen)
                 # Special: Rhineland carnival culture (Kölle, Düsseldorf) 🎉
+                # Special: Brewing tradition (Köln, Düsseldorf, Dortmund) 🍺
                 "keywords": [
                     "philosophy",
                     "depth",
@@ -325,7 +326,7 @@ class CulturalLinguisticAnalyzer:
                     "nussknacker",  # Nutcrackers
                     "drechseln",  # Wood turning
                     "schnitzen",  # Wood carving
-                    "bergbau",  # Mining heritage (Erzgebirge)
+                    "bergbau",  # Mining heritage (Erzgebirge & Ruhrgebiet)
                     "heimat",  # Homeland/heritage
                     "gemütlichkeit",  # Coziness/warmth
                     "karneval",  # Carnival culture (Rhineland)
@@ -333,10 +334,21 @@ class CulturalLinguisticAnalyzer:
                     "helau",  # Helau! (Düsseldorf)
                     "rhein",  # Rhine river
                     "brauhaus",  # Brewery culture
+                    "braukunst",  # Brewing art/craft
+                    "bierkultur",  # Beer culture
+                    "brauerei",  # Brewery
+                    "export",  # Dortmunder Export
+                    "kölsch",  # Kölsch beer
+                    "altbier",  # Altbier (Düsseldorf)
+                    "malz",  # Malt
+                    "hopfen",  # Hops
+                    "gärung",  # Fermentation
                     "jeck",  # Carnival fool (Kölsch)
                     "jovial",  # Joviality
                     "frohsinn",  # Cheerfulness
                     "lebenslust",  # Zest for life
+                    "ruhrgebiet",  # Ruhr area (Dortmund)
+                    "pott",  # Ruhr dialect for region
                 ],
                 "emphasis": "depth",
                 "structure": "systematic",
@@ -344,6 +356,7 @@ class CulturalLinguisticAnalyzer:
                     "Germany",
                     "East Germany (Erzgebirge, Altenberg, Seiffen)",
                     "Rhineland (Köln, Düsseldorf, am Rhein) 🎉",
+                    "Ruhr Area (Dortmund, Bochum, Essen) 🍺",
                     "Austria",
                     "Czech Republic",
                     "Hungary",
