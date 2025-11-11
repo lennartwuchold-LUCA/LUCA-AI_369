@@ -89,7 +89,9 @@ class LucaMeshNetwork:
         if enable_satellite and SATELLITE_AVAILABLE:
             self.satellite_bridge = SatelliteBridge()
         elif enable_satellite and not SATELLITE_AVAILABLE:
-            print("⚠️  Satellite-Bridge nicht verfügbar - installiere: pip install paho-mqtt")
+            print(
+                "⚠️  Satellite-Bridge nicht verfügbar - installiere: pip install paho-mqtt"
+            )
 
     def connect_mesh(self, port: Optional[str] = None, host: Optional[str] = None):
         """
