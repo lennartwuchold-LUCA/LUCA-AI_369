@@ -45,13 +45,9 @@ jobs:
         poetry config virtualenvs.in-project true
         poetry install --no-interaction --no-ansi --extras backend
 
-    - name: 🧪 Run tests with pytest
+    - name: 🧪 Run all tests with pytest
       run: |
-        poetry run pytest tests/ -v --tb=short --color=yes
-
-    - name: 🏛️ Run L.U.C.A 369/370 Framework tests
-      run: |
-        poetry run pytest luca_369_370/tests/ -v --tb=short --color=yes
+        poetry run pytest -v --tb=short --color=yes
 
     - name: 🎨 Check code formatting with black
       run: |

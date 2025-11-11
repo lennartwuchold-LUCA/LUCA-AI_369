@@ -5,18 +5,18 @@ LUCA 369/370 - Progressive Disclosure Interactive Demo
 Zeigt Progressive Disclosure in Aktion mit simulierter User Interaction
 """
 
-import time
 import sys
+import time
 from pathlib import Path
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from luca_369_370.core.info_block_engine import InfoBlock, BlockType
+from luca_369_370.core.info_block_engine import BlockType, InfoBlock
 from luca_369_370.core.progressive_disclosure import (
-    ProgressiveDisclosureEngine,
+    DisclosureMode,
     ProgressiveBlockFormatter,
-    DisclosureMode
+    ProgressiveDisclosureEngine,
 )
 
 
@@ -28,29 +28,29 @@ def create_demo_blocks() -> list:
             block_type=BlockType.FOUNDATION,
             sentence_count=3,
             has_next_preview=True,
-            next_block_hint="Wie funktioniert Progressive Disclosure?"
+            next_block_hint="Wie funktioniert Progressive Disclosure?",
         ),
         InfoBlock(
             content="Progressive Disclosure zeigt Information schrittweise statt alles auf einmal. Das verhindert Cognitive Overload bei ADHD. Du bleibst im Flow statt überwältigt zu werden.",
             block_type=BlockType.BUILDING,
             sentence_count=3,
             has_next_preview=True,
-            next_block_hint="Warum ist das besser?"
+            next_block_hint="Warum ist das besser?",
         ),
         InfoBlock(
             content="Andere KIs fluten dich mit Text-Walls. LUCA gibt dir Kontrolle über Tempo und Menge. Du entscheidest wann du bereit für mehr bist.",
             block_type=BlockType.BUILDING,
             sentence_count=3,
             has_next_preview=True,
-            next_block_hint="Praktische Anwendung"
+            next_block_hint="Praktische Anwendung",
         ),
         InfoBlock(
             content="Für dein Projekt bedeutet das: Bessere Retention, weniger Overwhelm, höhere Satisfaction. LUCA passt sich deinem kognitiven State an - nicht umgekehrt.",
             block_type=BlockType.CONNECTION,
             sentence_count=3,
             has_next_preview=False,
-            next_block_hint=None
-        )
+            next_block_hint=None,
+        ),
     ]
 
 
@@ -86,30 +86,32 @@ def interactive_demo():
 
         # Get user input
         print()
-        action = input("Aktion wählen (w=weiter, z=zurück, p=pause, d=details, q=quit): ").lower()
+        action = input(
+            "Aktion wählen (w=weiter, z=zurück, p=pause, d=details, q=quit): "
+        ).lower()
 
         # Record interaction time
         interaction_time = int(time.time() - start_time)
         engine.record_interaction_time(interaction_time)
 
         # Process action
-        if action == 'w' or action == '':  # Enter = weiter
+        if action == "w" or action == "":  # Enter = weiter
             engine.next_block()
-        elif action == 'z':
+        elif action == "z":
             engine.previous_block()
-        elif action == 'p':
+        elif action == "p":
             pause_display = engine.pause()
             print()
-            print(pause_display['message'])
-            print(pause_display['suggestion'])
-            input(pause_display['resume_action'])
-        elif action == 'd':
+            print(pause_display["message"])
+            print(pause_display["suggestion"])
+            input(pause_display["resume_action"])
+        elif action == "d":
             detail_display = engine.request_more_detail()
             print()
-            print(detail_display['message'])
-            print("Optionen:", ", ".join(detail_display['options']))
+            print(detail_display["message"])
+            print("Optionen:", ", ".join(detail_display["options"]))
             input("Drücke Enter um fortzufahren...")
-        elif action == 'q':
+        elif action == "q":
             print("👋 Demo beendet!")
             return
         else:

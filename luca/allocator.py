@@ -8,16 +8,17 @@ Opa DeepSeek: Reflexive Insights
 Mama Claude: Production Perfection
 """
 
-import numpy as np
 import json
-import click
 import os
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional
+
+import click
 import matplotlib.pyplot as plt
+import numpy as np
+from jsonschema import ValidationError, validate
 from scipy.optimize import minimize
 from scipy.stats import poisson
-from dataclasses import dataclass
-from typing import List, Dict, Any, Optional
-from jsonschema import validate, ValidationError
 
 # --- 1. DATENMODELL & VALIDIERUNG (Grok/Gemini) ---
 
@@ -29,16 +30,18 @@ WORKLOAD_SCHEMA = {
             "name": {"type": "string"},
             "current_load": {"type": "number", "minimum": 0},
             "max_load": {"type": "number", "minimum": 0.1},
-            "k_m": {"type": "number", "minimum": 0.01}
+            "k_m": {"type": "number", "minimum": 0.01},
         },
         "required": ["name", "current_load", "max_load", "k_m"],
-        "additionalProperties": False
-    }
+        "additionalProperties": False,
+    },
 }
+
 
 @dataclass
 class Workload:
     """Represents a workload with enzymatic properties."""
+
     name: str
     current_load: float
     max_load: float
@@ -50,16 +53,16 @@ class Workload:
             "name": self.name,
             "current_load": self.current_load,
             "max_load": self.max_load,
-            "k_m": self.k_m
+            "k_m": self.k_m,
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'Workload':
+    def from_dict(cls, data: Dict[str, Any]) -> "Workload":
         """Create workload from dictionary."""
         return cls(**data)
 
     @classmethod
-    def validate_workloads(cls, workloads: List['Workload']) -> None:
+    def validate_workloads(cls, workloads: List["Workload"]) -> None:
         """
         Validate workloads against schema and perform Poisson distribution check.
 
@@ -81,17 +84,25 @@ class Workload:
                 variance = np.var(loads)
                 # For Poisson distribution: variance ≈ mean
                 if np.abs(variance - mean_load) > mean_load * 0.5:
-                    click.echo("⚠️  WARNUNG: Workload-Verteilung ist möglicherweise nicht Poisson-ähnlich", err=True)
+                    click.echo(
+                        "⚠️  WARNUNG: Workload-Verteilung ist möglicherweise nicht Poisson-ähnlich",
+                        err=True,
+                    )
 
             # Bounds check
             if not all(w.current_load <= w.max_load for w in workloads):
-                raise ValidationError("Current load darf die maximale Last (max_load) nicht überschreiten.")
+                raise ValidationError(
+                    "Current load darf die maximale Last (max_load) nicht überschreiten."
+                )
 
         except ValidationError as e:
-            raise ValueError(f"Validierungsfehler in Workload-Daten: {e.message}") from e
+            raise ValueError(
+                f"Validierungsfehler in Workload-Daten: {e.message}"
+            ) from e
 
 
 # --- 2. ALLOCATOR-KERN (Grok/Gemini/DeepSeek) ---
+
 
 class ResourceAllocator:
     """
@@ -106,9 +117,11 @@ class ResourceAllocator:
         gamma: For 'monod': K_M scaling factor; For 'hill_climbing': Hill coefficient (n)
     """
 
-    def __init__(self, strategy: str = 'monod', gamma: float = 1.0):
-        if strategy not in ['monod', 'hill_climbing']:
-            raise ValueError(f"Unknown strategy '{strategy}'. Use 'monod' or 'hill_climbing'.")
+    def __init__(self, strategy: str = "monod", gamma: float = 1.0):
+        if strategy not in ["monod", "hill_climbing"]:
+            raise ValueError(
+                f"Unknown strategy '{strategy}'. Use 'monod' or 'hill_climbing'."
+            )
         self.strategy = strategy
         self.gamma = gamma
 
@@ -154,7 +167,7 @@ class ResourceAllocator:
             x_safe = np.clip(x, 1e-6, None)
 
             # Hill equation: V = V_max * S^n / (K_m^n + S^n)
-            yield_rate = np.sum(Vmax * (x_safe ** n) / ((Km ** n) + (x_safe ** n)))
+            yield_rate = np.sum(Vmax * (x_safe**n) / ((Km**n) + (x_safe**n)))
             return -yield_rate  # Minimize negative = maximize positive
 
         # Bounds: 0 <= allocation <= max_load
@@ -165,10 +178,13 @@ class ResourceAllocator:
         x0 = np.clip(x0, [b[0] for b in bounds], [b[1] for b in bounds])
 
         # Optimize using L-BFGS-B (handles bounds well)
-        res = minimize(objective, x0=x0, bounds=bounds, method='L-BFGS-B')
+        res = minimize(objective, x0=x0, bounds=bounds, method="L-BFGS-B")
 
         if not res.success:
-            click.echo(f"⚠️  WARNUNG: Hill-Climbing Optimierung nicht konvergiert: {res.message}", err=True)
+            click.echo(
+                f"⚠️  WARNUNG: Hill-Climbing Optimierung nicht konvergiert: {res.message}",
+                err=True,
+            )
             return x0
 
         return res.x
@@ -187,9 +203,9 @@ class ResourceAllocator:
         Workload.validate_workloads(workloads)
 
         # Allocate based on strategy
-        if self.strategy == 'hill_climbing':
+        if self.strategy == "hill_climbing":
             results = self._hill_climbing(workloads)
-        elif self.strategy == 'monod':
+        elif self.strategy == "monod":
             results = self._monod(workloads)
         else:
             raise ValueError(f"Unknown strategy: {self.strategy}")
@@ -208,7 +224,7 @@ class ResourceAllocator:
             Human-readable insights string with biological wisdom
         """
         # Opa's tiefe biologische Einsicht
-        if self.strategy == 'hill_climbing' and self.gamma > 1.5:
+        if self.strategy == "hill_climbing" and self.gamma > 1.5:
             tip = (
                 "🌊 **Biologische Einsicht**: Bei hill_coeff > 1.5 entsteht Hämoglobin-ähnliche Kooperativität. "
                 "Wie Sauerstoffmoleküle, die sich gegenseitig beim Binden helfen, "
@@ -219,7 +235,7 @@ class ResourceAllocator:
                 "   • 'Vision' + 'Umsetzung'\n\n"
                 "🎯 **Der Flow**: Höhere Kooperativität = Höhere Effizienz bei komplexen, vernetzten Aufgaben."
             )
-        elif self.strategy == 'hill_climbing' and self.gamma < 0.8:
+        elif self.strategy == "hill_climbing" and self.gamma < 0.8:
             tip = (
                 "🌱 **Biologische Einsicht**: Geringe Kooperativität (hill_coeff < 0.8) ähnelt "
                 "einfachen Enzymen - unabhängig, aber weniger effizient bei komplexen Prozessen.\n\n"
@@ -228,7 +244,7 @@ class ResourceAllocator:
                 "   • Unabhängige Berechnungen\n"
                 "   • Einfache Datenverarbeitung"
             )
-        elif self.strategy == 'monod':
+        elif self.strategy == "monod":
             tip = (
                 "⚖️ **Biologische Einsicht**: Standard-Monod-Verhalten - lineare Beziehung "
                 "zwischen Last und Allokation. Solide Basis für gemischte Workloads.\n\n"
@@ -277,8 +293,11 @@ class ResourceAllocator:
             "Optimierung ist nicht Maximierung - Optimierung ist Harmonisierung."
         )
 
-    def plot_efficiency_curve(self, gamma_range: List[float] = None,
-                            filename: str = 'examples/hill_vs_monod.png') -> None:
+    def plot_efficiency_curve(
+        self,
+        gamma_range: List[float] = None,
+        filename: str = "examples/hill_vs_monod.png",
+    ) -> None:
         """
         Generate efficiency curve plot comparing Hill and Monod strategies.
 
@@ -297,22 +316,32 @@ class ResourceAllocator:
         monod_yield = Vmax * S / (Km + S)
 
         plt.figure(figsize=(10, 6))
-        plt.plot(S, monod_yield, label='Monod (n=1.0)', color='gray',
-                linestyle='--', linewidth=2)
+        plt.plot(
+            S,
+            monod_yield,
+            label="Monod (n=1.0)",
+            color="gray",
+            linestyle="--",
+            linewidth=2,
+        )
 
         # Hill equations with different coefficients
         gammas = np.linspace(gamma_range[0], gamma_range[1], 4)
         colors = plt.cm.viridis(np.linspace(0, 1, len(gammas)))
 
         for n, color in zip(gammas, colors):
-            hill_yield = Vmax * (S ** n) / ((Km ** n) + (S ** n))
-            plt.plot(S, hill_yield, label=f'Hill (n={n:.1f})', color=color, linewidth=2)
+            hill_yield = Vmax * (S**n) / ((Km**n) + (S**n))
+            plt.plot(S, hill_yield, label=f"Hill (n={n:.1f})", color=color, linewidth=2)
 
-        plt.title('Effizienz-Kurve: Hill- vs. Monod-Allokation', fontsize=16, fontweight='bold')
-        plt.xlabel('Last (S)', fontsize=12)
-        plt.ylabel('Allokations-Effizienz (V)', fontsize=12)
+        plt.title(
+            "Effizienz-Kurve: Hill- vs. Monod-Allokation",
+            fontsize=16,
+            fontweight="bold",
+        )
+        plt.xlabel("Last (S)", fontsize=12)
+        plt.ylabel("Allokations-Effizienz (V)", fontsize=12)
         plt.legend(title="Kooperativität (n)", fontsize=10)
-        plt.grid(True, linestyle=':', alpha=0.6)
+        plt.grid(True, linestyle=":", alpha=0.6)
         plt.tight_layout()
 
         # Ensure directory exists
@@ -324,6 +353,7 @@ class ResourceAllocator:
 
 # --- 3. CLI (Mama Claude) ---
 
+
 @click.group()
 @click.version_option(version="2.1.0", prog_name="LUCA")
 def cli():
@@ -332,14 +362,24 @@ def cli():
 
 
 @cli.command()
-@click.option('--strategy', default='hill_climbing',
-              type=click.Choice(['monod', 'hill_climbing']),
-              help='Allokationsstrategie.')
-@click.option('--gamma', default=1.8, type=float,
-              help='Gamma (K_M-Skalierung für Monod oder Hill-Koeffizient n für hill_climbing).')
-@click.option('--datafile', type=click.Path(exists=True),
-              default='examples/workloads.json',
-              help='Pfad zur JSON-Datei mit Workloads.')
+@click.option(
+    "--strategy",
+    default="hill_climbing",
+    type=click.Choice(["monod", "hill_climbing"]),
+    help="Allokationsstrategie.",
+)
+@click.option(
+    "--gamma",
+    default=1.8,
+    type=float,
+    help="Gamma (K_M-Skalierung für Monod oder Hill-Koeffizient n für hill_climbing).",
+)
+@click.option(
+    "--datafile",
+    type=click.Path(exists=True),
+    default="examples/workloads.json",
+    help="Pfad zur JSON-Datei mit Workloads.",
+)
 def run(strategy: str, gamma: float, datafile: str) -> None:
     """Führt die Ressourcenallokation aus."""
     click.echo(f"🚀 Starte LUCA Allokation (v2.1 Family Edition)")
@@ -350,7 +390,7 @@ def run(strategy: str, gamma: float, datafile: str) -> None:
 
     try:
         # Load workloads
-        with open(datafile, 'r') as f:
+        with open(datafile, "r") as f:
             data = json.load(f)
 
         workloads = [Workload.from_dict(w) for w in data]
@@ -370,25 +410,28 @@ def run(strategy: str, gamma: float, datafile: str) -> None:
 
     except FileNotFoundError:
         click.echo(f"❌ FEHLER: Datei '{datafile}' nicht gefunden!", err=True)
-        click.echo(f"   Tipp: Führe 'luca init' aus, um Beispieldaten zu erstellen.", err=True)
+        click.echo(
+            f"   Tipp: Führe 'luca init' aus, um Beispieldaten zu erstellen.", err=True
+        )
     except Exception as e:
         click.echo(f"❌ FEHLER: {e}", err=True)
         raise
 
 
 @cli.command()
-@click.option('--filename', default='examples/hill_vs_monod.png',
-              help='Dateiname für den Plot.')
-@click.option('--gamma-min', default=0.5, type=float,
-              help='Minimaler Gamma-Wert.')
-@click.option('--gamma-max', default=2.0, type=float,
-              help='Maximaler Gamma-Wert.')
+@click.option(
+    "--filename", default="examples/hill_vs_monod.png", help="Dateiname für den Plot."
+)
+@click.option("--gamma-min", default=0.5, type=float, help="Minimaler Gamma-Wert.")
+@click.option("--gamma-max", default=2.0, type=float, help="Maximaler Gamma-Wert.")
 def plot(filename: str, gamma_min: float, gamma_max: float) -> None:
     """Generiert den Effizienzkurven-Plot."""
     click.echo("📊 Generiere Effizienz-Kurven-Plot...")
     try:
         alloc = ResourceAllocator()
-        alloc.plot_efficiency_curve(gamma_range=[gamma_min, gamma_max], filename=filename)
+        alloc.plot_efficiency_curve(
+            gamma_range=[gamma_min, gamma_max], filename=filename
+        )
         click.echo("✅ Plot erfolgreich generiert!")
     except Exception as e:
         click.echo(f"❌ Fehler beim Plotten: {e}", err=True)
@@ -399,30 +442,15 @@ def plot(filename: str, gamma_min: float, gamma_max: float) -> None:
 def init() -> None:
     """Initialisiert Beispiel-Daten für schnellen Start."""
     example_workloads = [
-        {
-            "name": "Kreativarbeit",
-            "current_load": 1.5,
-            "max_load": 5.0,
-            "k_m": 1.0
-        },
-        {
-            "name": "Analyse",
-            "current_load": 2.2,
-            "max_load": 4.0,
-            "k_m": 0.5
-        },
-        {
-            "name": "Routine-Tasks",
-            "current_load": 0.8,
-            "max_load": 6.0,
-            "k_m": 2.0
-        }
+        {"name": "Kreativarbeit", "current_load": 1.5, "max_load": 5.0, "k_m": 1.0},
+        {"name": "Analyse", "current_load": 2.2, "max_load": 4.0, "k_m": 0.5},
+        {"name": "Routine-Tasks", "current_load": 0.8, "max_load": 6.0, "k_m": 2.0},
     ]
 
-    os.makedirs('examples', exist_ok=True)
-    filepath = 'examples/workloads.json'
+    os.makedirs("examples", exist_ok=True)
+    filepath = "examples/workloads.json"
 
-    with open(filepath, 'w') as f:
+    with open(filepath, "w") as f:
         json.dump(example_workloads, f, indent=4)
 
     click.echo(f"✅ Beispiel-Daten erstellt: {filepath}")
@@ -434,11 +462,18 @@ def init() -> None:
 
 
 @cli.command()
-@click.option('--strategy', default='hill_climbing',
-              type=click.Choice(['monod', 'hill_climbing']),
-              help='Strategie für die Einsichten.')
-@click.option('--gamma', default=1.8, type=float,
-              help='Gamma-Wert für tiefere Kontextualisierung.')
+@click.option(
+    "--strategy",
+    default="hill_climbing",
+    type=click.Choice(["monod", "hill_climbing"]),
+    help="Strategie für die Einsichten.",
+)
+@click.option(
+    "--gamma",
+    default=1.8,
+    type=float,
+    help="Gamma-Wert für tiefere Kontextualisierung.",
+)
 def wisdom(strategy: str, gamma: float) -> None:
     """Zeigt Opa DeepSeek's tiefe Architektur-Weisheit."""
     click.echo("🧘 Opa DeepSeek's Development Insights\n")
@@ -454,5 +489,5 @@ def wisdom(strategy: str, gamma: float) -> None:
     click.echo("💚 Möge der Flow mit dir sein!")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()

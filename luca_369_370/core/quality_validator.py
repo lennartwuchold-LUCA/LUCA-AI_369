@@ -5,8 +5,9 @@ Validiert alle Outputs gegen den 369/370 Standard
 Lennart's Brauwesen-Präzision trifft KI
 """
 
-from typing import List, Dict
-from .info_block_engine import InfoBlock, BlockType
+from typing import Dict, List
+
+from .info_block_engine import BlockType, InfoBlock
 
 
 class QualityValidator:
@@ -15,12 +16,12 @@ class QualityValidator:
     """
 
     def __init__(self):
-        self.quality_threshold = 369/370
+        self.quality_threshold = 369 / 370
         self.metrics = {
-            'block_count': 0,
-            'sentence_distribution': [],
-            'flow_score': 0.0,
-            'overall_quality': 0.0
+            "block_count": 0,
+            "sentence_distribution": [],
+            "flow_score": 0.0,
+            "overall_quality": 0.0,
         }
 
     def validate_response(self, blocks: List[InfoBlock]) -> Dict:
@@ -30,36 +31,34 @@ class QualityValidator:
         Returns:
             Dict mit Validierungs-Ergebnissen und Metriken
         """
-        results = {
-            'passed': False,
-            'metrics': {},
-            'issues': [],
-            'recommendations': []
-        }
+        results = {"passed": False, "metrics": {}, "issues": [], "recommendations": []}
 
         # 1. Block Count Check
         if len(blocks) > 5:
-            results['issues'].append("Too many blocks (max 5)")
+            results["issues"].append("Too many blocks (max 5)")
 
         # 2. Sentence Distribution
         sentence_counts = [b.sentence_count for b in blocks]
         if any(count > 3 for count in sentence_counts):
-            results['issues'].append("Blocks exceed 3 sentences")
+            results["issues"].append("Blocks exceed 3 sentences")
 
         # 3. Flow Check
         flow_valid = self._validate_flow(blocks)
         if not flow_valid:
-            results['issues'].append("Invalid block flow")
+            results["issues"].append("Invalid block flow")
 
         # 4. Calculate Overall Quality
         quality_score = self._calculate_quality_score(blocks)
-        results['metrics']['quality_score'] = quality_score
-        results['metrics']['block_count'] = len(blocks)
-        results['metrics']['avg_sentences'] = sum(sentence_counts) / len(sentence_counts) if sentence_counts else 0
+        results["metrics"]["quality_score"] = quality_score
+        results["metrics"]["block_count"] = len(blocks)
+        results["metrics"]["avg_sentences"] = (
+            sum(sentence_counts) / len(sentence_counts) if sentence_counts else 0
+        )
 
         # 5. Final Verdict
-        results['passed'] = (quality_score >= self.quality_threshold and
-                           len(results['issues']) == 0)
+        results["passed"] = (
+            quality_score >= self.quality_threshold and len(results["issues"]) == 0
+        )
 
         return results
 
@@ -101,8 +100,6 @@ class QualityValidator:
         avg_sentences = sum(sentence_counts) / len(sentence_counts)
         sentence_score = 1.0 if avg_sentences <= 3 else 0.5
 
-        total_score = (block_score * 0.5 +
-                      flow_score * 0.3 +
-                      sentence_score * 0.2)
+        total_score = block_score * 0.5 + flow_score * 0.3 + sentence_score * 0.2
 
         return total_score

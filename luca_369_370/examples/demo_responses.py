@@ -10,8 +10,8 @@ from pathlib import Path
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from core.info_block_engine import InfoBlock, BlockType
 from core.block_formatter import BlockFormatter
+from core.info_block_engine import BlockType, InfoBlock
 from core.quality_validator import QualityValidator
 
 
@@ -19,9 +19,9 @@ def demo_simple_query():
     """
     Demo: Einfache Query über LUCA selbst
     """
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("DEMO 1: Was ist LUCA?")
-    print("="*60 + "\n")
+    print("=" * 60 + "\n")
 
     # Manuelle Block-Erstellung (später: LLM-generiert)
     blocks = [
@@ -30,22 +30,22 @@ def demo_simple_query():
             block_type=BlockType.FOUNDATION,
             sentence_count=3,
             has_next_preview=True,
-            next_block_hint="Wie funktioniert das konkret?"
+            next_block_hint="Wie funktioniert das konkret?",
         ),
         InfoBlock(
             content="Wie beim Brauen arbeiten viele kleine Prozesse zusammen. Jede GPU ist wie eine Hefe-Kolonie - autonom aber koordiniert. Das System balanciert Last dynamisch.",
             block_type=BlockType.BUILDING,
             sentence_count=3,
             has_next_preview=True,
-            next_block_hint="Was macht das besonders?"
+            next_block_hint="Was macht das besonders?",
         ),
         InfoBlock(
             content="Der 369/370-Standard garantiert Qualität ohne Perfektion. LUCA lernt deine Arbeitsweise im Onboarding. So wird jede Antwort auf dich zugeschnitten.",
             block_type=BlockType.CONNECTION,
             sentence_count=3,
             has_next_preview=False,
-            next_block_hint=None
-        )
+            next_block_hint=None,
+        ),
     ]
 
     # Format und Display
@@ -69,9 +69,9 @@ def demo_complex_query():
     """
     Demo: Komplexere technische Query
     """
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("DEMO 2: Wie implementiert man GPU-Fermentation?")
-    print("="*60 + "\n")
+    print("=" * 60 + "\n")
 
     blocks = [
         InfoBlock(
@@ -79,29 +79,29 @@ def demo_complex_query():
             block_type=BlockType.FOUNDATION,
             sentence_count=3,
             has_next_preview=True,
-            next_block_hint="Technische Details folgen"
+            next_block_hint="Technische Details folgen",
         ),
         InfoBlock(
             content="Die Orchestrierung nutzt drei Layer: Substrate (Daten), Mikroorganismen (Worker), Metaboliten (Outputs). Worker kommunizieren über Signaling-Moleküle - in Code: Message-Queues.",
             block_type=BlockType.BUILDING,
             sentence_count=2,
             has_next_preview=True,
-            next_block_hint="Praktische Umsetzung"
+            next_block_hint="Praktische Umsetzung",
         ),
         InfoBlock(
             content="Implementierung startet mit einem Resource-Pool. Worker registrieren Capabilities und Kapazität. Workload-Verteiler matched Tasks nach Fitness-Score.",
             block_type=BlockType.BUILDING,
             sentence_count=3,
             has_next_preview=True,
-            next_block_hint="Was bringt das?"
+            next_block_hint="Was bringt das?",
         ),
         InfoBlock(
             content="Für dein LUCA-Projekt: Start mit 2-3 GPUs als Proof-of-Concept. Teste Load-Balancing mit synthetischen Workloads. Skaliere iterativ auf mehr Hardware.",
             block_type=BlockType.CONNECTION,
             sentence_count=3,
             has_next_preview=False,
-            next_block_hint=None
-        )
+            next_block_hint=None,
+        ),
     ]
 
     formatter = BlockFormatter()
@@ -120,9 +120,9 @@ def demo_adhd_optimized():
     """
     Demo: ADHD-optimierte Antwort mit extra kurzen Blöcken
     """
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("DEMO 3: ADHD-optimiert - Info Overload bekämpfen")
-    print("="*60 + "\n")
+    print("=" * 60 + "\n")
 
     blocks = [
         InfoBlock(
@@ -130,22 +130,22 @@ def demo_adhd_optimized():
             block_type=BlockType.FOUNDATION,
             sentence_count=3,
             has_next_preview=True,
-            next_block_hint="Konkrete Lösung"
+            next_block_hint="Konkrete Lösung",
         ),
         InfoBlock(
             content="Max 3 Sätze pro Block. Visueller Break zwischen Blöcken. Progress-Indikator zeigt wo du bist.",
             block_type=BlockType.BUILDING,
             sentence_count=3,
             has_next_preview=True,
-            next_block_hint="Warum das funktioniert"
+            next_block_hint="Warum das funktioniert",
         ),
         InfoBlock(
             content="Kurze Chunks = weniger Cognitive Load. Jeder Block ist verdaubar. Kein Überwältigungs-Gefühl.",
             block_type=BlockType.CONNECTION,
             sentence_count=3,
             has_next_preview=False,
-            next_block_hint=None
-        )
+            next_block_hint=None,
+        ),
     ]
 
     formatter = BlockFormatter()
@@ -158,16 +158,18 @@ def demo_adhd_optimized():
     print("\n📊 QUALITY REPORT:")
     print(f"   Passed: {'✅' if results['passed'] else '❌'}")
     print(f"   Quality Score: {results['metrics']['quality_score']:.4f}")
-    print(f"   ADHD-Optimization: {'✅ Active' if results['metrics']['avg_sentences'] <= 3 else '❌ Too verbose'}")
+    print(
+        f"   ADHD-Optimization: {'✅ Active' if results['metrics']['avg_sentences'] <= 3 else '❌ Too verbose'}"
+    )
 
 
 def demo_web_format():
     """
     Demo: Web-Format Export
     """
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("DEMO 4: Web-Format Export")
-    print("="*60 + "\n")
+    print("=" * 60 + "\n")
 
     blocks = [
         InfoBlock(
@@ -175,22 +177,22 @@ def demo_web_format():
             block_type=BlockType.FOUNDATION,
             sentence_count=3,
             has_next_preview=True,
-            next_block_hint="JSON-Struktur"
+            next_block_hint="JSON-Struktur",
         ),
         InfoBlock(
             content="Jeder Block wird zu einem Objekt. Mit Index, Type, Content, Icon. Plus Navigation-Hints.",
             block_type=BlockType.BUILDING,
             sentence_count=3,
             has_next_preview=True,
-            next_block_hint="Vorteile"
+            next_block_hint="Vorteile",
         ),
         InfoBlock(
             content="Frontend kann Themes applyen. Animationen für Block-Transitions. User-Profile steuern Darstellung.",
             block_type=BlockType.CONNECTION,
             sentence_count=3,
             has_next_preview=False,
-            next_block_hint=None
-        )
+            next_block_hint=None,
+        ),
     ]
 
     formatter = BlockFormatter()
@@ -204,6 +206,7 @@ def demo_web_format():
     web_format = formatter.format_for_web(blocks)
 
     import json
+
     print(json.dumps(web_format, indent=2, ensure_ascii=False))
 
 
@@ -223,17 +226,17 @@ def main():
     # Demo 1: Simple Query
     demo_simple_query()
 
-    print("\n" + "🔄"*30 + "\n")
+    print("\n" + "🔄" * 30 + "\n")
 
     # Demo 2: Complex Query
     demo_complex_query()
 
-    print("\n" + "🔄"*30 + "\n")
+    print("\n" + "🔄" * 30 + "\n")
 
     # Demo 3: ADHD-Optimized
     demo_adhd_optimized()
 
-    print("\n" + "🔄"*30 + "\n")
+    print("\n" + "🔄" * 30 + "\n")
 
     # Demo 4: Web Format
     demo_web_format()

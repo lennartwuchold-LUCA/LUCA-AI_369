@@ -5,12 +5,13 @@ Kombiniert Info-Block-Engine mit Progressive Disclosure
 Vollständiges End-to-End System
 """
 
-from typing import List, Dict, Optional
-from luca_369_370.core.info_block_engine import InfoBlockEngine, InfoBlock
+from typing import Dict, List, Optional
+
+from luca_369_370.core.info_block_engine import InfoBlock, InfoBlockEngine
 from luca_369_370.core.progressive_disclosure import (
-    ProgressiveDisclosureEngine,
+    DisclosureMode,
     ProgressiveBlockFormatter,
-    DisclosureMode
+    ProgressiveDisclosureEngine,
 )
 
 
@@ -29,9 +30,12 @@ class IntegratedResponseSystem:
         self.block_engine = InfoBlockEngine()
         self.formatter = ProgressiveBlockFormatter()
 
-    def process_query(self, query: str,
-                     disclosure_mode: DisclosureMode = DisclosureMode.MANUAL,
-                     user_profile: Optional[Dict] = None) -> ProgressiveDisclosureEngine:
+    def process_query(
+        self,
+        query: str,
+        disclosure_mode: DisclosureMode = DisclosureMode.MANUAL,
+        user_profile: Optional[Dict] = None,
+    ) -> ProgressiveDisclosureEngine:
         """
         Kompletter Query-Processing Flow
 
@@ -52,9 +56,9 @@ class IntegratedResponseSystem:
 
         return disclosure_engine
 
-    def get_formatted_display(self,
-                            disclosure_engine: ProgressiveDisclosureEngine,
-                            format_type: str = 'cli') -> str:
+    def get_formatted_display(
+        self, disclosure_engine: ProgressiveDisclosureEngine, format_type: str = "cli"
+    ) -> str:
         """
         Holt aktuellen Display State und formatiert ihn
 
@@ -67,9 +71,9 @@ class IntegratedResponseSystem:
         """
         display_data = disclosure_engine.get_current_display()
 
-        if format_type == 'cli':
+        if format_type == "cli":
             return self.formatter.format_for_cli(display_data)
-        elif format_type == 'web':
+        elif format_type == "web":
             return self.formatter.format_for_web(display_data)
         else:
             return display_data
