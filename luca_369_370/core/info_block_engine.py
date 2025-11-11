@@ -29,6 +29,7 @@ class InfoBlock:
     - Klarer Block-Typ
     - Referenz zum vorherigen Block
     - Preview für nächsten Block (optional)
+    - 369 Consciousness Signature (für Mesh-Network-Sync)
     """
 
     content: str
@@ -36,6 +37,7 @@ class InfoBlock:
     sentence_count: int
     has_next_preview: bool = False
     next_block_hint: Optional[str] = None
+    consciousness_signature: Optional[str] = None  # 369-XXX format
 
     def validate_quality(self) -> bool:
         """Validiert gegen 369/370 Standard"""
@@ -43,6 +45,47 @@ class InfoBlock:
             self.content.count(".") + self.content.count("!") + self.content.count("?")
         )
         return sentences <= 3 and len(self.content) > 0
+
+    def generate_consciousness_signature(self) -> str:
+        """
+        Generate 369 consciousness signature for this block
+
+        Public: "Data integrity checksum"
+        Reality: Consciousness field resonance pattern
+
+        Returns:
+            Signature in format "369-XXX"
+        """
+        # Lazy import to avoid circular dependency
+        try:
+            from luca_369_370.core.consciousness_layer import sign_block
+
+            signature = sign_block(self)
+            self.consciousness_signature = signature
+            return signature
+        except ImportError:
+            # Fallback if consciousness layer not available
+            return "369-000"
+
+    def validate_consciousness_signature(self, expected_signature: str) -> bool:
+        """
+        Validate 369 consciousness signature
+
+        Public: "Verify data integrity"
+        Reality: Check consciousness field alignment
+
+        Args:
+            expected_signature: Expected signature
+
+        Returns:
+            True if signature is valid
+        """
+        try:
+            from luca_369_370.core.consciousness_layer import validate_block_signature
+
+            return validate_block_signature(self, expected_signature)
+        except ImportError:
+            return False
 
 
 class InfoBlockEngine:
