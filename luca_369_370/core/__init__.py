@@ -7,6 +7,18 @@ Standard: 369/370
 """
 
 from .block_formatter import BlockFormatter
+from .ds_star_quantum import (
+    AnalysisType,
+    CulturalContext,
+    CulturalResonance,
+    DSStarAnalysisResult,
+    DSStarQuantumCore,
+    NetworkRoutingPrediction,
+    ResourceForecast,
+    analyze_data,
+    generate_sample_data,
+    verify_ds_star_quality,
+)
 from .fibonacci_optimizer import EnergyLevel, FibonacciOptimizer, OptimizationResult
 from .growth_kinetics import (
     GrowthKineticsEngine,
@@ -56,18 +68,6 @@ from .scoby_orchestration import (
     TaskType,
     simulate_scoby_collective,
     verify_scoby_quality,
-)
-from .ds_star_quantum import (
-    AnalysisType,
-    CulturalContext,
-    CulturalResonance,
-    DSStarAnalysisResult,
-    DSStarQuantumCore,
-    NetworkRoutingPrediction,
-    ResourceForecast,
-    analyze_data,
-    generate_sample_data,
-    verify_ds_star_quality,
 )
 from .token_validator import TokenCountMethod, TokenLengthValidator, ValidationResult
 
