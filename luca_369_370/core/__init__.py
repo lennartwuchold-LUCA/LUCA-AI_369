@@ -57,6 +57,18 @@ from .scoby_orchestration import (
     simulate_scoby_collective,
     verify_scoby_quality,
 )
+from .ds_star_quantum import (
+    AnalysisType,
+    CulturalContext,
+    CulturalResonance,
+    DSStarAnalysisResult,
+    DSStarQuantumCore,
+    NetworkRoutingPrediction,
+    ResourceForecast,
+    analyze_data,
+    generate_sample_data,
+    verify_ds_star_quality,
+)
 from .token_validator import TokenCountMethod, TokenLengthValidator, ValidationResult
 
 __all__ = [
@@ -121,4 +133,15 @@ __all__ = [
     "TaskType",
     "simulate_scoby_collective",
     "verify_scoby_quality",
+    # Layer 10: DS-STAR Quantum Core (Data Science with Cultural Cosmology)
+    "AnalysisType",
+    "CulturalContext",
+    "CulturalResonance",
+    "DSStarAnalysisResult",
+    "DSStarQuantumCore",
+    "NetworkRoutingPrediction",
+    "ResourceForecast",
+    "analyze_data",
+    "generate_sample_data",
+    "verify_ds_star_quality",
 ]

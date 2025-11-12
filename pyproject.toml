@@ -30,6 +30,7 @@ numpy = "^1.26.0"
 scipy = "^1.11.0"
 jsonschema = "^4.20.0"
 matplotlib = "^3.8.0"
+pandas = "^2.1.0"
 click = "^8.1.7"
 
 # Backend dependencies (optional)
