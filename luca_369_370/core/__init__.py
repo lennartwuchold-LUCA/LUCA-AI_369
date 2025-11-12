@@ -42,6 +42,14 @@ from .metabolic_pathways import (
     simulate_metabolic_scenario,
     verify_metabolic_quality,
 )
+from .multimodal_metabolism import (
+    MetabolicMode,
+    MetabolicState,
+    MultimodalFusionResult,
+    MultimodalMetabolismCore,
+    calculate_multimodal_fusion,
+    verify_multimodal_quality,
+)
 from .population_dynamics import (
     InteractionType,
     PopulationDynamicsEngine,
@@ -144,4 +152,11 @@ __all__ = [
     "analyze_data",
     "generate_sample_data",
     "verify_ds_star_quality",
+    # Layer 11: Multimodal Metabolism (Bio-inspired Multimodal Fusion)
+    "MetabolicMode",
+    "MetabolicState",
+    "MultimodalFusionResult",
+    "MultimodalMetabolismCore",
+    "calculate_multimodal_fusion",
+    "verify_multimodal_quality",
 ]
