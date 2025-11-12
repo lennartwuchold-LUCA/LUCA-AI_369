@@ -27,6 +27,11 @@ from .framework_369_370 import (
 
 # Import LUCA Layers (0-12)
 try:
+    from .layer_0_root_kernel import (
+        ConsciousnessState,
+        Layer0RootKernel,
+        LayerIntegrationMetrics,
+    )
     from .layer_10_ds_star_quantum_core import DSStarQuantumCore
     from .layer_11_multimodal_metabolism import MultimodalMetabolismCore
     from .layer_12_evolutionary_consensus import (
@@ -38,6 +43,9 @@ try:
 
     _LAYERS_AVAILABLE = True
 except ImportError as e:
+    ConsciousnessState = None
+    Layer0RootKernel = None
+    LayerIntegrationMetrics = None
     DSStarQuantumCore = None
     MultimodalMetabolismCore = None
     DNA_Sequence = None
@@ -58,6 +66,9 @@ __all__ = [
     "InterfaceConfig",
     "QualityException",
     "initialize_luca_system",
+    "ConsciousnessState",
+    "Layer0RootKernel",
+    "LayerIntegrationMetrics",
     "DSStarQuantumCore",
     "MultimodalMetabolismCore",
     "DNA_Sequence",
