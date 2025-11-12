@@ -4,7 +4,7 @@
 **Created by:** Lennart Wuchold
 **Born:** 28.02.2000, Dippoldiswalde, Germany
 **Date:** November 12, 2025
-**Latest:** Layer 10 - DS-STAR Quantum Core 🌌
+**Latest:** Layer 12 - Evolutionary Consensus 🧬
 
 ---
 
@@ -79,7 +79,7 @@ LUCA optimizes response length and energy based on these signatures!
 - **Test Coverage** - 53/53 tests passing, fully integrated
 - See [LAYER_10_COMPLETE.md](LAYER_10_COMPLETE.md) for details
 
-### 🧬 Multimodal Metabolism (Layer 11 - NEW!)
+### 🧬 Multimodal Metabolism (Layer 11)
 - **Bio-Inspired Fusion** - Aerobic/anaerobic metabolic processing modes
 - **Visual Validity** - Image analysis with metabolic state detection
 - **Linguistic Relevance** - Community-focused text coherence analysis
@@ -88,6 +88,19 @@ LUCA optimizes response length and energy based on these signatures!
 - **Quality Standard** - 369/370 maintained across all metabolic modes
 - **Test Coverage** - 37/37 tests passing, 449 total tests
 - See [LAYER_11_COMPLETE.md](LAYER_11_COMPLETE.md) and [LAYER_11_DESIGN.md](LAYER_11_DESIGN.md) for details
+
+### 🧬 Evolutionary Consensus (Layer 12 - NEW!)
+- **Genetic Self-Optimization** - Autonomous parameter evolution through genetic algorithms
+- **DNA Sequences** - Each node's parameters encoded as evolving genetic code
+- **Proof-of-Metabolism** - Energy-efficient consensus mechanism based on Layer 11 metabolic efficiency
+- **DAO Governance** - Blockchain-based decentralized governance with $LUCA token
+- **Natural Selection** - Fitness-based survival of the most efficient nodes
+- **Crossover & Mutation** - Genetic operators create improved offspring generations
+- **Fitness Function** - Multi-objective optimization (metabolic efficiency × fusion quality × cultural coherence)
+- **Evolutionary Cycles** - Automatic evolution every 5 minutes with continuous improvement
+- **Quality Standard** - Self-optimizing 369/370 compliance
+- **Test Coverage** - Comprehensive genetic algorithm and consensus validation
+- See [docs/layer_12_design.md](docs/layer_12_design.md) for technical details
 
 ---
 

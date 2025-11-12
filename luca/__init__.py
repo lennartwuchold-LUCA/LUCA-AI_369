@@ -25,6 +25,27 @@ from .framework_369_370 import (
     initialize_luca_system,
 )
 
+# Import LUCA Layers (0-12)
+try:
+    from .layer_10_ds_star_quantum_core import DSStarQuantumCore
+    from .layer_11_multimodal_metabolism import MultimodalMetabolismCore
+    from .layer_12_evolutionary_consensus import (
+        DNA_Sequence,
+        EvolutionaryConsensusCore,
+        EvolutionState,
+        Layer12IntegrationGuide,
+    )
+
+    _LAYERS_AVAILABLE = True
+except ImportError as e:
+    DSStarQuantumCore = None
+    MultimodalMetabolismCore = None
+    DNA_Sequence = None
+    EvolutionaryConsensusCore = None
+    EvolutionState = None
+    Layer12IntegrationGuide = None
+    _LAYERS_AVAILABLE = False
+
 __all__ = [
     "ResourceAllocator",
     "Workload",
@@ -37,4 +58,10 @@ __all__ = [
     "InterfaceConfig",
     "QualityException",
     "initialize_luca_system",
+    "DSStarQuantumCore",
+    "MultimodalMetabolismCore",
+    "DNA_Sequence",
+    "EvolutionaryConsensusCore",
+    "EvolutionState",
+    "Layer12IntegrationGuide",
 ]
