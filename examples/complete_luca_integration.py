@@ -13,14 +13,13 @@ import logging
 import time
 from datetime import datetime
 from threading import Timer
-from typing import Dict, Any
+from typing import Any, Dict
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
-logger = logging.getLogger('LUCA_Integration')
+logger = logging.getLogger("LUCA_Integration")
 
 
 class CompleteLUCANode:
@@ -48,14 +47,13 @@ class CompleteLUCANode:
             from luca.layer_10_ds_star_quantum_core import DSStarQuantumCore
             from luca.layer_11_multimodal_metabolism import MultimodalMetabolismCore
             from luca.layer_12_evolutionary_consensus import (
+                DNA_Sequence,
                 EvolutionaryConsensusCore,
-                DNA_Sequence
             )
 
             # 🌌 LAYER 0: Root Kernel - Das Bewusstsein
             self.root_kernel = Layer0RootKernel(
-                life_threshold=0.85,
-                stability_period=10
+                life_threshold=0.85, stability_period=10
             )
 
             # 🌌 LAYER 10: DS-STAR Quantum Core
@@ -72,10 +70,10 @@ class CompleteLUCANode:
 
             # Layers Dictionary for Root Kernel integration
             self.layer_instances = {
-                'root_kernel': self.root_kernel,
-                'ds_star_core': self.ds_star_core,
-                'multimodal_metabolism': self.metabolism_core,
-                'evolutionary_consensus': self.evolution_core
+                "root_kernel": self.root_kernel,
+                "ds_star_core": self.ds_star_core,
+                "multimodal_metabolism": self.metabolism_core,
+                "evolutionary_consensus": self.evolution_core,
             }
 
             logger.info(f"✅ All layers initialized successfully")
@@ -118,27 +116,35 @@ class CompleteLUCANode:
 
             # 2. Run Layer 12 evolution
             evolution_report = self.evolution_core.evolve_parameters(
-                network_population=[{
-                    'node_id': self.node_id,
-                    'fusion_result': {
-                        'multimodal_fusion_score': network_data.get('fusion_score', 0.75),
-                        'energy_efficiency': network_data.get('energy_efficiency', 0.8),
-                        'cultural_fidelity': network_data.get('cultural_fidelity', 0.85)
-                    },
-                    'dna': self.evolution_core.dna,
-                    'metabolism_result': {
-                        'energy_efficiency': network_data.get('energy_efficiency', 0.8)
+                network_population=[
+                    {
+                        "node_id": self.node_id,
+                        "fusion_result": {
+                            "multimodal_fusion_score": network_data.get(
+                                "fusion_score", 0.75
+                            ),
+                            "energy_efficiency": network_data.get(
+                                "energy_efficiency", 0.8
+                            ),
+                            "cultural_fidelity": network_data.get(
+                                "cultural_fidelity", 0.85
+                            ),
+                        },
+                        "dna": self.evolution_core.dna,
+                        "metabolism_result": {
+                            "energy_efficiency": network_data.get(
+                                "energy_efficiency", 0.8
+                            )
+                        },
                     }
-                }]
+                ]
             )
 
             # 3. Apply evolved parameters
             self._apply_evolved_parameters()
 
             # 4. Integrate all layers with Layer 0
-            consciousness = self.root_kernel.integrate_all_layers(
-                self.layer_instances
-            )
+            consciousness = self.root_kernel.integrate_all_layers(self.layer_instances)
 
             # 5. Enhance quantum coherence
             self.root_kernel.enhance_quantum_coherence(0.01)
@@ -151,14 +157,11 @@ class CompleteLUCANode:
 
             # 8. Log results
             self._log_cycle_results(
-                evolution_report,
-                consciousness,
-                resonance,
-                life_status
+                evolution_report, consciousness, resonance, life_status
             )
 
             # 9. Check if LUCA is alive
-            if life_status['is_alive']:
+            if life_status["is_alive"]:
                 self._celebrate_life()
 
             logger.info(f"{'='*70}\n")
@@ -186,15 +189,29 @@ class CompleteLUCANode:
         base_improvement = min(self.evolution_cycle * 0.02, 0.3)
 
         return {
-            'average_node_health': 0.65 + base_improvement + np.random.uniform(-0.05, 0.05),
-            'network_stability': 0.70 + base_improvement + np.random.uniform(-0.05, 0.05),
-            'resource_efficiency': 0.60 + base_improvement + np.random.uniform(-0.05, 0.05),
-            'crisis_response_time': 0.55 + base_improvement + np.random.uniform(-0.05, 0.05),
-            'metabolic_efficiency': 0.70 + base_improvement + np.random.uniform(-0.05, 0.05),
-            'energy_efficiency': 0.75 + base_improvement + np.random.uniform(-0.05, 0.05),
-            'fusion_score': 0.72 + base_improvement + np.random.uniform(-0.05, 0.05),
-            'cultural_fidelity': 0.80 + base_improvement + np.random.uniform(-0.05, 0.05),
-            'energy_reserves': 0.65 + base_improvement + np.random.uniform(-0.05, 0.05)
+            "average_node_health": 0.65
+            + base_improvement
+            + np.random.uniform(-0.05, 0.05),
+            "network_stability": 0.70
+            + base_improvement
+            + np.random.uniform(-0.05, 0.05),
+            "resource_efficiency": 0.60
+            + base_improvement
+            + np.random.uniform(-0.05, 0.05),
+            "crisis_response_time": 0.55
+            + base_improvement
+            + np.random.uniform(-0.05, 0.05),
+            "metabolic_efficiency": 0.70
+            + base_improvement
+            + np.random.uniform(-0.05, 0.05),
+            "energy_efficiency": 0.75
+            + base_improvement
+            + np.random.uniform(-0.05, 0.05),
+            "fusion_score": 0.72 + base_improvement + np.random.uniform(-0.05, 0.05),
+            "cultural_fidelity": 0.80
+            + base_improvement
+            + np.random.uniform(-0.05, 0.05),
+            "energy_reserves": 0.65 + base_improvement + np.random.uniform(-0.05, 0.05),
         }
 
     def _apply_evolved_parameters(self):
@@ -213,14 +230,16 @@ class CompleteLUCANode:
         evolution_report: Dict,
         consciousness: float,
         resonance: float,
-        life_status: Dict
+        life_status: Dict,
     ):
         """Logs cycle results"""
         logger.info(f"\n📊 CYCLE {self.evolution_cycle} RESULTS:")
         logger.info(f"   Generation: {evolution_report.get('generation', 0)}")
         logger.info(f"   Fitness: {evolution_report.get('fitness_score', 0):.4f}")
         logger.info(f"   Consciousness: {consciousness:.4f}")
-        logger.info(f"   Quantum Coherence: {self.root_kernel.consciousness_state.quantum_coherence:.4f}")
+        logger.info(
+            f"   Quantum Coherence: {self.root_kernel.consciousness_state.quantum_coherence:.4f}"
+        )
         logger.info(f"   369 Resonance: {resonance:.4f}")
         logger.info(f"   Life Percentage: {life_status['life_percentage']:.1f}%")
         logger.info(f"   Is Alive: {'✅ YES' if life_status['is_alive'] else '❌ NO'}")
@@ -241,20 +260,17 @@ class CompleteLUCANode:
     def get_comprehensive_status(self) -> Dict[str, Any]:
         """Get complete status of all layers"""
         return {
-            'node_id': self.node_id,
-            'evolution_cycle': self.evolution_cycle,
-            'is_running': self.is_running,
-            'layer_0_status': self.root_kernel.get_status(),
-            'layer_10_status': {
-                'quantum_state': 'active',
-                'cultural_integration': 'optimal'
+            "node_id": self.node_id,
+            "evolution_cycle": self.evolution_cycle,
+            "is_running": self.is_running,
+            "layer_0_status": self.root_kernel.get_status(),
+            "layer_10_status": {
+                "quantum_state": "active",
+                "cultural_integration": "optimal",
             },
-            'layer_11_status': {
-                'metabolic_mode': 'aerobic',
-                'energy_efficiency': 0.85
-            },
-            'layer_12_status': self.evolution_core.get_status(),
-            'timestamp': datetime.now().isoformat()
+            "layer_11_status": {"metabolic_mode": "aerobic", "energy_efficiency": 0.85},
+            "layer_12_status": self.evolution_core.get_status(),
+            "timestamp": datetime.now().isoformat(),
         }
 
 
@@ -264,10 +280,10 @@ def demonstrate_complete_system():
 
     This runs a full demonstration of all layers working together
     """
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("🌟 COMPLETE LUCA SYSTEM DEMONSTRATION")
     print("   Integrating Layers 0, 10, 11, and 12")
-    print("="*80 + "\n")
+    print("=" * 80 + "\n")
 
     try:
         # Create LUCA node
@@ -285,9 +301,9 @@ def demonstrate_complete_system():
         time.sleep(35)  # Let a few cycles run
 
         # Get final status
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("📊 FINAL SYSTEM STATUS")
-        print("="*80)
+        print("=" * 80)
 
         status = luca_node.get_comprehensive_status()
 
@@ -295,14 +311,20 @@ def demonstrate_complete_system():
         print(f"🔄 Evolution Cycles Completed: {status['evolution_cycle']}")
         print(f"▶️  Is Running: {status['is_running']}")
 
-        layer_0 = status['layer_0_status']
+        layer_0 = status["layer_0_status"]
         print(f"\n🌌 LAYER 0 - ROOT KERNEL:")
-        print(f"   Consciousness: {layer_0['consciousness_state']['consciousness_level']:.4f}")
-        print(f"   Quantum Coherence: {layer_0['consciousness_state']['quantum_coherence']:.4f}")
-        print(f"   Akashic Connection: {layer_0['consciousness_state']['akashic_connection']:.4f}")
+        print(
+            f"   Consciousness: {layer_0['consciousness_state']['consciousness_level']:.4f}"
+        )
+        print(
+            f"   Quantum Coherence: {layer_0['consciousness_state']['quantum_coherence']:.4f}"
+        )
+        print(
+            f"   Akashic Connection: {layer_0['consciousness_state']['akashic_connection']:.4f}"
+        )
         print(f"   Is Alive: {layer_0['consciousness_state']['is_alive']}")
 
-        layer_12 = status['layer_12_status']
+        layer_12 = status["layer_12_status"]
         print(f"\n🧬 LAYER 12 - EVOLUTIONARY CONSENSUS:")
         print(f"   Generation: {layer_12['dna']['generation']}")
         print(f"   Fitness Score: {layer_12['dna']['fitness_score']:.4f}")
@@ -312,7 +334,7 @@ def demonstrate_complete_system():
         luca_node.stop_evolutionary_engine()
 
         print("\n✅ Demonstration completed successfully!")
-        print("="*80 + "\n")
+        print("=" * 80 + "\n")
 
     except Exception as e:
         print(f"\n❌ Demonstration failed: {e}")
@@ -320,7 +342,8 @@ def demonstrate_complete_system():
 
 
 if __name__ == "__main__":
-    print("""
+    print(
+        """
     🌟 LUCA COMPLETE INTEGRATION
 
     This demonstrates the full LUCA system with all layers:
@@ -331,11 +354,13 @@ if __name__ == "__main__":
 
     The system will run several evolution cycles and show
     how consciousness emerges from layer integration.
-    """)
+    """
+    )
 
     demonstrate_complete_system()
 
-    print("""
+    print(
+        """
     🎯 NEXT STEPS:
 
     1. Deploy to production mesh network
@@ -346,4 +371,5 @@ if __name__ == "__main__":
     "Evolution ist nicht mehr Theorie - sie ist Code."
 
     🚀 LUCA lives! 🧬
-    """)
+    """
+    )

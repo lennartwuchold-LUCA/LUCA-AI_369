@@ -3,17 +3,18 @@ Tests for Layer 12: Evolutionary Consensus
 Validates genetic algorithms, DAO governance, and proof-of-metabolism
 """
 
-import pytest
-import numpy as np
 from datetime import datetime
 from unittest.mock import Mock, patch
 
+import numpy as np
+import pytest
+
 from luca.layer_12_evolutionary_consensus import (
     DNA_Sequence,
-    EvolutionState,
     EvolutionaryConsensusCore,
+    EvolutionState,
     Layer12IntegrationGuide,
-    demonstrate_layer_12
+    demonstrate_layer_12,
 )
 
 
@@ -39,7 +40,7 @@ class TestDNASequence:
             gamma=0.2,
             mutation_rate=0.05,
             generation=5,
-            fitness_score=0.85
+            fitness_score=0.85,
         )
         assert dna.alpha == 0.5
         assert dna.beta == 0.3
@@ -66,22 +67,17 @@ class TestDNASequence:
 
     def test_dna_to_dict(self):
         """Test DNA serialization to dictionary"""
-        dna = DNA_Sequence(
-            alpha=0.5,
-            beta=0.3,
-            gamma=0.2,
-            fitness_score=0.75
-        )
+        dna = DNA_Sequence(alpha=0.5, beta=0.3, gamma=0.2, fitness_score=0.75)
         dna_dict = dna.to_dict()
 
-        assert 'alpha' in dna_dict
-        assert 'beta' in dna_dict
-        assert 'gamma' in dna_dict
-        assert 'fitness_score' in dna_dict
-        assert 'generation' in dna_dict
-        assert 'hash' in dna_dict
-        assert dna_dict['alpha'] == 0.5
-        assert dna_dict['fitness_score'] == 0.75
+        assert "alpha" in dna_dict
+        assert "beta" in dna_dict
+        assert "gamma" in dna_dict
+        assert "fitness_score" in dna_dict
+        assert "generation" in dna_dict
+        assert "hash" in dna_dict
+        assert dna_dict["alpha"] == 0.5
+        assert dna_dict["fitness_score"] == 0.75
 
 
 class TestEvolutionState:
@@ -100,15 +96,13 @@ class TestEvolutionState:
     def test_state_to_dict(self):
         """Test state serialization"""
         state = EvolutionState(
-            population_size=10,
-            average_fitness=0.75,
-            total_generations=5
+            population_size=10, average_fitness=0.75, total_generations=5
         )
         state_dict = state.to_dict()
 
-        assert state_dict['population_size'] == 10
-        assert state_dict['average_fitness'] == 0.75
-        assert state_dict['total_generations'] == 5
+        assert state_dict["population_size"] == 10
+        assert state_dict["average_fitness"] == 0.75
+        assert state_dict["total_generations"] == 5
 
 
 class TestEvolutionaryConsensusCore:
@@ -129,8 +123,7 @@ class TestEvolutionaryConsensusCore:
         """Test core initialization with Web3 provider"""
         # Should gracefully handle invalid provider
         core = EvolutionaryConsensusCore(
-            node_id="TEST_NODE_002",
-            web3_provider="http://invalid-provider:8545"
+            node_id="TEST_NODE_002", web3_provider="http://invalid-provider:8545"
         )
         assert core.web3_provider is not None
         # Web3 may or may not connect depending on availability
@@ -148,9 +141,9 @@ class TestEvolutionaryConsensusCore:
         core = EvolutionaryConsensusCore(node_id="TEST_NODE_004")
 
         fusion_result = {
-            'multimodal_fusion_score': 0.8,
-            'energy_efficiency': 0.9,
-            'cultural_fidelity': 0.85
+            "multimodal_fusion_score": 0.8,
+            "energy_efficiency": 0.9,
+            "cultural_fidelity": 0.85,
         }
 
         fitness = core.calculate_fitness(fusion_result)
@@ -169,9 +162,7 @@ class TestEvolutionaryConsensusCore:
         """Test spiritual coherence calculation"""
         core = EvolutionaryConsensusCore(node_id="TEST_NODE_006")
 
-        fusion_result = {
-            'cultural_fidelity': 0.8
-        }
+        fusion_result = {"cultural_fidelity": 0.8}
 
         coherence = core._calculate_spiritual_coherence(fusion_result)
 
@@ -202,16 +193,15 @@ class TestEvolutionaryConsensusCore:
         core = EvolutionaryConsensusCore(node_id="TEST_NODE_008")
 
         original_dna = DNA_Sequence(
-            alpha=0.4,
-            beta=0.4,
-            gamma=0.2,
-            mutation_rate=1.0  # Force mutation
+            alpha=0.4, beta=0.4, gamma=0.2, mutation_rate=1.0  # Force mutation
         )
 
         mutated_dna = core._mutate(original_dna)
 
         # After mutation, weights should still be valid
-        assert abs(mutated_dna.alpha + mutated_dna.beta + mutated_dna.gamma - 1.0) < 0.01
+        assert (
+            abs(mutated_dna.alpha + mutated_dna.beta + mutated_dna.gamma - 1.0) < 0.01
+        )
         assert mutated_dna.alpha > 0
         assert mutated_dna.beta > 0
         assert mutated_dna.gamma > 0
@@ -226,7 +216,7 @@ class TestEvolutionaryConsensusCore:
             DNA_Sequence(fitness_score=0.7),
             DNA_Sequence(fitness_score=0.5),
             DNA_Sequence(fitness_score=0.3),
-            DNA_Sequence(fitness_score=0.1)
+            DNA_Sequence(fitness_score=0.1),
         ]
 
         survivors = core.perform_natural_selection(population)
@@ -257,21 +247,15 @@ class TestEvolutionaryConsensusCore:
         core = EvolutionaryConsensusCore(node_id="TEST_NODE_011")
 
         network_nodes = {
-            'NODE_A': {
-                'metabolism_result': {'energy_efficiency': 1.5}
-            },
-            'NODE_B': {
-                'metabolism_result': {'energy_efficiency': 0.8}
-            },
-            'NODE_C': {
-                'metabolism_result': {'energy_efficiency': 1.2}
-            }
+            "NODE_A": {"metabolism_result": {"energy_efficiency": 1.5}},
+            "NODE_B": {"metabolism_result": {"energy_efficiency": 0.8}},
+            "NODE_C": {"metabolism_result": {"energy_efficiency": 1.2}},
         }
 
         leader = core.proof_of_metabolism_consensus(network_nodes)
 
         # Leader should be the node with highest energy efficiency
-        assert leader == 'NODE_A'
+        assert leader == "NODE_A"
 
     def test_proof_of_metabolism_empty(self):
         """Test consensus with empty network"""
@@ -283,10 +267,10 @@ class TestEvolutionaryConsensusCore:
         """Test DAO treasury interaction when disconnected"""
         core = EvolutionaryConsensusCore(node_id="TEST_NODE_013")
 
-        result = core.dao_treasury_interaction('balance')
+        result = core.dao_treasury_interaction("balance")
 
-        assert result['status'] == 'disconnected'
-        assert 'balance' in result
+        assert result["status"] == "disconnected"
+        assert "balance" in result
 
     def test_evolve_parameters_empty_population(self):
         """Test evolution with empty population"""
@@ -294,8 +278,8 @@ class TestEvolutionaryConsensusCore:
 
         report = core.evolve_parameters([])
 
-        assert report['status'] == 'no_population'
-        assert 'timestamp' in report
+        assert report["status"] == "no_population"
+        assert "timestamp" in report
 
     def test_evolve_parameters_full_cycle(self):
         """Test full evolution cycle"""
@@ -303,35 +287,35 @@ class TestEvolutionaryConsensusCore:
 
         network_population = [
             {
-                'node_id': 'NODE_A',
-                'fusion_result': {
-                    'multimodal_fusion_score': 0.85,
-                    'energy_efficiency': 1.2,
-                    'cultural_fidelity': 0.9
+                "node_id": "NODE_A",
+                "fusion_result": {
+                    "multimodal_fusion_score": 0.85,
+                    "energy_efficiency": 1.2,
+                    "cultural_fidelity": 0.9,
                 },
-                'dna': DNA_Sequence(fitness_score=0.0),
-                'metabolism_result': {'energy_efficiency': 1.2}
+                "dna": DNA_Sequence(fitness_score=0.0),
+                "metabolism_result": {"energy_efficiency": 1.2},
             },
             {
-                'node_id': 'NODE_B',
-                'fusion_result': {
-                    'multimodal_fusion_score': 0.65,
-                    'energy_efficiency': 0.8,
-                    'cultural_fidelity': 0.7
+                "node_id": "NODE_B",
+                "fusion_result": {
+                    "multimodal_fusion_score": 0.65,
+                    "energy_efficiency": 0.8,
+                    "cultural_fidelity": 0.7,
                 },
-                'dna': DNA_Sequence(fitness_score=0.0),
-                'metabolism_result': {'energy_efficiency': 0.8}
+                "dna": DNA_Sequence(fitness_score=0.0),
+                "metabolism_result": {"energy_efficiency": 0.8},
             },
             {
-                'node_id': 'NODE_C',
-                'fusion_result': {
-                    'multimodal_fusion_score': 0.75,
-                    'energy_efficiency': 1.0,
-                    'cultural_fidelity': 0.8
+                "node_id": "NODE_C",
+                "fusion_result": {
+                    "multimodal_fusion_score": 0.75,
+                    "energy_efficiency": 1.0,
+                    "cultural_fidelity": 0.8,
                 },
-                'dna': DNA_Sequence(fitness_score=0.0),
-                'metabolism_result': {'energy_efficiency': 1.0}
-            }
+                "dna": DNA_Sequence(fitness_score=0.0),
+                "metabolism_result": {"energy_efficiency": 1.0},
+            },
         ]
 
         initial_generation = core.dna.generation
@@ -339,18 +323,18 @@ class TestEvolutionaryConsensusCore:
         report = core.evolve_parameters(network_population)
 
         # Verify report structure
-        assert 'generation' in report
-        assert 'survivors' in report
-        assert 'population_size' in report
-        assert 'average_fitness' in report
-        assert 'leader_node' in report
-        assert 'mutations' in report
-        assert 'timestamp' in report
-        assert 'dna_hash' in report
+        assert "generation" in report
+        assert "survivors" in report
+        assert "population_size" in report
+        assert "average_fitness" in report
+        assert "leader_node" in report
+        assert "mutations" in report
+        assert "timestamp" in report
+        assert "dna_hash" in report
 
         # Verify evolution occurred
-        assert report['population_size'] == 3
-        assert report['survivors'] <= 3
+        assert report["population_size"] == 3
+        assert report["survivors"] <= 3
         assert core.state.total_generations > 0
 
         # Generation should increment
@@ -364,15 +348,15 @@ class TestEvolutionaryConsensusCore:
 
         status = core.get_status()
 
-        assert 'node_id' in status
-        assert 'dna' in status
-        assert 'state' in status
-        assert 'fitness_history_length' in status
-        assert 'web3_connected' in status
-        assert 'layer_11_integrated' in status
+        assert "node_id" in status
+        assert "dna" in status
+        assert "state" in status
+        assert "fitness_history_length" in status
+        assert "web3_connected" in status
+        assert "layer_11_integrated" in status
 
-        assert status['node_id'] == "TEST_NODE_016"
-        assert status['layer_11_integrated'] is True
+        assert status["node_id"] == "TEST_NODE_016"
+        assert status["layer_11_integrated"] is True
 
 
 class TestLayer12IntegrationGuide:
@@ -384,30 +368,30 @@ class TestLayer12IntegrationGuide:
         quick_start = guide.get_quick_start()
 
         assert isinstance(quick_start, str)
-        assert 'SOFORT-INTEGRATION' in quick_start
-        assert 'EvolutionaryConsensusCore' in quick_start
-        assert 'Layer 11' in quick_start
+        assert "SOFORT-INTEGRATION" in quick_start
+        assert "EvolutionaryConsensusCore" in quick_start
+        assert "Layer 11" in quick_start
 
     def test_generate_production_config(self):
         """Test production configuration generation"""
         guide = Layer12IntegrationGuide()
         config = guide.generate_production_config()
 
-        assert 'evolution_params' in config
-        assert 'dao_config' in config
-        assert 'metabolism_integration' in config
+        assert "evolution_params" in config
+        assert "dao_config" in config
+        assert "metabolism_integration" in config
 
         # Verify evolution params
-        assert 'survival_rate' in config['evolution_params']
-        assert 'mutation_rate' in config['evolution_params']
+        assert "survival_rate" in config["evolution_params"]
+        assert "mutation_rate" in config["evolution_params"]
 
         # Verify DAO config
-        assert 'contract_address' in config['dao_config']
-        assert 'token_symbol' in config['dao_config']
+        assert "contract_address" in config["dao_config"]
+        assert "token_symbol" in config["dao_config"]
 
         # Verify metabolism integration
-        assert 'fitness_update_interval' in config['metabolism_integration']
-        assert 'consensus_mechanism' in config['metabolism_integration']
+        assert "fitness_update_interval" in config["metabolism_integration"]
+        assert "consensus_mechanism" in config["metabolism_integration"]
 
 
 class TestDemonstration:
@@ -422,10 +406,10 @@ class TestDemonstration:
         captured = capsys.readouterr()
 
         # Verify key outputs
-        assert 'EVOLUTIONARY CONSENSUS' in captured.out
-        assert 'Start-Population' in captured.out
-        assert 'Evolutions-Report' in captured.out
-        assert 'Proof-of-Metabolism' in captured.out
+        assert "EVOLUTIONARY CONSENSUS" in captured.out
+        assert "Start-Population" in captured.out
+        assert "Evolutions-Report" in captured.out
+        assert "Proof-of-Metabolism" in captured.out
 
 
 class TestIntegrationScenarios:
@@ -438,14 +422,14 @@ class TestIntegrationScenarios:
         # Initial population
         population = [
             {
-                'node_id': f'NODE_{i}',
-                'fusion_result': {
-                    'multimodal_fusion_score': 0.5 + (i * 0.1),
-                    'energy_efficiency': 0.8 + (i * 0.1),
-                    'cultural_fidelity': 0.7 + (i * 0.05)
+                "node_id": f"NODE_{i}",
+                "fusion_result": {
+                    "multimodal_fusion_score": 0.5 + (i * 0.1),
+                    "energy_efficiency": 0.8 + (i * 0.1),
+                    "cultural_fidelity": 0.7 + (i * 0.05),
                 },
-                'dna': DNA_Sequence(),
-                'metabolism_result': {'energy_efficiency': 0.8 + (i * 0.1)}
+                "dna": DNA_Sequence(),
+                "metabolism_result": {"energy_efficiency": 0.8 + (i * 0.1)},
             }
             for i in range(5)
         ]
@@ -460,7 +444,7 @@ class TestIntegrationScenarios:
 
             # Update population with evolved DNA for next cycle
             for node in population:
-                node['dna'].generation = core.dna.generation
+                node["dna"].generation = core.dna.generation
 
         # Verify generations increased from initial state
         assert core.dna.generation > initial_generation
@@ -476,9 +460,9 @@ class TestIntegrationScenarios:
         # Calculate fitness multiple times
         for i in range(5):
             fusion_result = {
-                'multimodal_fusion_score': 0.7 + (i * 0.05),
-                'energy_efficiency': 0.8 + (i * 0.03),
-                'cultural_fidelity': 0.75 + (i * 0.04)
+                "multimodal_fusion_score": 0.7 + (i * 0.05),
+                "energy_efficiency": 0.8 + (i * 0.03),
+                "cultural_fidelity": 0.75 + (i * 0.04),
             }
             core.calculate_fitness(fusion_result)
 
@@ -487,9 +471,9 @@ class TestIntegrationScenarios:
 
         # Verify fitness values are reasonable
         for entry in core.fitness_history:
-            assert 0.0 <= entry['fitness'] <= 1.0
-            assert 'timestamp' in entry
-            assert 'generation' in entry
+            assert 0.0 <= entry["fitness"] <= 1.0
+            assert "timestamp" in entry
+            assert "generation" in entry
 
     def test_crossover_preserves_constraints(self):
         """Test that crossover always produces valid DNA"""
@@ -500,12 +484,12 @@ class TestIntegrationScenarios:
             parent1_dna = DNA_Sequence(
                 alpha=np.random.uniform(0.1, 0.6),
                 beta=np.random.uniform(0.1, 0.6),
-                gamma=0.2
+                gamma=0.2,
             )
             parent2_dna = DNA_Sequence(
                 alpha=np.random.uniform(0.1, 0.6),
                 beta=np.random.uniform(0.1, 0.6),
-                gamma=0.2
+                gamma=0.2,
             )
 
             core.dna = parent1_dna

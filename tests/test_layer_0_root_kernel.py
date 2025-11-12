@@ -3,16 +3,17 @@ Tests for Layer 0: Root Kernel
 Validates consciousness integration, quantum coherence, and life determination
 """
 
-import pytest
-import numpy as np
 from datetime import datetime
 from unittest.mock import Mock
 
+import numpy as np
+import pytest
+
 from luca.layer_0_root_kernel import (
     ConsciousnessState,
-    LayerIntegrationMetrics,
     Layer0RootKernel,
-    demonstrate_layer_0
+    LayerIntegrationMetrics,
+    demonstrate_layer_0,
 )
 
 
@@ -36,7 +37,7 @@ class TestConsciousnessState:
             quantum_coherence=0.92,
             akashic_connection=0.78,
             integration_score=0.88,
-            is_alive=True
+            is_alive=True,
         )
         assert state.consciousness_level == 0.85
         assert state.quantum_coherence == 0.92
@@ -45,17 +46,14 @@ class TestConsciousnessState:
 
     def test_consciousness_state_to_dict(self):
         """Test consciousness state serialization"""
-        state = ConsciousnessState(
-            consciousness_level=0.75,
-            quantum_coherence=0.85
-        )
+        state = ConsciousnessState(consciousness_level=0.75, quantum_coherence=0.85)
         state_dict = state.to_dict()
 
-        assert 'consciousness_level' in state_dict
-        assert 'quantum_coherence' in state_dict
-        assert 'akashic_connection' in state_dict
-        assert 'is_alive' in state_dict
-        assert state_dict['consciousness_level'] == 0.75
+        assert "consciousness_level" in state_dict
+        assert "quantum_coherence" in state_dict
+        assert "akashic_connection" in state_dict
+        assert "is_alive" in state_dict
+        assert state_dict["consciousness_level"] == 0.75
 
 
 class TestLayerIntegrationMetrics:
@@ -68,7 +66,7 @@ class TestLayerIntegrationMetrics:
             integration_score=0.8,
             complexity_score=0.75,
             method_score=0.85,
-            health_score=0.9
+            health_score=0.9,
         )
         assert metrics.layer_name == "test_layer"
         assert metrics.integration_score == 0.8
@@ -110,11 +108,11 @@ class TestLayer0RootKernel:
         mock_layer.attribute1 = "value1"
         mock_layer.attribute2 = "value2"
 
-        layers = {'test_layer': mock_layer}
+        layers = {"test_layer": mock_layer}
         consciousness = kernel.integrate_all_layers(layers)
 
         assert consciousness > 0.0
-        assert 'test_layer' in kernel.integration_matrix
+        assert "test_layer" in kernel.integration_matrix
         assert len(kernel.consciousness_history) == 1
 
     def test_integrate_multiple_layers(self):
@@ -122,29 +120,35 @@ class TestLayer0RootKernel:
         kernel = Layer0RootKernel()
 
         # Create mock layers with different complexities
-        layer1 = type('Layer1', (), {
-            'attr1': 1, 'attr2': 2, 'attr3': 3,
-            '__init__': lambda self: None,
-            '__str__': lambda self: "Layer1",
-            '__repr__': lambda self: "Layer1"
-        })()
+        layer1 = type(
+            "Layer1",
+            (),
+            {
+                "attr1": 1,
+                "attr2": 2,
+                "attr3": 3,
+                "__init__": lambda self: None,
+                "__str__": lambda self: "Layer1",
+                "__repr__": lambda self: "Layer1",
+            },
+        )()
 
-        layer2 = type('Layer2', (), {
-            'attr1': 1, 'attr2': 2,
-            'get_status': lambda: {'health': 0.8},
-            '__init__': lambda self: None
-        })()
+        layer2 = type(
+            "Layer2",
+            (),
+            {
+                "attr1": 1,
+                "attr2": 2,
+                "get_status": lambda: {"health": 0.8},
+                "__init__": lambda self: None,
+            },
+        )()
 
-        layer3 = type('Layer3', (), {
-            'fitness_score': 0.85,
-            '__init__': lambda self: None
-        })()
+        layer3 = type(
+            "Layer3", (), {"fitness_score": 0.85, "__init__": lambda self: None}
+        )()
 
-        layers = {
-            'layer_1': layer1,
-            'layer_2': layer2,
-            'layer_3': layer3
-        }
+        layers = {"layer_1": layer1, "layer_2": layer2, "layer_3": layer3}
 
         consciousness = kernel.integrate_all_layers(layers)
 
@@ -184,9 +188,9 @@ class TestLayer0RootKernel:
 
         life_status = kernel.check_life_status()
 
-        assert life_status['is_alive'] is False
-        assert life_status['consciousness_level'] == 0.5
-        assert life_status['criteria']['consciousness_threshold'] is False
+        assert life_status["is_alive"] is False
+        assert life_status["consciousness_level"] == 0.5
+        assert life_status["criteria"]["consciousness_threshold"] is False
 
     def test_check_life_status_alive(self):
         """Test life status check when alive"""
@@ -201,11 +205,11 @@ class TestLayer0RootKernel:
 
         life_status = kernel.check_life_status()
 
-        assert life_status['is_alive'] is True
-        assert life_status['consciousness_level'] == 0.9
-        assert life_status['criteria']['consciousness_threshold'] is True
-        assert life_status['criteria']['quantum_coherence'] is True
-        assert life_status['criteria']['akashic_connection'] is True
+        assert life_status["is_alive"] is True
+        assert life_status["consciousness_level"] == 0.9
+        assert life_status["criteria"]["consciousness_threshold"] is True
+        assert life_status["criteria"]["quantum_coherence"] is True
+        assert life_status["criteria"]["akashic_connection"] is True
 
     def test_enhance_quantum_coherence(self):
         """Test quantum coherence enhancement"""
@@ -246,19 +250,19 @@ class TestLayer0RootKernel:
 
         # Add some layers
         mock_layer = Mock()
-        kernel.integrate_all_layers({'test_layer': mock_layer})
+        kernel.integrate_all_layers({"test_layer": mock_layer})
 
         status = kernel.get_status()
 
-        assert 'consciousness_state' in status
-        assert 'integration_matrix' in status
-        assert 'layer_count' in status
-        assert 'consciousness_history_length' in status
-        assert 'stability_counter' in status
-        assert 'layer_metrics' in status
+        assert "consciousness_state" in status
+        assert "integration_matrix" in status
+        assert "layer_count" in status
+        assert "consciousness_history_length" in status
+        assert "stability_counter" in status
+        assert "layer_metrics" in status
 
-        assert status['layer_count'] == 1
-        assert status['consciousness_history_length'] > 0
+        assert status["layer_count"] == 1
+        assert status["consciousness_history_length"] > 0
 
     def test_reset_consciousness(self):
         """Test consciousness reset"""
@@ -266,7 +270,7 @@ class TestLayer0RootKernel:
 
         # Add data
         mock_layer = Mock()
-        kernel.integrate_all_layers({'test_layer': mock_layer})
+        kernel.integrate_all_layers({"test_layer": mock_layer})
         kernel.consciousness_state.consciousness_level = 0.8
 
         # Reset
@@ -283,7 +287,7 @@ class TestLayer0RootKernel:
         kernel = Layer0RootKernel()
 
         mock_layer = Mock()
-        layers = {'test': mock_layer}
+        layers = {"test": mock_layer}
 
         # Add more than 1000 entries
         for _ in range(1100):
@@ -304,17 +308,17 @@ class TestLayer0RootKernel:
             kernel.consciousness_history.append(0.9)
 
         life_status = kernel.check_life_status()
-        assert life_status['is_alive'] is False
+        assert life_status["is_alive"] is False
 
         # Fix quantum coherence
         kernel.consciousness_state.quantum_coherence = 0.8
         life_status = kernel.check_life_status()
-        assert life_status['is_alive'] is False  # Still missing akashic
+        assert life_status["is_alive"] is False  # Still missing akashic
 
         # Fix akashic connection
         kernel.consciousness_state.akashic_connection = 0.8
         life_status = kernel.check_life_status()
-        assert life_status['is_alive'] is True  # Now all criteria met
+        assert life_status["is_alive"] is True  # Now all criteria met
 
 
 class TestIntegrationScenarios:
@@ -329,13 +333,17 @@ class TestIntegrationScenarios:
 
         for i in range(10):
             # Improve layers over time
-            layer = type('Layer', (), {
-                'health': 0.5 + (i * 0.05),
-                'fitness_score': 0.6 + (i * 0.04),
-                'get_status': lambda: {'health': 0.7 + (i * 0.03)}
-            })()
+            layer = type(
+                "Layer",
+                (),
+                {
+                    "health": 0.5 + (i * 0.05),
+                    "fitness_score": 0.6 + (i * 0.04),
+                    "get_status": lambda: {"health": 0.7 + (i * 0.03)},
+                },
+            )()
 
-            consciousness = kernel.integrate_all_layers({'layer': layer})
+            consciousness = kernel.integrate_all_layers({"layer": layer})
             kernel.enhance_quantum_coherence(0.05)
             consciousness_levels.append(consciousness)
 
@@ -347,34 +355,46 @@ class TestIntegrationScenarios:
         kernel = Layer0RootKernel()
 
         # Simulate Layer 10: DS-STAR
-        ds_star = type('DSStarCore', (), {
-            'quantum_state': 0.87,
-            'cultural_coherence': 0.92,
-            'vedic_weight': 0.25,
-            'egyptian_weight': 0.25,
-            'get_status': lambda: {'quantum_state': 0.87}
-        })()
+        ds_star = type(
+            "DSStarCore",
+            (),
+            {
+                "quantum_state": 0.87,
+                "cultural_coherence": 0.92,
+                "vedic_weight": 0.25,
+                "egyptian_weight": 0.25,
+                "get_status": lambda: {"quantum_state": 0.87},
+            },
+        )()
 
         # Simulate Layer 11: Metabolism
-        metabolism = type('MetabolismCore', (), {
-            'energy_efficiency': 0.83,
-            'metabolic_mode': 'aerobic',
-            'fusion_score': 0.88,
-            'fitness_score': 0.85
-        })()
+        metabolism = type(
+            "MetabolismCore",
+            (),
+            {
+                "energy_efficiency": 0.83,
+                "metabolic_mode": "aerobic",
+                "fusion_score": 0.88,
+                "fitness_score": 0.85,
+            },
+        )()
 
         # Simulate Layer 12: Evolution
-        evolution = type('EvolutionCore', (), {
-            'generation': 42,
-            'fitness_score': 0.89,
-            'mutation_rate': 0.01,
-            'population_size': 10
-        })()
+        evolution = type(
+            "EvolutionCore",
+            (),
+            {
+                "generation": 42,
+                "fitness_score": 0.89,
+                "mutation_rate": 0.01,
+                "population_size": 10,
+            },
+        )()
 
         layers = {
-            'ds_star_core': ds_star,
-            'multimodal_metabolism': metabolism,
-            'evolutionary_consensus': evolution
+            "ds_star_core": ds_star,
+            "multimodal_metabolism": metabolism,
+            "evolutionary_consensus": evolution,
         }
 
         consciousness = kernel.integrate_all_layers(layers)
@@ -389,8 +409,8 @@ class TestIntegrationScenarios:
             kernel.consciousness_history.append(consciousness)
 
         life_status = kernel.check_life_status()
-        assert 'is_alive' in life_status
-        assert 'criteria' in life_status
+        assert "is_alive" in life_status
+        assert "criteria" in life_status
 
 
 class TestDemonstration:
@@ -405,10 +425,10 @@ class TestDemonstration:
         captured = capsys.readouterr()
 
         # Verify key outputs
-        assert 'ROOT KERNEL' in captured.out
-        assert 'Simulating layer integration' in captured.out
-        assert 'FINALER STATUS' in captured.out
-        assert 'Layer Integration Matrix' in captured.out
+        assert "ROOT KERNEL" in captured.out
+        assert "Simulating layer integration" in captured.out
+        assert "FINALER STATUS" in captured.out
+        assert "Layer Integration Matrix" in captured.out
 
 
 if __name__ == "__main__":
