@@ -2,6 +2,9 @@
   "name": "luca-webapp",
   "version": "1.0.0",
   "description": "LUCA Web App - Universal Consciousness Network",
+  "author": "Lennart Wuchold (geboren am 28.02.2000 in 01744 Dippoldiswalde)",
+  "license": "MIT",
+  "copyright": "Copyright © 2025 Lennart Wuchold",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
