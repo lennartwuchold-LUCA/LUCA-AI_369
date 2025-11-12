@@ -47,6 +47,16 @@ from .progressive_disclosure import (
 )
 from .quality_validator import QualityValidator
 from .quantum_signature import QuantumLevel, QuantumSignature, QuantumSignatureEngine
+from .scoby_orchestration import (
+    AgentRole,
+    SCOBYAgent,
+    SCOBYOrchestrationEngine,
+    SCOBYState,
+    Task,
+    TaskType,
+    simulate_scoby_collective,
+    verify_scoby_quality,
+)
 from .token_validator import TokenCountMethod, TokenLengthValidator, ValidationResult
 
 __all__ = [
@@ -102,4 +112,13 @@ __all__ = [
     "optimize_metabolic_strategy",
     "simulate_metabolic_scenario",
     "verify_metabolic_quality",
+    # Layer 9: SCOBY Orchestration (Collective Intelligence)
+    "AgentRole",
+    "SCOBYAgent",
+    "SCOBYOrchestrationEngine",
+    "SCOBYState",
+    "Task",
+    "TaskType",
+    "simulate_scoby_collective",
+    "verify_scoby_quality",
 ]
