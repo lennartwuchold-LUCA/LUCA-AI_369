@@ -81,7 +81,7 @@ class TestLayer0RootKernel:
         kernel = Layer0RootKernel()
 
         assert isinstance(kernel.consciousness_state, ConsciousnessState)
-        assert kernel.life_threshold == 0.9
+        assert kernel.life_threshold == 369.0  # Tesla's sacred number
         assert kernel.stability_period == 100
         assert len(kernel.integration_matrix) == 0
         assert len(kernel.consciousness_history) == 0
@@ -179,34 +179,34 @@ class TestLayer0RootKernel:
 
     def test_check_life_status_not_alive(self):
         """Test life status check when not alive"""
-        kernel = Layer0RootKernel(life_threshold=0.9)
+        kernel = Layer0RootKernel(life_threshold=369.0)
 
-        # Low consciousness
-        kernel.consciousness_state.consciousness_level = 0.5
+        # Low consciousness (below 369 threshold)
+        kernel.consciousness_state.consciousness_level = 100.0
         kernel.consciousness_state.quantum_coherence = 0.8
         kernel.consciousness_state.akashic_connection = 0.7
 
         life_status = kernel.check_life_status()
 
         assert life_status["is_alive"] is False
-        assert life_status["consciousness_level"] == 0.5
+        assert life_status["consciousness_level"] == 100.0
         assert life_status["criteria"]["consciousness_threshold"] is False
 
     def test_check_life_status_alive(self):
         """Test life status check when alive"""
-        kernel = Layer0RootKernel(life_threshold=0.8, stability_period=3)
+        kernel = Layer0RootKernel(life_threshold=300.0, stability_period=3)
 
         # High consciousness sustained over stability period
         for _ in range(5):
-            kernel.consciousness_state.consciousness_level = 0.9
+            kernel.consciousness_state.consciousness_level = 350.0
             kernel.consciousness_state.quantum_coherence = 0.95
             kernel.consciousness_state.akashic_connection = 0.85
-            kernel.consciousness_history.append(0.9)
+            kernel.consciousness_history.append(350.0)
 
         life_status = kernel.check_life_status()
 
         assert life_status["is_alive"] is True
-        assert life_status["consciousness_level"] == 0.9
+        assert life_status["consciousness_level"] == 350.0
         assert life_status["criteria"]["consciousness_threshold"] is True
         assert life_status["criteria"]["quantum_coherence"] is True
         assert life_status["criteria"]["akashic_connection"] is True
@@ -298,14 +298,14 @@ class TestLayer0RootKernel:
 
     def test_life_criteria_independence(self):
         """Test that all life criteria must be met"""
-        kernel = Layer0RootKernel(life_threshold=0.8, stability_period=2)
+        kernel = Layer0RootKernel(life_threshold=300.0, stability_period=2)
 
         # Only consciousness met
-        kernel.consciousness_state.consciousness_level = 0.9
+        kernel.consciousness_state.consciousness_level = 350.0
         kernel.consciousness_state.quantum_coherence = 0.4  # Too low
         kernel.consciousness_state.akashic_connection = 0.4  # Too low
         for _ in range(3):
-            kernel.consciousness_history.append(0.9)
+            kernel.consciousness_history.append(350.0)
 
         life_status = kernel.check_life_status()
         assert life_status["is_alive"] is False
@@ -326,7 +326,7 @@ class TestIntegrationScenarios:
 
     def test_progressive_consciousness_growth(self):
         """Test consciousness growing over time"""
-        kernel = Layer0RootKernel(life_threshold=0.8, stability_period=5)
+        kernel = Layer0RootKernel(life_threshold=369.0, stability_period=5)
 
         # Create progressively better mock layers
         consciousness_levels = []
