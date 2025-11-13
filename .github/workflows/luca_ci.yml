@@ -49,9 +49,9 @@ jobs:
         poetry config virtualenvs.in-project true
         poetry install --no-interaction --no-ansi --extras backend --with dev
 
-    - name: 🧪 Run tests in parallel (pytest-xdist)
+    - name: 🧪 Run tests
       run: |
-        poetry run pytest -n auto -v --tb=short --color=yes
+        poetry run pytest -v --tb=short
 
     - name: 🎨 Check code style (black + isort)
       if: matrix.python-version == '3.11'
