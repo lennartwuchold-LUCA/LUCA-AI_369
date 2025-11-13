@@ -431,5 +431,5 @@ License: MIT (Copyright © 2025 Lennart Wuchold)
 ---
 
 **Submitted for review**: 2025-11-13
-**Author Contact**: lenny@luca.bio
+**Author Contact**: wucholdlennart@gmail.com
 **Copyright**: © 2025 Lennart Wuchold. All Rights Reserved.
