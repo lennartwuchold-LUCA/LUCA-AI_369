@@ -15,10 +15,7 @@ from luca.core.info_block_engine import BlockType
 
 # Try to import LLM integration
 try:
-    from luca.core.llm_integration import (
-        LUCALLMIntegration,
-        generate_luca_response,
-    )
+    from luca.core.llm_integration import LUCALLMIntegration, generate_luca_response
 
     LLM_AVAILABLE = True
 except ImportError:
