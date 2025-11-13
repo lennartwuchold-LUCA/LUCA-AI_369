@@ -11,8 +11,15 @@ numpy==1.26.2
 python-multipart==0.0.6
 email-validator==2.1.0
 
-# Optional: Meshtastic support (uncomment to enable)
+# Optional: Universal Root Kernel - Meshtastic Hardware (uncomment to enable)
+# pyserial==3.5
 # meshtastic==2.2.0
+
+# Optional: Universal Root Kernel - Quantum Simulation (uncomment to enable)
+# qutip==4.7.3
+
+# Optional: Universal Root Kernel - Polar Light Check (uncomment to enable)
+# requests==2.31.0
 
 # Optional: PyTorch for Bayesian Causal Transformer (uncomment to enable)
 # torch==2.1.1
