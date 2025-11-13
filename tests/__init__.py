@@ -1,1 +1,3 @@
-"""LUCA Test Suite (v2.1 Family Edition)"""
+"""
+LUCA 369/370 - Test Suite
+"""
