@@ -2,23 +2,37 @@
 Tests for LUCA UX/UI Design Generator
 """
 
+import json
 import pytest
-from unittest.mock import Mock, MagicMock
+from unittest.mock import Mock
+
+# Check if design module is available
+try:
+    from luca.design.ux_ui_generator import LUCAUXUIGenerator
+    DESIGN_AVAILABLE = True
+except ImportError:
+    DESIGN_AVAILABLE = False
+    LUCAUXUIGenerator = None
+
+# Check if kernel is available
+try:
+    from luca.kernel.universal_root import UniversalRootKernel
+    KERNEL_AVAILABLE = True
+except ImportError:
+    KERNEL_AVAILABLE = False
+    UniversalRootKernel = None
 
 
+@pytest.mark.skipif(not DESIGN_AVAILABLE, reason="Design module not available")
 class TestLUCAUXUIGenerator:
     """Test suite for LUCAUXUIGenerator"""
 
     def test_import_design_generator(self):
         """Test that design generator can be imported"""
-        from luca.design.ux_ui_generator import LUCAUXUIGenerator
-
         assert LUCAUXUIGenerator is not None
 
     def test_design_generator_initialization(self):
         """Test design generator initialization with mock client"""
-        from luca.design.ux_ui_generator import LUCAUXUIGenerator
-
         # Mock anthropic client
         mock_client = Mock()
 
@@ -32,8 +46,6 @@ class TestLUCAUXUIGenerator:
 
     def test_tesla_design_system_fallback(self):
         """Test that fallback design system is valid"""
-        from luca.design.ux_ui_generator import LUCAUXUIGenerator
-
         mock_client = Mock()
         generator = LUCAUXUIGenerator(mock_client)
 
@@ -51,8 +63,6 @@ class TestLUCAUXUIGenerator:
 
     def test_design_generator_without_api_key(self):
         """Test that generator works in fallback mode without API key"""
-        from luca.design.ux_ui_generator import LUCAUXUIGenerator
-
         # Mock client that will fail
         mock_client = Mock()
         mock_client.messages.create.side_effect = Exception("No API key")
@@ -71,8 +81,6 @@ class TestLUCAUXUIGenerator:
 
     def test_calculate_design_resonance(self):
         """Test design resonance calculation"""
-        from luca.design.ux_ui_generator import LUCAUXUIGenerator
-
         mock_client = Mock()
         generator = LUCAUXUIGenerator(mock_client)
 
@@ -85,8 +93,6 @@ class TestLUCAUXUIGenerator:
 
     def test_flutter_code_generation(self):
         """Test Flutter code generation"""
-        from luca.design.ux_ui_generator import LUCAUXUIGenerator
-
         mock_client = Mock()
         generator = LUCAUXUIGenerator(mock_client)
 
@@ -101,8 +107,6 @@ class TestLUCAUXUIGenerator:
 
     def test_ios_swiftui_generation(self):
         """Test iOS SwiftUI code generation"""
-        from luca.design.ux_ui_generator import LUCAUXUIGenerator
-
         mock_client = Mock()
         generator = LUCAUXUIGenerator(mock_client)
 
@@ -117,8 +121,6 @@ class TestLUCAUXUIGenerator:
 
     def test_android_compose_generation(self):
         """Test Android Jetpack Compose code generation"""
-        from luca.design.ux_ui_generator import LUCAUXUIGenerator
-
         mock_client = Mock()
         generator = LUCAUXUIGenerator(mock_client)
 
@@ -133,9 +135,6 @@ class TestLUCAUXUIGenerator:
 
     def test_design_tokens_export(self):
         """Test design tokens export"""
-        from luca.design.ux_ui_generator import LUCAUXUIGenerator
-        import json
-
         mock_client = Mock()
         generator = LUCAUXUIGenerator(mock_client)
 
@@ -157,8 +156,6 @@ class TestLUCAUXUIGenerator:
 
     def test_file_structure_generation(self):
         """Test file structure recommendation"""
-        from luca.design.ux_ui_generator import LUCAUXUIGenerator
-
         mock_client = Mock()
         generator = LUCAUXUIGenerator(mock_client)
 
@@ -171,41 +168,25 @@ class TestLUCAUXUIGenerator:
         assert "lib/main.dart" in file_structure
 
 
+@pytest.mark.skipif(not KERNEL_AVAILABLE, reason="Universal Root Kernel not available")
 class TestUniversalRootKernelDesignIntegration:
     """Test design generator integration with Universal Root Kernel"""
 
     def test_universal_root_kernel_imports(self):
         """Test that Universal Root Kernel can be imported"""
-        try:
-            from luca.kernel.universal_root import UniversalRootKernel
-
-            assert UniversalRootKernel is not None
-        except ImportError as e:
-            pytest.skip(f"Universal Root Kernel dependencies not available: {e}")
+        assert UniversalRootKernel is not None
 
     def test_design_generator_initialization_in_kernel(self):
         """Test that design generator initializes in kernel"""
-        try:
-            from luca.kernel.universal_root import UniversalRootKernel
+        # Initialize without API key (fallback mode)
+        kernel = UniversalRootKernel(anthropic_api_key=None, enable_quantum_simulation=False)
 
-            # Initialize without API key (fallback mode)
-            kernel = UniversalRootKernel(anthropic_api_key=None, enable_quantum_simulation=False)
-
-            # Design generator should be initialized (might be None if anthropic not available)
-            assert hasattr(kernel, "design_generator")
-
-        except ImportError as e:
-            pytest.skip(f"Universal Root Kernel dependencies not available: {e}")
+        # Design generator should be initialized (might be None if anthropic not available)
+        assert hasattr(kernel, "design_generator")
 
     def test_generate_app_interface_method_exists(self):
         """Test that generate_app_interface method exists"""
-        try:
-            from luca.kernel.universal_root import UniversalRootKernel
+        kernel = UniversalRootKernel(anthropic_api_key=None, enable_quantum_simulation=False)
 
-            kernel = UniversalRootKernel(anthropic_api_key=None, enable_quantum_simulation=False)
-
-            assert hasattr(kernel, "generate_app_interface")
-            assert callable(kernel.generate_app_interface)
-
-        except ImportError as e:
-            pytest.skip(f"Universal Root Kernel dependencies not available: {e}")
+        assert hasattr(kernel, "generate_app_interface")
+        assert callable(kernel.generate_app_interface)
