@@ -13,17 +13,34 @@ Creator: Lennart Wuchold + Claude
 import os
 import sys
 
+import pytest
+
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from backend.consciousness.audit_breaker import EvidenceType, NeurodiversityAuditBreaker
-from backend.consciousness.crisis_communication import (
-    CrisisCommunicationBridge,
-    CrisisType,
-)
-from backend.consciousness.neurodiversity_integration import (
-    BiosensorType,
-    NeurodiversityIntegrationLayer,
+# Optional dependencies - skip tests if not available
+try:
+    from backend.consciousness.audit_breaker import (
+        EvidenceType,
+        NeurodiversityAuditBreaker,
+    )
+    from backend.consciousness.crisis_communication import (
+        CrisisCommunicationBridge,
+        CrisisType,
+    )
+    from backend.consciousness.neurodiversity_integration import (
+        BiosensorType,
+        NeurodiversityIntegrationLayer,
+    )
+
+    BACKEND_AVAILABLE = True
+except ImportError:
+    BACKEND_AVAILABLE = False
+
+# Skip all tests in this module if backend dependencies are not available
+pytestmark = pytest.mark.skipif(
+    not BACKEND_AVAILABLE,
+    reason="Backend dependencies (sqlalchemy, fastapi) not installed - use: poetry install --extras backend"
 )
 
 

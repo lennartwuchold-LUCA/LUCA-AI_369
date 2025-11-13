@@ -16,9 +16,25 @@ import tempfile
 
 import numpy as np
 import pytest
-from jsonschema import ValidationError, validate
 
-from luca.allocator import WORKLOAD_SCHEMA, ResourceAllocator, Workload
+# Optional dependencies - skip tests if not available
+try:
+    from jsonschema import ValidationError, validate
+    JSONSCHEMA_AVAILABLE = True
+except ImportError:
+    JSONSCHEMA_AVAILABLE = False
+
+try:
+    from luca.allocator import WORKLOAD_SCHEMA, ResourceAllocator, Workload
+    ALLOCATOR_AVAILABLE = True
+except ImportError:
+    ALLOCATOR_AVAILABLE = False
+
+# Skip all tests in this module if allocator dependencies are not available
+pytestmark = pytest.mark.skipif(
+    not (JSONSCHEMA_AVAILABLE and ALLOCATOR_AVAILABLE),
+    reason="Allocator dependencies (scipy, matplotlib, jsonschema) not installed"
+)
 
 # --- FIXTURES ---
 
