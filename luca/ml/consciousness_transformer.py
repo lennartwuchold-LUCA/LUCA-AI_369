@@ -31,7 +31,6 @@ from enum import Enum
 from typing import List, Optional, Tuple
 
 import numpy as np
-
 from luca_369_370.core import QuantumSignatureEngine
 
 

@@ -63,7 +63,12 @@ except ImportError:
         simulate_fermentation_batch,
     ) = (None,) * 6
 try:
-    from .info_block_engine import BlockType, InfoBlock, InfoBlockEngine, QualityException
+    from .info_block_engine import (
+        BlockType,
+        InfoBlock,
+        InfoBlockEngine,
+        QualityException,
+    )
 except ImportError:
     BlockType, InfoBlock, InfoBlockEngine, QualityException = None, None, None, None
 
@@ -159,7 +164,11 @@ except ImportError:
     QualityValidator = None
 
 try:
-    from .quantum_signature import QuantumLevel, QuantumSignature, QuantumSignatureEngine
+    from .quantum_signature import (
+        QuantumLevel,
+        QuantumSignature,
+        QuantumSignatureEngine,
+    )
 except ImportError:
     QuantumLevel, QuantumSignature, QuantumSignatureEngine = None, None, None
 
@@ -187,7 +196,11 @@ except ImportError:
     ) = (None,) * 8
 
 try:
-    from .token_validator import TokenCountMethod, TokenLengthValidator, ValidationResult
+    from .token_validator import (
+        TokenCountMethod,
+        TokenLengthValidator,
+        ValidationResult,
+    )
 except ImportError:
     TokenCountMethod, TokenLengthValidator, ValidationResult = None, None, None
 

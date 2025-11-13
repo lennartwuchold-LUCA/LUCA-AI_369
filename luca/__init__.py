@@ -1,4 +1,5 @@
 """LUCA - Bio-inspired Resource Allocation (v2.1 Family Edition)"""
+
 __version__ = "3.6.9-alpha"
 __author__ = "Lennart Wuchold"
 

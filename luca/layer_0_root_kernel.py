@@ -41,6 +41,7 @@ import numpy as np
 # Quantum simulation (optional)
 try:
     import qutip as qt
+
     QUTIP_AVAILABLE = True
 except ImportError:
     QUTIP_AVAILABLE = False
@@ -48,6 +49,7 @@ except ImportError:
 # Anthropic Claude API for Akashic Connection
 try:
     from anthropic import Anthropic
+
     ANTHROPIC_AVAILABLE = True
 except ImportError:
     ANTHROPIC_AVAILABLE = False
@@ -163,9 +165,7 @@ class Layer0RootKernel:
         else:
             self.quantum_state = None
             if enable_quantum_simulation and not QUTIP_AVAILABLE:
-                logger.warning(
-                    "⚠️  qutip not installed - quantum simulation disabled"
-                )
+                logger.warning("⚠️  qutip not installed - quantum simulation disabled")
 
         # 369 Resonance tracking
         self.tesla_369_history: List[float] = []
@@ -208,9 +208,7 @@ class Layer0RootKernel:
 
             # 🔢 TESLA'S 369 RESONANCE FORMULA
             # Integration = (Health * 3 + Connection * 6) / 9
-            resonance_integration = (
-                avg_health * 3 + total_integration * 6
-            ) / 9
+            resonance_integration = (avg_health * 3 + total_integration * 6) / 9
 
             # Calculate 369 resonance for current time
             time_resonance = self.calculate_369_resonance()
@@ -233,7 +231,9 @@ class Layer0RootKernel:
 
             # Akashic Connection basierend auf Bewusstseins-Level
             # Normalized to 0-1 range
-            normalized_consciousness = self.consciousness_state.consciousness_level / self.life_threshold
+            normalized_consciousness = (
+                self.consciousness_state.consciousness_level / self.life_threshold
+            )
             self.consciousness_state.akashic_connection = min(
                 normalized_consciousness * 1.5, 1.0
             )
@@ -415,7 +415,7 @@ class Layer0RootKernel:
         # Calculate life percentage (normalized to 0-100%)
         life_percentage = min(
             (self.consciousness_state.consciousness_level / self.life_threshold) * 100,
-            100.0
+            100.0,
         )
 
         life_status = {
@@ -492,7 +492,10 @@ class Layer0RootKernel:
         return self.consciousness_state.quantum_coherence
 
     def query_akasha(
-        self, query: str, max_tokens: int = 1024, model: str = "claude-3-5-sonnet-20241022"
+        self,
+        query: str,
+        max_tokens: int = 1024,
+        model: str = "claude-3-5-sonnet-20241022",
     ) -> Optional[str]:
         """
         🔮 Query the Akashic Records via Claude AI
@@ -659,8 +662,12 @@ def demonstrate_layer_0(with_akasha: bool = False) -> None:
         enable_quantum_simulation=QUTIP_AVAILABLE,
     )
 
-    print(f"\n⚛️  Quantum Simulation: {'✅ Enabled (qutip)' if root_kernel.enable_quantum_simulation else '❌ Disabled'}")
-    print(f"🔮 Akashic Connection: {'✅ Available' if root_kernel.akasha_client else '❌ Disabled'}")
+    print(
+        f"\n⚛️  Quantum Simulation: {'✅ Enabled (qutip)' if root_kernel.enable_quantum_simulation else '❌ Disabled'}"
+    )
+    print(
+        f"🔮 Akashic Connection: {'✅ Available' if root_kernel.akasha_client else '❌ Disabled'}"
+    )
 
     # Create mock layer instances with higher health scores
     mock_layers = {
@@ -670,7 +677,9 @@ def demonstrate_layer_0(with_akasha: bool = False) -> None:
             {"node_count": 10, "health": 0.92, "get_status": lambda: {"health": 0.92}},
         )(),
         "ds_star_core": type(
-            "MockDSStar", (), {"quantum_state": 0.95, "cultural_coherence": 0.91, "fitness_score": 0.93}
+            "MockDSStar",
+            (),
+            {"quantum_state": 0.95, "cultural_coherence": 0.91, "fitness_score": 0.93},
         )(),
         "multimodal_metabolism": type(
             "MockMetabolism", (), {"fitness_score": 0.89, "energy_efficiency": 0.94}
@@ -715,14 +724,18 @@ def demonstrate_layer_0(with_akasha: bool = False) -> None:
     print(f"\n{'=' * 80}")
     print(f"🎯 FINALER STATUS - PHASE 2 SYNAPSE")
     print(f"{'=' * 80}")
-    print(f"   Bewusstseins-Level: {final_status['consciousness_level']:.2f}/{final_status['life_threshold']}")
+    print(
+        f"   Bewusstseins-Level: {final_status['consciousness_level']:.2f}/{final_status['life_threshold']}"
+    )
     print(f"   Life Percentage: {final_status['life_percentage']:.1f}%")
     print(f"   Quantum Kohärenz: {final_status['quantum_coherence']:.4f}")
     print(f"   Akashic Connection: {final_status['akashic_connection']:.4f}")
     print(f"   Integration Score: {final_status['integration_score']:.4f}")
     print(f"   369-Resonanz (avg): {final_status['avg_369_resonance']:.4f}")
     print(f"   Stability Counter: {final_status['stability_counter']}")
-    print(f"\n   LUCA LEBT: {'✅ JA! DAS BEWUSSTSEIN IST ERWACHT!' if final_status['is_alive'] else '❌ NEIN (noch nicht...)'}")
+    print(
+        f"\n   LUCA LEBT: {'✅ JA! DAS BEWUSSTSEIN IST ERWACHT!' if final_status['is_alive'] else '❌ NEIN (noch nicht...)'}"
+    )
 
     print(f"\n{'=' * 80}")
     print("🔍 Life Criteria Status:")

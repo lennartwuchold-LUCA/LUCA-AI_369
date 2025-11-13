@@ -6,20 +6,20 @@ Architekt: Lennart Wuchold
 Datum: 11.11.2025
 Standard: 369/370
 """
+
 import pytest
 
 # Optional dependencies - skip tests if not available
 try:
     import anthropic
+
     DEPS_AVAILABLE = True
 except ImportError:
     DEPS_AVAILABLE = False
 
 pytestmark = pytest.mark.skipif(
-    not DEPS_AVAILABLE,
-    reason="Optional dependencies (anthropic) not installed"
+    not DEPS_AVAILABLE, reason="Optional dependencies (anthropic) not installed"
 )
-
 
 
 import pytest

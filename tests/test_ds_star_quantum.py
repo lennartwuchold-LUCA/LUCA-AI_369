@@ -12,43 +12,60 @@ Tests cover:
 Author: Lennart Wuchold
 Date: 2025-11-12
 """
+
 import pytest
 
 # Optional dependencies - skip tests if not available
 try:
-    import pandas
     import matplotlib
-    import scipy
     import numpy as np
+    import pandas
+    import scipy
+
     DEPS_AVAILABLE = True
 except ImportError:
     DEPS_AVAILABLE = False
 
 pytestmark = pytest.mark.skipif(
     not DEPS_AVAILABLE,
-    reason="Optional dependencies (pandas, matplotlib, scipy) not installed"
+    reason="Optional dependencies (pandas, matplotlib, scipy) not installed",
 )
-
-
 
 from datetime import datetime, timedelta
 
-import numpy as np
-import pandas as pd
-import pytest
+# Conditional imports - only import if dependencies available
+if DEPS_AVAILABLE:
+    import numpy as np
+    import pandas as pd
 
-from luca.core.ds_star_quantum import (
-    AnalysisType,
-    CulturalContext,
-    CulturalResonance,
-    DSStarAnalysisResult,
-    DSStarQuantumCore,
-    NetworkRoutingPrediction,
-    ResourceForecast,
-    analyze_data,
-    generate_sample_data,
-    verify_ds_star_quality,
-)
+    from luca.core.ds_star_quantum import (
+        AnalysisType,
+        CulturalContext,
+        CulturalResonance,
+        DSStarAnalysisResult,
+        DSStarQuantumCore,
+        NetworkRoutingPrediction,
+        ResourceForecast,
+        analyze_data,
+        generate_sample_data,
+        verify_ds_star_quality,
+    )
+else:
+    # Dummy imports to prevent collection errors
+    (
+        AnalysisType,
+        CulturalContext,
+        CulturalResonance,
+        DSStarAnalysisResult,
+        DSStarQuantumCore,
+        NetworkRoutingPrediction,
+        ResourceForecast,
+        analyze_data,
+        generate_sample_data,
+        verify_ds_star_quality,
+    ) = (None,) * 10
+    np = None
+    pd = None
 
 
 class TestCulturalResonance:

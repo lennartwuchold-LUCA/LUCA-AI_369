@@ -12,33 +12,47 @@ Tests cover:
 Author: Lennart Wuchold
 Date: 2025-11-12
 """
+
 import pytest
 
 # Optional dependencies - skip tests if not available
 try:
-    import pandas
     import matplotlib
-    from PIL import Image
     import numpy as np
+    import pandas
+    from PIL import Image
+
     DEPS_AVAILABLE = True
 except ImportError:
     DEPS_AVAILABLE = False
 
 pytestmark = pytest.mark.skipif(
     not DEPS_AVAILABLE,
-    reason="Optional dependencies (pandas, matplotlib, PIL, numpy) not installed"
+    reason="Optional dependencies (pandas, matplotlib, PIL, numpy) not installed",
 )
 
 from datetime import datetime
 
-from luca.core.multimodal_metabolism import (
-    MetabolicMode,
-    MetabolicState,
-    MultimodalFusionResult,
-    MultimodalMetabolismCore,
-    calculate_multimodal_fusion,
-    verify_multimodal_quality,
-)
+# Conditional imports - only import if dependencies available
+if DEPS_AVAILABLE:
+    from luca.core.multimodal_metabolism import (
+        MetabolicMode,
+        MetabolicState,
+        MultimodalFusionResult,
+        MultimodalMetabolismCore,
+        calculate_multimodal_fusion,
+        verify_multimodal_quality,
+    )
+else:
+    # Dummy imports to prevent collection errors
+    (
+        MetabolicMode,
+        MetabolicState,
+        MultimodalFusionResult,
+        MultimodalMetabolismCore,
+        calculate_multimodal_fusion,
+        verify_multimodal_quality,
+    ) = (None,) * 6
 
 
 class TestMetabolicState:

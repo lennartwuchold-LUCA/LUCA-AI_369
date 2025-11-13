@@ -6,34 +6,44 @@ Architekt: Lennart Wuchold
 Datum: 11.11.2025
 Standard: 369/370 ≈ 0.997297
 """
+
 import pytest
 
 # Optional dependencies - skip tests if not available
 try:
-    import torch
     import sklearn
+    import torch
+
     DEPS_AVAILABLE = True
 except ImportError:
     DEPS_AVAILABLE = False
 
 pytestmark = pytest.mark.skipif(
-    not DEPS_AVAILABLE,
-    reason="Optional dependencies (torch, sklearn) not installed"
+    not DEPS_AVAILABLE, reason="Optional dependencies (torch, sklearn) not installed"
 )
-
-
 
 import numpy as np
-import pytest
 
-from luca.ml import (
-    AttentionAwareBackprop,
-    AttentionMode,
-    ConsciousnessTransformer,
-    ConvergenceMode,
-    ResonanceBackpropagation,
-    SymbioticGradientDescent,
-)
+# Conditional imports - only import if dependencies available
+if DEPS_AVAILABLE:
+    from luca.ml import (
+        AttentionAwareBackprop,
+        AttentionMode,
+        ConsciousnessTransformer,
+        ConvergenceMode,
+        ResonanceBackpropagation,
+        SymbioticGradientDescent,
+    )
+else:
+    # Dummy imports to prevent collection errors
+    (
+        AttentionAwareBackprop,
+        AttentionMode,
+        ConsciousnessTransformer,
+        ConvergenceMode,
+        ResonanceBackpropagation,
+        SymbioticGradientDescent,
+    ) = (None,) * 6
 
 
 class TestSymbioticGradientDescent:

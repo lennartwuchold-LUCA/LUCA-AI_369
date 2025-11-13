@@ -523,10 +523,11 @@ class DSStarQuantumCore:
             insights = {
                 "data_harmony": self._calculate_data_harmony(numeric_df),
                 "structural_integrity": len(df) > 0 and not df.empty,
-                "balance_score": 1.0
-                - (numeric_df.std().mean() / numeric_df.mean().mean())
-                if not numeric_df.empty
-                else 0.0,
+                "balance_score": (
+                    1.0 - (numeric_df.std().mean() / numeric_df.mean().mean())
+                    if not numeric_df.empty
+                    else 0.0
+                ),
             }
         elif culture == CulturalContext.EGYPTIAN:
             # Egyptian: Order and Precision

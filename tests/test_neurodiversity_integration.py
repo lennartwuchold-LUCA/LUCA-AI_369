@@ -40,7 +40,7 @@ except ImportError:
 # Skip all tests in this module if backend dependencies are not available
 pytestmark = pytest.mark.skipif(
     not BACKEND_AVAILABLE,
-    reason="Backend dependencies (sqlalchemy, fastapi) not installed - use: poetry install --extras backend"
+    reason="Backend dependencies (sqlalchemy, fastapi) not installed - use: poetry install --extras backend",
 )
 
 
