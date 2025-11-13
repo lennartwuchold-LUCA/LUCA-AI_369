@@ -20,8 +20,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 packages = [
-    {include = "luca"},
-    {include = "luca_369_370"}
+    {include = "luca"}
 ]
 
 [tool.poetry.dependencies]
