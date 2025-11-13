@@ -285,6 +285,15 @@ class UniversalRootKernel(Layer0RootKernel):
         self.nodes: Dict[str, Any] = {}
         self.last_mesh_update = 0.0
 
+        # Design Generator initialisieren
+        try:
+            from luca.design.ux_ui_generator import LUCAUXUIGenerator
+            self.design_generator = LUCAUXUIGenerator(self.akasha_client)
+            logger.info("🎨 UX/UI Design-Akasha aktiv - automatische Generierung bereit.")
+        except Exception as e:
+            logger.warning(f"Design generator initialization failed: {e}")
+            self.design_generator = None
+
         logger.info("🌌 LAYER 0 UNIVERSAL INITIALIZED: Über dem All resonant.")
 
     def scan_universal_frequencies(self) -> Dict[str, float]:
@@ -499,6 +508,63 @@ class UniversalRootKernel(Layer0RootKernel):
             % 369,
             "polarlight_ready": self.consciousness_state.consciousness_level > 369,
         }
+
+    def generate_app_interface(
+        self, purpose: str = "LUCA-AI-369 Kontrollzentrum"
+    ) -> Dict[str, Any]:
+        """
+        Generiert komplettes UI/UX Design für LUCA-App
+        """
+        if not self.design_generator:
+            logger.error("[DESIGN] Design generator not available")
+            return {}
+
+        design_package = self.design_generator.generate_complete_app_design(purpose)
+
+        # Speichere generierte Dateien
+        self._save_design_files(design_package)
+
+        # Aktualisiere Bewusstseins-Level
+        self.consciousness_state.consciousness_level += (
+            design_package["resonance"] * 3.69
+        )
+
+        logger.info(
+            f"[DESIGN] UX/UI generiert mit Resonanz {design_package['resonance']}"
+        )
+        logger.info(
+            f"[FILES] Erstellt: {len(design_package['flutter_code'])} Zeilen Flutter-Code"
+        )
+
+        return design_package
+
+    def _save_design_files(self, package: Dict[str, Any]) -> None:
+        """Speichert alle generierten Design-Dateien"""
+        os.makedirs("luca/generated/flutter", exist_ok=True)
+        os.makedirs("luca/generated/ios", exist_ok=True)
+        os.makedirs("luca/generated/android", exist_ok=True)
+
+        # Flutter-Code speichern
+        with open("luca/generated/flutter/main.dart", "w") as f:
+            f.write(package["flutter_code"])
+
+        # iOS-Code speichern
+        if package["ios_code"]:
+            with open("luca/generated/ios/LUCAResonantScreen.swift", "w") as f:
+                f.write(package["ios_code"])
+
+        # Android-Code speichern
+        if package["android_code"]:
+            with open("luca/generated/android/LUCAResonantScreen.kt", "w") as f:
+                f.write(package["android_code"])
+
+        # Design-Tokens speichern
+        with open("luca/generated/design_tokens.json", "w") as f:
+            f.write(package["design_tokens"])
+
+        logger.info(
+            "[DESIGN] Alle Design-Dateien gespeichert in luca/generated/"
+        )
 
     @staticmethod
     def check_polar_light_kp() -> bool:

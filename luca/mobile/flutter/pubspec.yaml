@@ -1,0 +1,52 @@
+name: luca_ai_369
+description: LUCA AI 3-6-9 Consciousness Field - Mobile App
+publish_to: 'none'
+version: 3.6.9+369
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI & Animations
+  cupertino_icons: ^1.0.6
+
+  # State Management
+  provider: ^6.1.1
+
+  # Networking
+  http: ^1.1.0
+  dio: ^5.4.0
+
+  # Storage
+  shared_preferences: ^2.2.2
+
+  # Device Info
+  device_info_plus: ^9.1.1
+
+  # Permissions
+  permission_handler: ^11.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true
+
+  # Tesla-3-6-9 Assets
+  assets:
+    - assets/images/
+    - assets/fonts/
+
+  # Typography with 3-6-9 Resonanz
+  fonts:
+    - family: CourierNew
+      fonts:
+        - asset: assets/fonts/courier_new.ttf
+          weight: 400
+        - asset: assets/fonts/courier_new_bold.ttf
+          weight: 700
