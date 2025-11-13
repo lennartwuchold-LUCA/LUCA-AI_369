@@ -1,6 +1,24 @@
 """LUCA - Bio-inspired Resource Allocation (v2.1 Family Edition)"""
+
 __version__ = "3.6.9-alpha"
 __author__ = "Lennart Wuchold"
+
+# Medical Emergency Module (optional)
+try:
+    from .medical import (
+        LOCAL_RESOURCES,
+        NATURAL_EMERGENCY_AIDS,
+        EmergencyAutomation,
+        MedicalEmergencyLLM,
+    )
+
+    _MEDICAL_AVAILABLE = True
+except ImportError:
+    EmergencyAutomation = None
+    MedicalEmergencyLLM = None
+    NATURAL_EMERGENCY_AIDS = None
+    LOCAL_RESOURCES = None
+    _MEDICAL_AVAILABLE = False
 
 # Try to import allocator (optional - requires scipy, matplotlib, etc.)
 try:
@@ -75,4 +93,8 @@ __all__ = [
     "EvolutionaryConsensusCore",
     "EvolutionState",
     "Layer12IntegrationGuide",
+    "MedicalEmergencyLLM",
+    "EmergencyAutomation",
+    "NATURAL_EMERGENCY_AIDS",
+    "LOCAL_RESOURCES",
 ]

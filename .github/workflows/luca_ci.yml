@@ -49,15 +49,15 @@ jobs:
         poetry config virtualenvs.in-project true
         poetry install --no-interaction --no-ansi --extras backend --with dev
 
-    - name: 🧪 Run tests in parallel (pytest-xdist)
+    - name: 🧪 Run tests
       run: |
-        poetry run pytest -n auto -v --tb=short --color=yes
+        poetry run pytest -v --tb=short
 
     - name: 🎨 Check code style (black + isort)
       if: matrix.python-version == '3.11'
       run: |
-        poetry run black --check --quiet luca/ tests/ luca_369_370/
-        poetry run isort --check-only --quiet luca/ tests/ luca_369_370/
+        poetry run black --check --quiet luca/ tests/
+        poetry run isort --check-only --quiet luca/ tests/
 
   lint:
     name: Lint and Type Check
@@ -93,7 +93,7 @@ jobs:
 
     - name: 🔍 Type check with mypy
       run: |
-        poetry run mypy luca/ luca_369_370/ || true  # Non-blocking for now
+        poetry run mypy luca/ || true  # Non-blocking for now
 
   build:
     name: Build Package

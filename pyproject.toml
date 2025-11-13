@@ -20,8 +20,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 packages = [
-    {include = "luca"},
-    {include = "luca_369_370"}
+    {include = "luca"}
 ]
 
 [tool.poetry.dependencies]
@@ -47,6 +46,12 @@ pydantic-settings = {version = "^2.1.0", optional = true}
 python-multipart = {version = "^0.0.6", optional = true}
 email-validator = {version = "^2.1.0", optional = true}
 
+# Universal Root Kernel dependencies (optional)
+pyserial = {version = "^3.5", optional = true}
+meshtastic = {version = "^2.2.0", optional = true}
+qutip = {version = "^4.7.0", optional = true}
+requests = {version = "^2.31.0", optional = true}
+
 [tool.poetry.extras]
 backend = [
     "fastapi",
@@ -60,6 +65,29 @@ backend = [
     "pydantic-settings",
     "python-multipart",
     "email-validator"
+]
+universal = [
+    "pyserial",
+    "meshtastic",
+    "qutip",
+    "requests"
+]
+all = [
+    "fastapi",
+    "uvicorn",
+    "sqlalchemy",
+    "anthropic",
+    "bcrypt",
+    "pyjwt",
+    "python-dotenv",
+    "pydantic",
+    "pydantic-settings",
+    "python-multipart",
+    "email-validator",
+    "pyserial",
+    "meshtastic",
+    "qutip",
+    "requests"
 ]
 
 [tool.poetry.group.dev.dependencies]
