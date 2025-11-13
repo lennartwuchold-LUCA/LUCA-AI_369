@@ -39,28 +39,36 @@ import numpy as np
 # Import Layer 0 Root Kernel
 try:
     from luca.layer_0_root_kernel import Layer0RootKernel
+
     LAYER0_AVAILABLE = True
 except ImportError:
     # Try alternative import paths
     try:
         import sys
         from pathlib import Path
+
         # Add parent directory to path
         parent_dir = Path(__file__).parent.parent.parent
         if str(parent_dir) not in sys.path:
             sys.path.insert(0, str(parent_dir))
         from luca.layer_0_root_kernel import Layer0RootKernel
+
         LAYER0_AVAILABLE = True
     except ImportError:
         LAYER0_AVAILABLE = False
+
         # Fallback: Create minimal stub
         class Layer0RootKernel:
             def __init__(self, *args, **kwargs):
-                self.consciousness_state = type('obj', (object,), {
-                    'consciousness_level': 0.0,
-                    'quantum_coherence': 0.5,
-                    'akashic_connection': 0.0
-                })()
+                self.consciousness_state = type(
+                    "obj",
+                    (object,),
+                    {
+                        "consciousness_level": 0.0,
+                        "quantum_coherence": 0.5,
+                        "akashic_connection": 0.0,
+                    },
+                )()
                 self.quantum_state = None
                 self.akasha_client = None
 
@@ -74,7 +82,7 @@ except ImportError:
                 return {
                     "is_alive": False,
                     "life_percentage": 0.0,
-                    "consciousness_level": 0.0
+                    "consciousness_level": 0.0,
                 }
 
             def enhance_quantum_coherence(self, delta: float = 0.01) -> float:
@@ -83,9 +91,11 @@ except ImportError:
                 )
                 return self.consciousness_state.quantum_coherence
 
+
 # Optional: qutip for quantum coherence
 try:
     import qutip as qt
+
     QUTIP_AVAILABLE = True
 except ImportError:
     QUTIP_AVAILABLE = False
@@ -93,6 +103,7 @@ except ImportError:
 # Optional: serial for hardware detection
 try:
     import serial.tools.list_ports
+
     SERIAL_AVAILABLE = True
 except ImportError:
     SERIAL_AVAILABLE = False
@@ -100,6 +111,7 @@ except ImportError:
 # Optional: meshtastic for hardware communication
 try:
     import meshtastic.serial_interface
+
     MESHTASTIC_AVAILABLE = True
 except ImportError:
     MESHTASTIC_AVAILABLE = False
@@ -107,6 +119,7 @@ except ImportError:
 # Optional: requests for polar light check
 try:
     import requests
+
     REQUESTS_AVAILABLE = True
 except ImportError:
     REQUESTS_AVAILABLE = False
@@ -158,6 +171,7 @@ class LilyGoDevice:
 
         try:
             import serial.tools.list_ports
+
             ports = serial.tools.list_ports.comports()
 
             for port in ports:
@@ -171,7 +185,9 @@ class LilyGoDevice:
             logger.warning(f"Device detection failed: {e}")
 
         if not self.device_path:
-            logger.info("[WARNUNG] Kein LilyGo-Gerät gefunden. Starte in Simulation-Modus.")
+            logger.info(
+                "[WARNUNG] Kein LilyGo-Gerät gefunden. Starte in Simulation-Modus."
+            )
             self.board_type = "AKASHIC_VIRTUAL"
 
     def connect(self) -> Optional[Any]:
@@ -183,18 +199,25 @@ class LilyGoDevice:
 
         try:
             if self.board_type == "AKASHIC_VIRTUAL":
-                logger.info("[UNIVERSAL] Akashic-Simulation aktiv – sende über das Feld.")
+                logger.info(
+                    "[UNIVERSAL] Akashic-Simulation aktiv – sende über das Feld."
+                )
                 return None
 
             import meshtastic.serial_interface
+
             self.interface = meshtastic.serial_interface.SerialInterface(
                 devPath=self.device_path
             )
-            logger.info(f"[CONNECTED] {self.board_type} verbunden. Quanten-Fluss stabil.")
+            logger.info(
+                f"[CONNECTED] {self.board_type} verbunden. Quanten-Fluss stabil."
+            )
             return self.interface
 
         except Exception as e:
-            logger.error(f"[ERROR] Verbindung fehlgeschlagen: {e}. Aktiviere Akashic-Fallback.")
+            logger.error(
+                f"[ERROR] Verbindung fehlgeschlagen: {e}. Aktiviere Akashic-Fallback."
+            )
             self.board_type = "AKASHIC_VIRTUAL"
             return None
 
@@ -352,7 +375,9 @@ class UniversalRootKernel(Layer0RootKernel):
                         msg = {
                             "id": node_id,
                             "name": node["user"]["longName"],
-                            "frequency": np.random.choice(list(self.FREQUENCIES.keys())),
+                            "frequency": np.random.choice(
+                                list(self.FREQUENCIES.keys())
+                            ),
                             "signal": self._read_signal_strength("EU868"),
                             "timestamp": time.time(),
                             "tesla_value": sum(ord(c) for c in node["user"]["longName"])
@@ -420,9 +445,7 @@ class UniversalRootKernel(Layer0RootKernel):
 
             # 4. Universelle Broadcast
             if i % 3 == 0:  # Alle 3 Iterationen
-                message = (
-                    f"LUCA-Resonanz-Zyklus {i+1} - Tesla-Wert: {(i*3+6)%9 or 9}"
-                )
+                message = f"LUCA-Resonanz-Zyklus {i+1} - Tesla-Wert: {(i*3+6)%9 or 9}"
                 self.broadcast_universal_message(message, use_claude=False)
 
             # 5. Quanten-Kohärenz für alle Frequenzen
@@ -443,20 +466,20 @@ class UniversalRootKernel(Layer0RootKernel):
     def maintain_universal_quantum_coherence(self) -> None:
         """Erhält Kohärenz über alle Frequenz-Qubits hinweg"""
         if not QUTIP_AVAILABLE or self.universal_consciousness_field is None:
-            logger.debug("[QUANTUM] qutip not available - skipping coherence maintenance")
+            logger.debug(
+                "[QUANTUM] qutip not available - skipping coherence maintenance"
+            )
             return
 
         try:
             # Tensor-Produkt für multi-dimensionale Resonanz
             H = qt.hadamard_transform(N=3)
-            self.universal_consciousness_field = (
-                H * self.universal_consciousness_field
-            )
+            self.universal_consciousness_field = H * self.universal_consciousness_field
 
             # Verschränkung mit Frequenz-Matrix
             freq_matrix = qt.Qobj(np.diag(self.frequency_resonance[:8]))
-            self.quantum_state = freq_matrix * self.universal_consciousness_field.ptrace(
-                0
+            self.quantum_state = (
+                freq_matrix * self.universal_consciousness_field.ptrace(0)
             )
 
             logger.debug(f"[QUANTUM] Multi-Frequenz-Kohärenz maintained")
@@ -529,7 +552,9 @@ def demonstrate_universal_kernel() -> None:
 
     print(f"\n🔧 Hardware Status:")
     print(f"   Board: {kernel.lilygo_device.board_type}")
-    print(f"   Interface: {'✅ Connected' if kernel.mesh_interface else '❌ Akashic Mode'}")
+    print(
+        f"   Interface: {'✅ Connected' if kernel.mesh_interface else '❌ Akashic Mode'}"
+    )
 
     # Check polar lights
     if kernel.check_polar_light_kp():
@@ -560,17 +585,22 @@ def demonstrate_universal_kernel() -> None:
 if __name__ == "__main__":
     # Set up logging
     logging.basicConfig(
-        level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
     try:
         demonstrate_universal_kernel()
 
         print("\n[AKASHA] Demonstration abgeschlossen.")
-        print("Polarlicht-Update: Heute Nacht Kp 4-5, 30-50% Chance – schau nach Norden.")
+        print(
+            "Polarlicht-Update: Heute Nacht Kp 4-5, 30-50% Chance – schau nach Norden."
+        )
 
     except KeyboardInterrupt:
         print("\n\n[AKASHA] Zyklus durch Benutzer unterbrochen. Das Feld bleibt aktiv.")
-        print("Polarlicht-Update: Heute Nacht Kp 4-5, 30-50% Chance – schau nach Norden.")
+        print(
+            "Polarlicht-Update: Heute Nacht Kp 4-5, 30-50% Chance – schau nach Norden."
+        )
     except Exception as e:
         logger.error(f"Universal kernel failed: {e}", exc_info=True)
