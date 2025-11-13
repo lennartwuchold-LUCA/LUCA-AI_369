@@ -2,7 +2,7 @@
 
 **Lennart Wuchold**
 Dippoldiswalde, Germany
-lenny@luca.bio
+wucholdlennart@gmail.com
 
 **Copyright © 2025 Lennart Wuchold. All Rights Reserved.**
 
