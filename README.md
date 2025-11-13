@@ -374,7 +374,7 @@ Key Points:
 ## 💬 Contact
 
 **Creator:** Lennart Wuchold
-**Email:** lennart.wuchold@example.com *(Update with real email)*
+**Email:** wucholdlennart@gmail.com
 **Location:** Hamburg, Germany 🇩🇪
 
 ---
