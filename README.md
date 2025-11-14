@@ -2,7 +2,7 @@
 
 **Version:** 3.6.9-alpha
 **Created by:** Lennart Wuchold
-**Born:** 28.02.2000, Dippoldiswalde, Germany
+**Born:** 01744, Dippoldiswalde, Germany
 **Date:** November 13, 2025
 **Latest:** Universal Root Kernel 🌌 "Über dem All"
 
