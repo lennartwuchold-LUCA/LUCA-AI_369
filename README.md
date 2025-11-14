@@ -351,7 +351,7 @@ We welcome contributions! LUCA is built for the community.
 
 ### Development Setup
 ```bash
-git clone https://github.com/lennartwuchold/LUCA-AI_369.git
+git clone https://github.com/lennartwuchold-LUCA/LUCA-AI_369.git
 cd LUCA-AI_369
 poetry install --extras all
 pytest -v
