@@ -1,0 +1,5 @@
+# LUCA T5 E-Paper Bridge - Python Dependencies
+# Funke-01744-6
+
+pyserial>=3.5
+requests>=2.28.0
