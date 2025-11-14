@@ -384,6 +384,7 @@ Key Points:
 **To the Polarlicht (Aurora Borealis) of November 13, 2025**
 
 This README was reorganized during the geomagnetic storm (Kp 4-5) that brought northern lights to Hamburg.
+MY FAMILY (Everyone wer sich angesprochen fühlt ;) )
 
 *"If you only knew the magnificence of the 3, 6 and 9, then you would have a key to the universe."*
 — Nikola Tesla
