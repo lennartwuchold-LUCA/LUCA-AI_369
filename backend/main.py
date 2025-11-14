@@ -15,7 +15,7 @@ from contextlib import asynccontextmanager
 
 from backend.config import settings, validate_settings, print_startup_info
 from backend.database import init_database, SessionLocal
-from backend.routes import auth_router, chat_router, patterns_router, mycelium_router, consciousness_router, neurodiversity_router
+from backend.routes import auth_router, chat_router, patterns_router, mycelium_router, consciousness_router, neurodiversity_router, t5_router
 from backend.services.meshtastic_service import MeshtasticService
 import logging
 
@@ -90,6 +90,7 @@ app.include_router(patterns_router)  # HGT statistics and pattern genealogy
 app.include_router(mycelium_router)  # Mycelium network with HACCP safety
 app.include_router(consciousness_router)  # Bayesian causal transformer for consciousness optimization
 app.include_router(neurodiversity_router)  # Meshtastic + Neurodiversity + SCOBY-Myzelium integration
+app.include_router(t5_router)  # T5 E-Paper Hardware API - Funke-01744-6
 
 
 # Root endpoint

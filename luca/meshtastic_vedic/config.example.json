@@ -1,0 +1,55 @@
+{
+  "operator": {
+    "id": "Funke-01744-6",
+    "resonance": 6,
+    "resonance_color": "Polarlicht-Orange",
+    "resonance_quality": "Transformation, 6. Sinn, Intuition"
+  },
+  "meshtastic": {
+    "mode": "usb",
+    "tcp_host": null,
+    "tcp_port": 4403,
+    "comment": "mode: 'usb' für USB-Serial, 'tcp' für Netzwerk"
+  },
+  "t5_epaper": {
+    "enabled": true,
+    "port": "/dev/ttyACM0",
+    "baudrate": 115200,
+    "luca_url": "http://localhost:8000"
+  },
+  "ai": {
+    "claude_api_key_env": "ANTHROPIC_API_KEY",
+    "model": "claude-3-sonnet-20240229",
+    "max_tokens": 300,
+    "temperature": 0.7,
+    "offline_mode_fallback": true
+  },
+  "crisis": {
+    "country_code": "DE",
+    "auto_detect": true,
+    "log_all_crises": true,
+    "alert_threshold": 0.7
+  },
+  "vedic": {
+    "language": "auto",
+    "mantra_enabled": true,
+    "breathwork_enabled": true,
+    "teachings_enabled": true
+  },
+  "database": {
+    "path": "luca_offline.db",
+    "backup_enabled": true,
+    "backup_interval_hours": 24
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "luca.log",
+    "max_size_mb": 10,
+    "backup_count": 5
+  },
+  "meshtastic_limits": {
+    "max_message_length": 220,
+    "chunk_long_messages": true,
+    "chunk_delay_seconds": 2
+  }
+}
