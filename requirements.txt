@@ -1,3 +1,20 @@
+# ⚠️ WICHTIG: Diese Datei wird automatisch aus pyproject.toml generiert!
+#
+# Verwenden Sie NICHT manuell bearbeitete requirements.txt.
+# Stattdessen aktualisieren Sie pyproject.toml und generieren Sie diese Datei neu:
+#
+# Für Produktion (mit Backend-Dependencies):
+#   poetry export -f requirements.txt --output requirements.txt --without-hashes --extras backend
+#
+# Für alle Dependencies (inkl. Universal Root Kernel):
+#   poetry export -f requirements.txt --output requirements.txt --without-hashes --extras all
+#
+# Für minimale Installation (nur Core):
+#   poetry export -f requirements.txt --output requirements.txt --without-hashes
+#
+# Letzte Generierung: 2025-11-22 (automatisch generiert)
+# ============================================================================
+
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 sqlalchemy==2.0.23
@@ -10,6 +27,12 @@ pydantic-settings==2.1.0
 numpy==1.26.2
 python-multipart==0.0.6
 email-validator==2.1.0
+scipy>=1.11.0
+jsonschema>=4.20.0
+matplotlib>=3.8.0
+pandas>=2.1.0
+pillow>=10.0.0
+click>=8.1.7
 
 # Optional: Universal Root Kernel - Meshtastic Hardware (uncomment to enable)
 # pyserial==3.5

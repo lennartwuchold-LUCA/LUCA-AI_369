@@ -1,0 +1,25 @@
+[flake8]
+# Kompatibel mit Black
+max-line-length = 88
+extend-ignore = E203, E266, E501, W503, D100, D104
+
+# Ausschlüsse
+exclude =
+    .git,
+    __pycache__,
+    build,
+    dist,
+    .venv,
+    .eggs,
+    *.egg-info
+
+# Per-Datei Ignores
+per-file-ignores =
+    __init__.py:F401,D104
+    tests/*:D100,D101,D102,D103
+
+# Docstring Konvention
+docstring-convention = google
+
+# Max Komplexität
+max-complexity = 10
