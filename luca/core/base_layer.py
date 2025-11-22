@@ -310,8 +310,7 @@ class LayerOrchestrator:
             Dictionary mapping layer IDs to their metrics
         """
         return {
-            layer_id: layer.get_metrics()
-            for layer_id, layer in self._layers.items()
+            layer_id: layer.get_metrics() for layer_id, layer in self._layers.items()
         }
 
     def check_system_health(self) -> Dict[str, Any]:
@@ -322,9 +321,7 @@ class LayerOrchestrator:
             System health summary
         """
         all_metrics = self.get_all_metrics()
-        healthy_layers = sum(
-            1 for m in all_metrics.values() if m.health_score > 0.8
-        )
+        healthy_layers = sum(1 for m in all_metrics.values() if m.health_score > 0.8)
         total_layers = len(all_metrics)
 
         return {
@@ -332,7 +329,6 @@ class LayerOrchestrator:
             "healthy_layers": healthy_layers,
             "system_health": healthy_layers / total_layers if total_layers > 0 else 0,
             "layer_details": {
-                layer_id: metrics.to_dict()
-                for layer_id, metrics in all_metrics.items()
+                layer_id: metrics.to_dict() for layer_id, metrics in all_metrics.items()
             },
         }
