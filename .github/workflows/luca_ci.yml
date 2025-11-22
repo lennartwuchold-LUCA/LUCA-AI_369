@@ -56,8 +56,13 @@ jobs:
     - name: 🎨 Check code style (black + isort)
       if: matrix.python-version == '3.11'
       run: |
-        poetry run black --check --quiet luca/ tests/
-        poetry run isort --check-only --quiet luca/ tests/
+        poetry run black --check --quiet luca/ tests/ backend/ examples/
+        poetry run isort --check-only --quiet luca/ tests/ backend/ examples/
+
+    - name: 🔍 Lint with flake8
+      if: matrix.python-version == '3.11'
+      run: |
+        poetry run flake8 luca/ backend/ --count --show-source --statistics
 
   lint:
     name: Lint and Type Check
@@ -93,7 +98,8 @@ jobs:
 
     - name: 🔍 Type check with mypy
       run: |
-        poetry run mypy luca/ || true  # Non-blocking for now
+        poetry run mypy luca/ --no-error-summary || echo "⚠️ Type check warnings detected"
+        # Non-blocking but shows issues
 
   build:
     name: Build Package
