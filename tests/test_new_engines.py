@@ -1,19 +1,15 @@
 """
 Tests für die neuen LUCA-KI Engines
+
+Autor: Lennart Wuchold
+Standard: 369/370
 """
-
-import sys
-import os
-
-# Add project root to path
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import pytest
 
-# Import directly from modules to avoid sqlalchemy dependency in core.py
-from backend.consciousness.stability_engine import StabilityEngine, get_stability_engine
-from backend.consciousness.semantic_hash_engine import SemanticHashEngine, get_semantic_hash_engine
-from backend.consciousness.torus_flow_engine import TorusFlowEngine, get_torus_flow_engine
+from backend.consciousness.semantic_hash_engine import SemanticHashEngine
+from backend.consciousness.stability_engine import StabilityEngine
+from backend.consciousness.torus_flow_engine import TorusFlowEngine
 
 
 class TestStabilityEngine:
@@ -81,7 +77,10 @@ class TestSemanticHashEngine:
         engine = SemanticHashEngine()
         result = engine.hash_intent("Ich suche Harmonie und Balance")
         assert result.dominant_attractor == 6
-        assert "harmonie" in result.matched_keywords or "balance" in result.matched_keywords
+        assert (
+            "harmonie" in result.matched_keywords
+            or "balance" in result.matched_keywords
+        )
 
     def test_emotional_boost(self):
         """Ausrufezeichen sollten Dichte erhöhen"""

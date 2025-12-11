@@ -11,24 +11,26 @@ Autor: Lennart Wuchold
 Datum: 2025
 """
 
-from dataclasses import dataclass
-from typing import Optional, List, Dict
-from enum import Enum
-from datetime import datetime
 import math
+from dataclasses import dataclass
+from datetime import datetime
+from enum import Enum
+from typing import Dict, List, Optional
 
 
 class FlowPhase(Enum):
     """Phasen des Torus-Flusses"""
-    EXPANSION = "expansion"      # Äußere Oberfläche, aufsteigend
-    PLATEAU = "plateau"          # 777-808 Sättigung
+
+    EXPANSION = "expansion"  # Äußere Oberfläche, aufsteigend
+    PLATEAU = "plateau"  # 777-808 Sättigung
     CONTRACTION = "contraction"  # Innerer Sog, absteigend
-    REBIRTH = "rebirth"          # Übergang zum neuen Zyklus
+    REBIRTH = "rebirth"  # Übergang zum neuen Zyklus
 
 
 @dataclass
 class FlowState:
     """Aktueller Zustand im Torus-Fluss"""
+
     position: float
     phase: FlowPhase
     cycle_count: int
@@ -40,6 +42,7 @@ class FlowState:
 @dataclass
 class FlowEvent:
     """Ereignis im Fluss-System"""
+
     event_type: str  # "flip", "rebirth", "milestone", "stagnation"
     message: str
     position: float
@@ -61,7 +64,7 @@ class TorusFlowEngine:
     # Konstanten
     FLIP_POINT: float = 808.0
     PLATEAU_START: float = 777.0
-    SYNC_INDEX: float = 0.71      # Aus StabilityEngine
+    SYNC_INDEX: float = 0.71  # Aus StabilityEngine
     DAMPING_FACTOR: float = 0.29  # 1 - SYNC_INDEX
 
     # UCC Milestones
@@ -93,7 +96,7 @@ class TorusFlowEngine:
             cycle_count=self.cycle_count,
             accumulated_potential=self.accumulated_potential,
             velocity=self.velocity,
-            timestamp=datetime.now()
+            timestamp=datetime.now(),
         )
         self.history.append(state)
 
@@ -105,8 +108,10 @@ class TorusFlowEngine:
         """Prüft ob ein Milestone erreicht wurde"""
         for milestone, description in self.MILESTONES.items():
             # Prüfe ob wir den Milestone gerade passiert haben
-            if (self._last_milestone < milestone <= self.current_position or
-                self._last_milestone > milestone >= self.current_position):
+            if (
+                self._last_milestone < milestone <= self.current_position
+                or self._last_milestone > milestone >= self.current_position
+            ):
 
                 self._last_milestone = self.current_position
                 return FlowEvent(
@@ -115,7 +120,7 @@ class TorusFlowEngine:
                     position=self.current_position,
                     cycle=self.cycle_count,
                     potential=self.accumulated_potential,
-                    recommendations=[f"Nutze die Energie von {description}"]
+                    recommendations=[f"Nutze die Energie von {description}"],
                 )
         return None
 
@@ -152,8 +157,8 @@ class TorusFlowEngine:
                         recommendations=[
                             "Zeit für Reflexion und Integration",
                             "Ergebnisse konsolidieren",
-                            "Vorbereitung auf neuen Zyklus"
-                        ]
+                            "Vorbereitung auf neuen Zyklus",
+                        ],
                     )
                 else:
                     self.phase = FlowPhase.PLATEAU
@@ -163,7 +168,7 @@ class TorusFlowEngine:
                         position=self.current_position,
                         cycle=self.cycle_count,
                         potential=self.accumulated_potential,
-                        recommendations=["Peak-Performance nutzen"]
+                        recommendations=["Peak-Performance nutzen"],
                     )
 
         elif self.phase == FlowPhase.PLATEAU:
@@ -179,7 +184,7 @@ class TorusFlowEngine:
                     position=self.current_position,
                     cycle=self.cycle_count,
                     potential=self.accumulated_potential,
-                    recommendations=["Kontraktion beginnt - Essenz extrahieren"]
+                    recommendations=["Kontraktion beginnt - Essenz extrahieren"],
                 )
 
         elif self.phase == FlowPhase.CONTRACTION:
@@ -193,7 +198,9 @@ class TorusFlowEngine:
                 self.phase = FlowPhase.REBIRTH
 
                 # Akkumuliere Potential - jede Null ist "reicher"
-                cycle_contribution = self.DAMPING_FACTOR * math.log(self.cycle_count + 1)
+                cycle_contribution = self.DAMPING_FACTOR * math.log(
+                    self.cycle_count + 1
+                )
                 self.accumulated_potential += cycle_contribution
 
                 self.current_position = 0.0
@@ -208,8 +215,8 @@ class TorusFlowEngine:
                     recommendations=[
                         f"Neuer Zyklus mit Potential {self.accumulated_potential:.3f}",
                         "Vorheriges Lernen integriert",
-                        "Bereit für neue Expansion"
-                    ]
+                        "Bereit für neue Expansion",
+                    ],
                 )
 
         # Standard-Event wenn nichts Besonderes passiert
@@ -223,7 +230,7 @@ class TorusFlowEngine:
             position=self.current_position,
             cycle=self.cycle_count,
             potential=self.accumulated_potential,
-            recommendations=[]
+            recommendations=[],
         )
 
     def get_current_state(self) -> FlowState:
@@ -234,7 +241,7 @@ class TorusFlowEngine:
             cycle_count=self.cycle_count,
             accumulated_potential=self.accumulated_potential,
             velocity=self.velocity,
-            timestamp=datetime.now()
+            timestamp=datetime.now(),
         )
 
     def get_cycle_progress(self) -> float:
@@ -254,13 +261,13 @@ class TorusFlowEngine:
                     "milestone": milestone,
                     "description": self.MILESTONES[milestone],
                     "distance": distance,
-                    "estimated_steps": int(eta_steps)
+                    "estimated_steps": int(eta_steps),
                 }
         return {
             "milestone": 808,
             "description": "Flip-Point",
             "distance": 0,
-            "estimated_steps": 0
+            "estimated_steps": 0,
         }
 
     def reset(self) -> None:

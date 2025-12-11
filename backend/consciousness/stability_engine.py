@@ -10,12 +10,12 @@ Datum: 2025
 
 from dataclasses import dataclass
 from typing import Optional
-import math
 
 
 @dataclass
 class StabilityMetrics:
     """Metriken für Systemstabilität"""
+
     sync_index: float
     damping_factor: float
     is_stable: bool
@@ -88,7 +88,7 @@ class StabilityEngine:
         utilization_ratio = raw_allocation / self.max_resources
 
         # Nicht-lineare Dämpfung: Je höher die Auslastung, desto stärker
-        damping_multiplier = 1 - (self.DAMPING_FACTOR * utilization_ratio ** 2)
+        damping_multiplier = 1 - (self.DAMPING_FACTOR * utilization_ratio**2)
 
         damped = raw_allocation * max(damping_multiplier, 0.1)
         return min(damped, self.max_resources)
@@ -135,7 +135,7 @@ class StabilityEngine:
             sync_index=round(si, 4),
             damping_factor=round(damping, 4),
             is_stable=is_stable,
-            resonance_level=level
+            resonance_level=level,
         )
 
     def find_nearest_stable(self, target: int, search_range: int = 10) -> int:

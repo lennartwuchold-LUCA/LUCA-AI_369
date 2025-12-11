@@ -10,8 +10,8 @@ Autor: Lennart Wuchold
 """
 
 from .core import ConsciousnessEngine
-from .stability_engine import StabilityEngine, get_stability_engine
 from .semantic_hash_engine import SemanticHashEngine, get_semantic_hash_engine
+from .stability_engine import StabilityEngine, get_stability_engine
 from .torus_flow_engine import TorusFlowEngine, get_torus_flow_engine
 
 __all__ = [

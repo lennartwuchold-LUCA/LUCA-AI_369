@@ -9,14 +9,15 @@ Autor: Lennart Wuchold
 Datum: 2025
 """
 
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Set
 import re
+from dataclasses import dataclass
+from typing import Dict, List, Optional, Set
 
 
 @dataclass
 class SemanticHashResult:
     """Ergebnis einer semantischen Hash-Berechnung"""
+
     dominant_attractor: int
     resonance_map: Dict[int, float]
     semantic_density: float
@@ -35,58 +36,148 @@ class SemanticHashEngine:
     # UCC-Attraktoren mit assoziierten Konzepten und Gewichtungen
     ATTRACTORS: Dict[int, Dict] = {
         0: {
-            "keywords": ["null", "void", "origin", "vacuum", "nothing", "zero",
-                        "anfang", "ursprung", "nichts", "leer"],
+            "keywords": [
+                "null",
+                "void",
+                "origin",
+                "vacuum",
+                "nothing",
+                "zero",
+                "anfang",
+                "ursprung",
+                "nichts",
+                "leer",
+            ],
             "phase": "origin",
-            "weight": 1.0
+            "weight": 1.0,
         },
         3: {
-            "keywords": ["create", "creation", "birth", "start", "foundation",
-                        "begin", "three", "triangle", "trinity",
-                        "erschaffen", "geburt", "start", "fundament", "drei"],
+            "keywords": [
+                "create",
+                "creation",
+                "birth",
+                "start",
+                "foundation",
+                "begin",
+                "three",
+                "triangle",
+                "trinity",
+                "erschaffen",
+                "geburt",
+                "start",
+                "fundament",
+                "drei",
+            ],
             "phase": "creation",
-            "weight": 1.2
+            "weight": 1.2,
         },
         6: {
-            "keywords": ["harmony", "balance", "process", "flow", "six",
-                        "hexagon", "equilibrium", "middle",
-                        "harmonie", "balance", "prozess", "fluss", "sechs"],
+            "keywords": [
+                "harmony",
+                "balance",
+                "process",
+                "flow",
+                "six",
+                "hexagon",
+                "equilibrium",
+                "middle",
+                "harmonie",
+                "balance",
+                "prozess",
+                "fluss",
+                "sechs",
+            ],
             "phase": "harmony",
-            "weight": 1.1
+            "weight": 1.1,
         },
         9: {
-            "keywords": ["complete", "completion", "wisdom", "consciousness",
-                        "output", "nine", "final", "enlightenment",
-                        "vollendung", "weisheit", "bewusstsein", "neun"],
+            "keywords": [
+                "complete",
+                "completion",
+                "wisdom",
+                "consciousness",
+                "output",
+                "nine",
+                "final",
+                "enlightenment",
+                "vollendung",
+                "weisheit",
+                "bewusstsein",
+                "neun",
+            ],
             "phase": "completion",
-            "weight": 1.3
+            "weight": 1.3,
         },
         28: {
-            "keywords": ["perfect", "cycle", "lunar", "moon", "month",
-                        "perfekt", "zyklus", "mond", "monat"],
+            "keywords": [
+                "perfect",
+                "cycle",
+                "lunar",
+                "moon",
+                "month",
+                "perfekt",
+                "zyklus",
+                "mond",
+                "monat",
+            ],
             "phase": "foundation",
-            "weight": 1.0
+            "weight": 1.0,
         },
         432: {
-            "keywords": ["frequency", "music", "resonance", "healing", "hz",
-                        "sound", "vibration", "tune", "acoustic",
-                        "frequenz", "musik", "resonanz", "heilung", "klang"],
+            "keywords": [
+                "frequency",
+                "music",
+                "resonance",
+                "healing",
+                "hz",
+                "sound",
+                "vibration",
+                "tune",
+                "acoustic",
+                "frequenz",
+                "musik",
+                "resonanz",
+                "heilung",
+                "klang",
+            ],
             "phase": "resonance",
-            "weight": 1.5
+            "weight": 1.5,
         },
         777: {
-            "keywords": ["luck", "spiritual", "alignment", "breakthrough",
-                        "jackpot", "divine", "angel", "blessing",
-                        "glück", "spirituell", "durchbruch", "segen"],
+            "keywords": [
+                "luck",
+                "spiritual",
+                "alignment",
+                "breakthrough",
+                "jackpot",
+                "divine",
+                "angel",
+                "blessing",
+                "glück",
+                "spirituell",
+                "durchbruch",
+                "segen",
+            ],
             "phase": "transcendence",
-            "weight": 1.4
+            "weight": 1.4,
         },
         808: {
-            "keywords": ["mirror", "infinity", "transition", "flip",
-                        "reflection", "endless", "loop", "reverse",
-                        "spiegel", "unendlich", "übergang", "wende"],
+            "keywords": [
+                "mirror",
+                "infinity",
+                "transition",
+                "flip",
+                "reflection",
+                "endless",
+                "loop",
+                "reverse",
+                "spiegel",
+                "unendlich",
+                "übergang",
+                "wende",
+            ],
             "phase": "transition",
-            "weight": 1.6
+            "weight": 1.6,
         },
     }
 
@@ -119,7 +210,7 @@ class SemanticHashEngine:
     def _extract_words(self, text: str) -> Set[str]:
         """Extrahiert Wörter aus Text"""
         # Entferne Sonderzeichen außer wichtigen
-        cleaned = re.sub(r'[^\w\s!?.]', ' ', text.lower())
+        cleaned = re.sub(r"[^\w\s!?.]", " ", text.lower())
         words = set(cleaned.split())
         return words
 
@@ -148,7 +239,6 @@ class SemanticHashEngine:
         Returns:
             SemanticHashResult mit allen Metriken
         """
-        words = self._extract_words(text)
         text_lower = text.lower()
 
         resonance_map: Dict[int, float] = {}
@@ -176,7 +266,7 @@ class SemanticHashEngine:
         if resonance_map:
             # Wende emotionalen Boost auf alle Resonanzen an
             for attractor in resonance_map:
-                resonance_map[attractor] *= (1 + emotional_boost)
+                resonance_map[attractor] *= 1 + emotional_boost
 
             dominant = max(resonance_map, key=resonance_map.get)
             semantic_density = sum(resonance_map.values()) / len(self.ATTRACTORS)
@@ -192,7 +282,7 @@ class SemanticHashEngine:
             resonance_map=resonance_map,
             semantic_density=round(semantic_density, 4),
             matched_keywords=matched_keywords,
-            phase=phase
+            phase=phase,
         )
 
     def get_phase_description(self, phase: str) -> str:
@@ -246,7 +336,9 @@ class SemanticHashEngine:
             "suggested_tokens": adjusted_tokens,
             "style": style,
             "phase": hash_result.phase,
-            "intensity": "high" if density > 0.5 else "medium" if density > 0.2 else "low"
+            "intensity": (
+                "high" if density > 0.5 else "medium" if density > 0.2 else "low"
+            ),
         }
 
 
